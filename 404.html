@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>神智核 V0.3.0</title>
+<style>
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+ background:linear-gradient(160deg,#0f766e,#134e4a);color:#fff;
+ font-family:"PingFang TC","Microsoft JhengHei",system-ui,sans-serif;padding:20px;text-align:center}
+.c{max-width:420px;width:100%}
+h1{font-size:23px;margin:0 0 10px}
+p{opacity:.85;font-size:14.5px;line-height:1.8}
+a.btn{display:inline-block;background:#fff;color:#0f766e;text-decoration:none;font-weight:700;
+ font-size:17px;padding:14px 28px;border-radius:13px;margin-top:20px;min-height:44px;line-height:1.2;box-sizing:border-box}
+</style></head>
+<body><div class="c">
+<h1>🧪 神智核 V0.3.0</h1>
+<p>你打開的這個頁面不存在。<br>回到首頁請點下面的按鈕。</p>
+<a class="btn" id="home" href="./">回到首頁 →</a>
+</div>
+<script>
+// 這個 404 頁面會被 GitHub Pages 用在任何不存在的路徑下，網址可能是
+//   /倉庫名/打錯的頁面        或   /倉庫名/深/一層/打錯
+// 所以不能用 "./"（它會相對「打錯的那一層」解析，還是 404），
+// 也不能用 "/"（那是使用者主頁，不是筆記）。
+// 專案網站的網址固定是 /倉庫名/...，取第一段就是倉庫根；使用者主頁只有一段，根就是 "/"。
+(function () {
+  var path = location.pathname;
+  var seg = path.split("/").filter(Boolean);
+  var base;
+  if (seg.length >= 2) {
+    base = "/" + seg[0] + "/";        // /倉庫名/任何東西
+  } else if (seg.length === 1 && path.charAt(path.length - 1) === "/") {
+    base = "/" + seg[0] + "/";        // /倉庫名/ 本身
+  } else {
+    base = "/";                       // 使用者主頁，或主頁下的 404
+  }
+  document.getElementById("home").setAttribute("href", base);
+})();
+</script>
+</body></html>
