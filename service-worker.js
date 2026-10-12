@@ -17,10 +17,10 @@
  *                        这样在线时总能拿到最新版，断网时又不会干等。
  *   其他同源 GET        → 缓存优先 + 后台更新（stale-while-revalidate）。
  *
- * V0.9.4 由 prep_ghpages.py 在部署时替换成站点版号。改版即换缓存名，
+ * V0.9.5 由 prep_ghpages.py 在部署时替换成站点版号。改版即换缓存名，
  * 避免用户长期停留在旧缓存上，同时 activate 时清掉旧版缓存防止无限增长。
  */
-var SW_VERSION = 'V0.9.4';
+var SW_VERSION = 'V0.9.5';
 var CACHE = 'shenzhine-' + SW_VERSION;
 var NET_TIMEOUT = 3500;
 
@@ -128,7 +128,40 @@ self.addEventListener('fetch', function (e) {
     return;
   }
 
-  /* 其他同源资源：缓存优先，命中后后台静默更新 */
+  /* 其他同源资源：按「内容型 vs 静态资源型」分策略（V0.9.5 修）
+     ─────────────────────────────────────────────────────────────
+     為什麼要分：
+       · data/*.json 是**筆記正文與圖片引用**——改版後必須立刻看到新內容。
+         原本走 cache-first，導致「HTML 已是新版、知識點卻還是舊圖」，
+         用戶反覆刷新也看不到更新（要等第二次訪問才生效）。
+       · 圖片／圖示是**靜態資源**——內容不變時走 cache-first 最省流量，
+         且離線時能直接命中緩存。
+     策略：
+       data/*.json → 網絡優先（超時／失敗才回退緩存）＝ 永遠看到最新筆記
+       其餘資源    → 緩存優先 + 後台靜默更新（stale-while-revalidate）
+  */
+  var path = url.pathname;
+  var isData = /\/data\/[^/]+\.json$/.test(path) || /(^|\/)data\/heavy-/.test(path);
+
+  if (isData) {
+    e.respondWith(
+      netFirstWithTimeout(req).then(function (res) {
+        if (res && res.status === 200) {
+          var copy = res.clone();
+          caches.open(CACHE).then(function (c) { c.put(req, copy); });
+        }
+        return res;
+      }).catch(function () {
+        /* 離線時回退緩存（沒有緩存過就報錯，讓上層顯示載入失敗） */
+        return caches.match(req).then(function (hit) {
+          return hit || Response.error();
+        });
+      })
+    );
+    return;
+  }
+
+  /* 靜態資源（圖片／圖示／字體等）：緩存優先，命中後後台靜默更新 */
   e.respondWith(
     caches.match(req).then(function (hit) {
       var fetching = fetch(req).then(function (res) {
