@@ -17,10 +17,10 @@
  *                        这样在线时总能拿到最新版，断网时又不会干等。
  *   其他同源 GET        → 缓存优先 + 后台更新（stale-while-revalidate）。
  *
- * V0.9.5 由 prep_ghpages.py 在部署时替换成站点版号。改版即换缓存名，
+ * V0.9.6 由 prep_ghpages.py 在部署时替换成站点版号。改版即换缓存名，
  * 避免用户长期停留在旧缓存上，同时 activate 时清掉旧版缓存防止无限增长。
  */
-var SW_VERSION = 'V0.9.5';
+var SW_VERSION = 'V0.9.6';
 var CACHE = 'shenzhine-' + SW_VERSION;
 var NET_TIMEOUT = 3500;
 
