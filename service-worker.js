@@ -17,12 +17,16 @@
  *                        这样在线时总能拿到最新版，断网时又不会干等。
  *   其他同源 GET        → 缓存优先 + 后台更新（stale-while-revalidate）。
  *
- * V0.9.13 由 prep_ghpages.py 在部署时替换成站点版号。改版即换缓存名，
+ * V0.9.14 由 prep_ghpages.py 在部署时替换成站点版号。改版即换缓存名，
  * 避免用户长期停留在旧缓存上，同时 activate 时清掉旧版缓存防止无限增长。
  */
-var SW_VERSION = 'V0.9.13';
+var SW_VERSION = 'V0.9.14';
 var CACHE = 'shenzhine-' + SW_VERSION;
 var NET_TIMEOUT = 3500;
+/* data/*.json 是几百 KB 的分区資料（heavy-phys.json 等），
+   弱网首次访问可能超过 3.5s——给独立的长超时（15s）。
+   导航仍是 3.5s（首屏要快）；data 用 15s，超时才回退缓存。 */
+var DATA_TIMEOUT = 15000;
 
 /* 预缓存清单。用相对路径，scope 根就是站点根。
    图例全部在根目录（不放子资料夹），理由见 manifest.json 的说明：
@@ -71,7 +75,7 @@ self.addEventListener('activate', function (e) {
 });
 
 /* 网络优先 + 超时保护：在线拿最新，断网快速回退，不干等浏览器默认超时。 */
-function netFirstWithTimeout(req) {
+function netFirstWithTimeout(req, timeoutMs) {
   return new Promise(function (resolve, reject) {
     var settled = false;
     var timer = setTimeout(function () {
@@ -79,7 +83,7 @@ function netFirstWithTimeout(req) {
         settled = true;
         reject(new Error('timeout'));
       }
-    }, NET_TIMEOUT);
+    }, timeoutMs || NET_TIMEOUT);
     fetch(req).then(function (res) {
       if (settled) return;
       settled = true;
@@ -145,7 +149,7 @@ self.addEventListener('fetch', function (e) {
 
   if (isData) {
     e.respondWith(
-      netFirstWithTimeout(req).then(function (res) {
+      netFirstWithTimeout(req, DATA_TIMEOUT).then(function (res) {
         if (res && res.status === 200) {
           var copy = res.clone();
           caches.open(CACHE).then(function (c) { c.put(req, copy); });
