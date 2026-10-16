@@ -3338,7 +3338,10 @@ function viewFormulas(x){
       var sym='';
       if(it.sym && it.sym.length){
         sym='<div class="fml-sym"><span class="fml-sym-label">符號：</span>'
-          +it.sym.map(function(pair){return '<span class="fml-sym-pair"><b>'+esc(pair[0])+'</b>＝'+esc(pair[1])+'</span>';}).join('　;　')
+          +it.sym.map(function(pair){
+              if(typeof pair === 'string') return esc(pair);
+              return '<span class="fml-sym-pair"><b>'+esc(pair[0])+'</b>＝'+esc(pair[1])+'</span>';
+            }).join('　;　')
           +'</div>';
       }
       var from='';
