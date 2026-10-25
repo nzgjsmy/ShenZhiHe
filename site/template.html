@@ -38,6 +38,23 @@
   --dur-fast:calc(.12s * var(--anim-k));
   --dur-base:calc(.18s * var(--anim-k));
   --dur-slow:calc(.25s * var(--anim-k));
+
+  /* ===== 修改位置：新增語意色變數（供黑夜模式切換時反向覆蓋）===== */
+  --paper-soft:#fdfcf9;        /* 次級面板、輸入框、選項卡 */
+  --paper-mute:#f7f3ea;        /* 三級底、hover 區 */
+  --paper-alt:#f5f1e8;         /* 表頭 */
+  --code-bg:#f1ede4;           /* inline code 底色 */
+  --code-bg2:#f1efe8;          /* markdown code 底色 */
+  --pre-bg:#f6f4ee;            /* 代碼塊背景 */
+  --pre-fg:#3d3a33;            /* 代碼塊文字 */
+  --panel:#efe9dd;             /* 進度條槽、nav hover */
+  --hover:#f3efe6;             /* 側欄小徽章 hover */
+  --hover2:#f3efe7;            /* 按鈕 hover */
+  --text-soft:#57534a;         /* 次級正文 */
+  --header-bg:rgba(250,247,242,.92);
+  --tip-bg:#2a2d36;            /* 提示浮條底（.memwarn / .gtip）*/
+  --tip-fg:#e8e5de;            /* 提示浮條文字 */
+  --scroll-thumb:#d8d2c5;      /* 虛擬滾動條 thumb */
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -917,6 +934,307 @@ details.wfixed[open]>summary:before{content:"▾ "}
 .wbtab:hover{border-color:#0f766e;color:#0f766e}
 .wbtab.on{background:#0f766e;border-color:#0f766e;color:#fff}
 .wbtab.on span{color:#c7f0e8}
+
+/* =============================================================
+   ===== 修改位置：iOS 風格主題切換開關（Light / Dark Toggle）=====
+   位置：header 右上角、齒輪按鈕左側
+   行為：純 CSS 依 html[data-theme] 切換 track 顏色、thumb 位置與圖標
+   ============================================================= */
+.themetoggle{
+  position:absolute;right:58px;top:8px;
+  width:52px;height:32px;border-radius:999px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  cursor:pointer;padding:0;
+  display:flex;align-items:center;
+  box-shadow:var(--shadow);
+  transition:background calc(.28s * var(--anim-k)) ease,
+             border-color calc(.28s * var(--anim-k)) ease;
+  flex:0 0 auto;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.themetoggle:hover{border-color:var(--accent)}
+.themetoggle .thumb{
+  position:absolute;left:2px;top:50%;transform:translateY(-50%);
+  width:26px;height:26px;border-radius:50%;
+  background:var(--paper);
+  box-shadow:0 1px 3px rgba(0,0,0,.22),0 0 0 .5px rgba(0,0,0,.05);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;line-height:1;
+  transition:transform calc(.28s * var(--anim-k)) cubic-bezier(.2,.8,.2,1),
+             background calc(.28s * var(--anim-k)) ease;
+  overflow:hidden;
+}
+.themetoggle .thumb .ic-sun{display:inline-block}
+.themetoggle .thumb .ic-moon{display:none}
+html[data-theme="dark"] .themetoggle{
+  background:var(--accent);
+  border-color:var(--accent);
+}
+html[data-theme="dark"] .themetoggle .thumb{
+  transform:translate(20px,-50%);
+  background:#0d1117;
+}
+html[data-theme="dark"] .themetoggle .thumb .ic-sun{display:none}
+html[data-theme="dark"] .themetoggle .thumb .ic-moon{display:inline-block}
+/* 無障礙：鍵盤 focus 時有清楚輪廓 */
+.themetoggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:860px){
+  /* 手機：與 gearbtn（44×44 right:10）左緣對齊留 8px 間隔 → right: 62 */
+  .themetoggle{right:64px;top:10px;width:56px;height:36px}
+  .themetoggle .thumb{width:30px;height:30px;font-size:15px}
+  html[data-theme="dark"] .themetoggle .thumb{transform:translate(20px,-50%)}
+}
+@media (prefers-reduced-motion:reduce){
+  .themetoggle,.themetoggle .thumb{transition:none}
+}
+
+/* =============================================================
+   ===== 修改位置：黑夜模式（Dark Theme）覆蓋層 =====
+   策略：light 模式 100% 保持原樣；dark 模式由這一段全部反轉。
+   1) 先覆蓋核心 CSS 變數（body/card/border/文字自動跟隨）
+   2) 再覆蓋硬編碼 #fff / #fdfcf9 / #efe9dd 等選擇器
+   3) 最後處理元素專屬色（表格頭、代碼塊、圖表文字、警示條）
+   ============================================================= */
+html[data-theme="dark"]{
+  --bg:#12141a;
+  --paper:#1c1e25;
+  --paper-soft:#22252c;
+  --paper-mute:#262933;
+  --paper-alt:#2b2e38;
+  --code-bg:#2b2e38;
+  --code-bg2:#2e313b;
+  --pre-bg:#1a1c22;
+  --pre-fg:#d6d3cc;
+  --panel:#2a2d36;
+  --hover:#282b33;
+  --hover2:#2b2e38;
+  --header-bg:rgba(18,20,26,.92);
+  --ink:#e8e5de;
+  --text-soft:#b8b3a8;
+  --muted:#8a857a;
+  --line:#31343e;
+  --accent:#2dd4bf;
+  --accent-soft:#0f3d38;
+  --amber:#fbbf24;
+  --amber-soft:#3a2e1a;
+  --red:#f87171;
+  --red-soft:#3a1a1a;
+  --green:#4ade80;
+  --green-soft:#173d24;
+  --tip-bg:#2a2d36;
+  --tip-fg:#e8e5de;
+  --scroll-thumb:#3a3e49;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.28);
+  color-scheme:dark;
+}
+html[data-theme="dark"] body{background:var(--bg);color:var(--ink)}
+html[data-theme="dark"] header{background:var(--header-bg)}
+html[data-theme="dark"] nav button:hover{background:var(--panel);color:var(--ink)}
+html[data-theme="dark"] code{background:var(--code-bg);color:var(--ink)}
+html[data-theme="dark"] .tcard .desc,
+html[data-theme="dark"] .subcard .sdesc,
+html[data-theme="dark"] .qpick-d,
+html[data-theme="dark"] .rail .rsec,
+html[data-theme="dark"] .subbar button,
+html[data-theme="dark"] .legallist,
+html[data-theme="dark"] .glegend span,
+html[data-theme="dark"] .emptybox .how{color:var(--text-soft)}
+html[data-theme="dark"] .rail .rsec:hover{background:var(--hover)}
+html[data-theme="dark"] .pcard h4 .pg,
+html[data-theme="dark"] .qgall{background:var(--paper-alt);color:var(--muted)}
+html[data-theme="dark"] .qgall:hover{background:var(--paper-mute)}
+html[data-theme="dark"] .pcard .md th,
+html[data-theme="dark"] .pipbody .md th{background:var(--paper-alt)}
+html[data-theme="dark"] .vcontent::-webkit-scrollbar-thumb{background:var(--scroll-thumb)}
+html[data-theme="dark"] .vplaceholder{background:linear-gradient(90deg,#1c1e25 0%,#22252c 50%,#1c1e25 100%)}
+html[data-theme="dark"] .opt,
+html[data-theme="dark"] .scope,
+html[data-theme="dark"] .fillrow input,
+html[data-theme="dark"] .ptsearch input{background:var(--paper-soft);color:var(--ink)}
+html[data-theme="dark"] .qbar,
+html[data-theme="dark"] .qpick-pbar,
+html[data-theme="dark"] .pbar{background:var(--panel)}
+html[data-theme="dark"] .nextbtn{background:var(--accent);color:#0d1117}
+html[data-theme="dark"] .nextbtn:hover{background:#5eead4}
+html[data-theme="dark"] pre.mdcodewrap{background:var(--pre-bg);border-left-color:var(--accent)}
+html[data-theme="dark"] pre.mdcodewrap code{color:var(--pre-fg)}
+html[data-theme="dark"] .md code,
+html[data-theme="dark"] .pipbody code{background:var(--code-bg2);color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] .expl.good{border-color:#2a5a3a}
+html[data-theme="dark"] .expl.bad{border-color:#5a2a2a}
+html[data-theme="dark"] .gtip{background:var(--tip-bg);color:var(--tip-fg)}
+html[data-theme="dark"] .memwarn{background:var(--tip-bg);color:var(--tip-fg)}
+html[data-theme="dark"] .memwarn b{color:#fbbf24}
+html[data-theme="dark"] .mdfig img{background:var(--paper)}
+html[data-theme="dark"] mark{background:#5a4a10;color:#fde68a}
+html[data-theme="dark"] .md mark.kwmark{background:#7c5a0e;box-shadow:0 1px 0 #f59e0b;color:#fef3c7}
+html[data-theme="dark"] .pcard[data-exam="3"] .md mark.kwmark{background:#7f1d1d;color:#fecaca;box-shadow:0 1px 0 #dc2626}
+html[data-theme="dark"] .pcard[data-exam="2"] .md mark.kwmark{background:#7c2d12;color:#fed7aa;box-shadow:0 1px 0 #ea580c}
+html[data-theme="dark"] .pcard[data-exam="1"] .md mark.kwmark{background:#713f12;color:#fef3c7;box-shadow:0 1px 0 #f59e0b}
+html[data-theme="dark"] .examtag.lv3{background:#4a1a1a;color:#fca5a5;border-color:#7f1d1d}
+html[data-theme="dark"] .examtag.lv2{background:#4a2a10;color:#fdba74;border-color:#7c2d12}
+html[data-theme="dark"] .examtag.lv1{background:var(--amber-soft);color:var(--amber);border-color:#7c5a1e}
+html[data-theme="dark"] .examdetail{background:#2a2010;color:#fcd34d;border-left-color:#7f1d1d}
+html[data-theme="dark"] .examdetail b{color:#fca5a5}
+html[data-theme="dark"] .kw{background:#5a4a10;color:#fde68a;border-color:#7c5a1e}
+html[data-theme="dark"] .gthreshold{background:#3a2e1a;color:#fbbf24;border-color:#7c5a1e}
+html[data-theme="dark"] .gthreshold button{background:var(--paper-soft);border-color:var(--amber);color:var(--amber)}
+/* hero 漸層加深，配合深底 */
+html[data-theme="dark"] .hero{background:linear-gradient(135deg,#0a5c56 0%,#0a4a46 60%,#0a3d3a 100%)}
+/* 額外資訊：粉紅／淺綠卡片在深色下轉成深底 */
+html[data-theme="dark"] .fmhero{background:linear-gradient(160deg,#1c1e25 0%,#22252c 55%,#1c1e25 100%);border-color:#4a3a45}
+html[data-theme="dark"] .fmhero .lead{color:#b8a8b0}
+html[data-theme="dark"] .fmhero .lead b{color:#f0a0b8}
+html[data-theme="dark"] .fmhero .pill{background:#3a2530;color:#f0a0b8}
+html[data-theme="dark"] .fstat .fc{background:var(--paper-soft);border-color:#3a3035}
+html[data-theme="dark"] .fstat .fc .n{color:#e8a0b8}
+html[data-theme="dark"] .fstat .fc .l{color:var(--muted)}
+html[data-theme="dark"] .ftab{background:var(--paper-soft);border-color:#3a3035;color:#b8a8b0}
+html[data-theme="dark"] .ftab.on{background:#ef8ba6;border-color:#ef8ba6;color:#1c1e25}
+html[data-theme="dark"] .ftab.given.on{background:#7fc8a9;border-color:#7fc8a9;color:#1c1e25}
+html[data-theme="dark"] .fcard{background:var(--paper-soft);border-color:color-mix(in srgb,var(--tc,#ef8ba6) 40%,#1c1e25)}
+html[data-theme="dark"] .fcard .fn{color:var(--text-soft)}
+html[data-theme="dark"] .fcard .fsym{color:var(--muted)}
+html[data-theme="dark"] .fcard .ff{color:#e8e5de;background:color-mix(in srgb,var(--tc,#ef8ba6) 15%,#1c1e25)}
+html[data-theme="dark"] .fcard .ffoot{color:var(--muted)}
+html[data-theme="dark"] .ftopic{background:var(--paper-mute);border-color:var(--line);color:var(--text-soft)}
+html[data-theme="dark"] .ftopicrow .ftopic{background:color-mix(in srgb,var(--tc,#888) 20%,#1c1e25);border-color:color-mix(in srgb,var(--tc,#888) 40%,#1c1e25);color:var(--ink)}
+html[data-theme="dark"] .fbadge.none{background:#4a1a1a;color:#fca5a5;border-color:#7f1d1d}
+html[data-theme="dark"] .fbadge.deriv{background:#1e2a36;color:#93c5fd;border-color:#2a3a4a}
+html[data-theme="dark"] .onhero{background:linear-gradient(160deg,#1c1e25 0%,#22252c 55%,#1c1e25 100%);border-color:#2a4a3a}
+html[data-theme="dark"] .onhero .lead{color:#8aa89a}
+html[data-theme="dark"] .onpri{background:var(--paper-soft);border-color:#2a4a3a;color:var(--ink)}
+html[data-theme="dark"] .onpri th{background:#1e3a2a;color:#7fc8a9}
+html[data-theme="dark"] .onpri tbody tr:nth-child(even){background:#1a1c22}
+html[data-theme="dark"] .onpri .grp{color:var(--ink)}
+html[data-theme="dark"] .onpri .nt{color:var(--muted)}
+html[data-theme="dark"] .onpri a{color:#7fc8a9}
+html[data-theme="dark"] .onstep{background:var(--paper-soft);border-color:#2a4a3a;border-left-color:var(--green)}
+html[data-theme="dark"] .onstep h4{color:#7fc8a9}
+html[data-theme="dark"] .onstep p{color:var(--text-soft)}
+html[data-theme="dark"] .onstep .lk a{color:#7fc8a9;background:#1e3a2a;border-color:#2a4a3a}
+html[data-theme="dark"] .onchain .c{background:var(--paper-soft);border-color:#2a4a3a}
+html[data-theme="dark"] .onchain .c b{color:var(--ink)}
+html[data-theme="dark"] .onchain .c span{color:var(--muted)}
+html[data-theme="dark"] .onex{background:var(--paper-soft);border-color:#2a4a3a}
+html[data-theme="dark"] .onex .nm{color:var(--ink)}
+html[data-theme="dark"] .onex .en{color:#7fc8a9}
+html[data-theme="dark"] .onex .why{color:var(--muted)}
+/* 程式碼速查 */
+html[data-theme="dark"] .progkv{background:var(--paper-soft);border-color:var(--line)}
+html[data-theme="dark"] .progio{background:var(--paper-soft);border-color:var(--line)}
+html[data-theme="dark"] .progverify{background:#0f2a1e;color:#a7f3d0;border-left-color:var(--green)}
+html[data-theme="dark"] .progverify b{color:#6ee7b7}
+html[data-theme="dark"] .progpit{background:#2a2010;color:#fde68a;border-left-color:var(--amber)}
+html[data-theme="dark"] .progpit b{color:#fbbf24}
+html[data-theme="dark"] .progbytes{background:var(--paper-soft);color:var(--muted);border-color:var(--line)}
+html[data-theme="dark"] .progdesc{color:var(--text-soft)}
+/* 週期表元素：深色下元素色塊內的文字統一提亮 */
+html[data-theme="dark"] .ptcell .z,
+html[data-theme="dark"] .ptcell .sym,
+html[data-theme="dark"] .ptcell .cn,
+html[data-theme="dark"] .ptcell .ms,
+html[data-theme="dark"] .ptcell .st{color:#f5f5f0;text-shadow:0 1px 1px rgba(0,0,0,.45)}
+html[data-theme="dark"] .ptdetail{background:var(--paper-soft);border-color:var(--line)}
+html[data-theme="dark"] .ptdetail .kv div{background:var(--paper);border-color:var(--line)}
+html[data-theme="dark"] .ptdetail .box span{color:var(--ink)}
+html[data-theme="dark"] .ptlegend span{background:var(--paper-soft);border-color:var(--line);color:var(--text-soft)}
+/* 高頻考點報告 */
+html[data-theme="dark"] .hcard{background:var(--paper-soft);border-color:var(--line)}
+html[data-theme="dark"] .hfilter input{background:var(--paper-soft);border-color:var(--line);color:var(--ink)}
+html[data-theme="dark"] .hchip{background:var(--paper-soft);border-color:var(--line);color:var(--ink)}
+html[data-theme="dark"] .htable{background:var(--paper-soft);border-color:var(--line);color:var(--ink)}
+html[data-theme="dark"] .htable th{background:var(--paper-alt);color:var(--text-soft)}
+html[data-theme="dark"] .hkw{background:#5a4a10;color:#fde68a;border-color:#7c5a1e}
+html[data-theme="dark"] .hlv3{background:#4a1a1a;color:#fca5a5}
+html[data-theme="dark"] .hlv2{background:#4a2a10;color:#fdba74}
+html[data-theme="dark"] .hlv1{background:#3a2e1a;color:#fbbf24}
+html[data-theme="dark"] .hpg{background:var(--paper-alt);color:var(--muted)}
+/* 動畫設定頁 */
+html[data-theme="dark"] .animseg button{background:var(--paper-soft);border-color:var(--line);color:var(--ink)}
+html[data-theme="dark"] .animseg button.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+html[data-theme="dark"] .animdemo button{background:var(--paper-soft);border-color:var(--line);color:var(--ink)}
+/* 錯題本 */
+html[data-theme="dark"] .wcard{background:var(--paper-soft);border-color:var(--line)}
+html[data-theme="dark"] .wstem{color:var(--text-soft)}
+html[data-theme="dark"] textarea.wnote{background:#1a1c22;color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] .wbtab{background:var(--paper-soft);border-color:var(--line);color:var(--text-soft)}
+html[data-theme="dark"] .wbtab.on{background:var(--accent);border-color:var(--accent);color:#0d1117}
+html[data-theme="dark"] .wfix{background:#0f2a1a;color:#4ade80;border-color:var(--green)}
+html[data-theme="dark"] .wfix.off{background:var(--paper-mute);color:var(--muted);border-color:var(--line)}
+html[data-theme="dark"] .wgo{background:var(--paper-soft);color:var(--text-soft);border-color:var(--line)}
+html[data-theme="dark"] .wdone{background:#173d24;color:#4ade80}
+html[data-theme="dark"] .wpend{background:#3a2e1a;color:#fbbf24}
+html[data-theme="dark"] details.wfixed{background:var(--paper-soft);border-color:var(--line)}
+html[data-theme="dark"] details.wfixed>summary{color:#4ade80}
+html[data-theme="dark"] .wans{color:var(--accent)}
+/* DSE 真題 */
+html[data-theme="dark"] .ppq{background:var(--paper-soft);border-color:var(--line)}
+html[data-theme="dark"] .ppqh{color:var(--text-soft)}
+html[data-theme="dark"] .ppstem{color:var(--ink)}
+html[data-theme="dark"] .ppnoex{color:var(--muted)}
+html[data-theme="dark"] .pptag{background:var(--paper-mute);color:var(--muted)}
+html[data-theme="dark"] .pppct.e{background:#173d24;color:#4ade80}
+html[data-theme="dark"] .pppct.m{background:#3a2e1a;color:#fbbf24}
+html[data-theme="dark"] .pppct.h{background:#4a2a10;color:#fdba74}
+html[data-theme="dark"] .pppct.vh{background:#4a1a1a;color:#fca5a5}
+html[data-theme="dark"] .ppfig{background:#2a2010;color:#fdba74}
+html[data-theme="dark"] .ppbtn{background:#0f3d38;color:var(--accent);border-color:var(--accent)}
+html[data-theme="dark"] .ppbtn:hover{background:#134e48}
+html[data-theme="dark"] .ppbtn.open{background:var(--accent);color:#0d1117}
+html[data-theme="dark"] .ppans{border-top-color:var(--line)}
+html[data-theme="dark"] .ppansrow .lab,
+html[data-theme="dark"] .ppexpl .lab{background:var(--paper-mute);color:var(--muted)}
+html[data-theme="dark"] .ppkey{color:var(--accent)}
+html[data-theme="dark"] button.ppo{background:var(--paper);border-color:var(--line);color:var(--ink)}
+html[data-theme="dark"] button.ppo:hover{background:#0f3d38;border-color:var(--accent)}
+html[data-theme="dark"] button.ppo.right{background:#173d24;border-color:#22c55e;color:#4ade80}
+html[data-theme="dark"] button.ppo.right b{color:#4ade80}
+html[data-theme="dark"] button.ppo.wrong{background:#4a1a1a;border-color:#ef4444;color:#f87171}
+html[data-theme="dark"] button.ppo.wrong b{color:#f87171}
+html[data-theme="dark"] .ppimgwrap{background:var(--paper-mute);border-color:var(--line)}
+html[data-theme="dark"] .ppimgbar button{background:var(--paper);border-color:var(--line);color:var(--ink)}
+html[data-theme="dark"] .ppchip{background:var(--paper-soft);border-color:var(--line);color:var(--text-soft)}
+html[data-theme="dark"] .ppchip.on{background:var(--accent);border-color:var(--accent);color:#0d1117}
+html[data-theme="dark"] .ppmore{background:var(--paper-mute);border-color:var(--line);color:var(--text-soft)}
+html[data-theme="dark"] .ppqimg{background:var(--paper-soft);border-color:var(--line)}
+html[data-theme="dark"] .ppoptimg{background:var(--paper-soft);border-color:var(--line)}
+html[data-theme="dark"] .ppfigbox{background:var(--paper-soft)}
+html[data-theme="dark"] .ppfigbox img.pplazy{background:var(--paper-mute)}
+html[data-theme="dark"] .ppsrc{background:#0f3d38;color:var(--accent);border-color:#134e48}
+/* 其他零星 */
+html[data-theme="dark"] .piphead{background:var(--paper-mute)}
+html[data-theme="dark"] .pipfoot{background:var(--paper-soft)}
+html[data-theme="dark"] .pipbtn{background:var(--paper-soft);color:var(--text-soft)}
+html[data-theme="dark"] .pipopen{background:var(--amber-soft);color:var(--amber);border-color:#7c5a1e}
+html[data-theme="dark"] .pickbar{background:var(--paper);border-color:var(--accent)}
+html[data-theme="dark"] .pickbar-t{color:var(--accent)}
+html[data-theme="dark"] .pickbar-x{background:var(--panel);color:var(--muted)}
+html[data-theme="dark"] .pickbar-x:hover{background:var(--hover)}
+html[data-theme="dark"] .cbtool{background:var(--paper-soft);color:var(--text-soft);border-color:var(--line)}
+html[data-theme="dark"] .cbtool:hover{background:var(--hover2)}
+html[data-theme="dark"] .cbtool.cbnbox input{color:var(--ink)}
+html[data-theme="dark"] .chip{background:var(--paper-soft);color:var(--ink)}
+html[data-theme="dark"] .chip.on{background:var(--accent);color:#0d1117}
+html[data-theme="dark"] .qpickwrap{background:var(--paper-soft);border-color:var(--line)}
+html[data-theme="dark"] .qgt{color:var(--text-soft)}
+html[data-theme="dark"] .qpick-go{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+html[data-theme="dark"] .qpick:hover{border-color:var(--accent)}
+html[data-theme="dark"] .legalcopy,
+html[data-theme="dark"] .fcopy{background:#3a2e1a;border-color:#7c5a1e;color:#fbbf24}
+html[data-theme="dark"] .note{background:var(--amber-soft);border-color:#7c5a1e;color:var(--amber)}
+html[data-theme="dark"] .scope.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+html[data-theme="dark"] .randbox{background:var(--accent-soft);border-color:var(--accent)}
+html[data-theme="dark"] .randrow select,
+html[data-theme="dark"] .randrow input{background:var(--paper-soft);color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] .databox code,
+html[data-theme="dark"] .emptybox code{background:var(--code-bg);color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] .subcard .soon{background:var(--paper-alt);color:var(--muted)}
+html[data-theme="dark"] .tcard .meta{color:var(--muted)}
+html[data-theme="dark"] .stat b{color:var(--accent)}
+/* graph SVG 內建文字色由 JS 讀 CSS 變數（下方 drawGraph 修改）*/
 </style>
 <script>
 /* iOS 舊版 Safari 的 vh 問題補償：真實可視高度寫進 CSS 變數 */
@@ -925,6 +1243,27 @@ details.wfixed[open]>summary:before{content:"▾ "}
     document.documentElement.style.setProperty('--vh',(window.innerHeight*0.01)+'px');
   }
   setVh();window.addEventListener('resize',setVh);window.addEventListener('orientationchange',function(){setTimeout(setVh,120);});
+})();
+</script>
+<script>
+/* ===== 修改位置：主題（Light / Dark）初始化 =====
+   必須在 <style> 之後、<body> 渲染之前執行，否則首屏會先閃一下白色。
+   儲存鍵：f6note.theme（'light' | 'dark'）
+   預設邏輯：若使用者手動選過 → 用該值；否則跟隨系統偏好；
+            系統偏好淺色時用 light，其餘（偏好深色或無偏好）用 dark。 */
+(function(){
+  var THEME_KEY='f6note.theme';
+  var m='';
+  try{ m=localStorage.getItem(THEME_KEY)||''; }catch(e){}
+  if(m!=='light' && m!=='dark'){
+    try{
+      if(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) m='light';
+      else m='dark';
+    }catch(e){ m='dark'; }
+  }
+  document.documentElement.setAttribute('data-theme', m);
+  var mt=document.querySelector('meta[name="theme-color"]');
+  if(mt) mt.setAttribute('content', m==='dark' ? '#12141a' : '#0f766e');
 })();
 </script>
 <script>
@@ -1017,6 +1356,10 @@ applyAnim();
       <button data-r="wrong" onclick="go('#/wrong')">錯題本</button>
       <button data-r="extras" onclick="go('#/extras')">額外資訊</button>
     </nav>
+    <!-- ===== 修改位置：新增日夜模式切換開關（齒輪按鈕左側）===== -->
+    <button class="themetoggle" id="themetoggle" onclick="toggleTheme()" title="切換日夜模式" aria-label="切換日夜模式" role="switch" aria-checked="false">
+      <span class="thumb"><span class="ic-sun">☀️</span><span class="ic-moon">🌙</span></span>
+    </button>
     <button class="gearbtn" id="gearbtn" data-r="settings" onclick="go('#/settings')" title="設定" aria-label="設定">⚙️</button>
   </div>
   <div class="subbar" id="subbar"></div>
@@ -1042,6 +1385,24 @@ const SITE_NAME = SITE.name || '神智核';
 const SITE_VER = SITE.version || 'V0.1.0';
 const SITE_TITLE = SITE_NAME + ' ' + SITE_VER;
 const app = document.getElementById('app');
+
+/* ===== 修改位置：主題切換（Light / Dark）=====
+   toggleTheme()：讀當前 data-theme 並切到相反值
+   setTheme(t)：套用並寫入 localStorage，同時更新 <meta theme-color>
+   注意：初始值已在 <head> 內的 IIFE 設定，這裡只負責「切換」與「寫入」。 */
+function setTheme(t){
+  if(t!=='light' && t!=='dark') t='dark';
+  document.documentElement.setAttribute('data-theme', t);
+  try{ localStorage.setItem('f6note.theme', t); }catch(e){}
+  var mt=document.querySelector('meta[name="theme-color"]');
+  if(mt) mt.setAttribute('content', t==='dark' ? '#12141a' : '#0f766e');
+  var sw=document.getElementById('themetoggle');
+  if(sw) sw.setAttribute('aria-checked', t==='dark' ? 'true' : 'false');
+}
+function toggleTheme(){
+  var cur=document.documentElement.getAttribute('data-theme')==='dark' ? 'dark' : 'light';
+  setTheme(cur==='dark' ? 'light' : 'dark');
+}
 
 /* ============ 科目層 ============
    每個科目（化學／物理／生物）是一份完全獨立的資料：自己的課題、串連、測驗題，
@@ -1822,6 +2183,18 @@ function viewSettings(){
         <span class="tmeta" style="align-self:center">按下去看目前設定下的按壓與高亮回饋</span>
       </div>
     </div>
+    <!-- ===== 修改位置：設定頁也提供「外觀」切換（與 header 開關同步）===== -->
+    <div class="databox">
+      <div style="font-weight:700;margin-bottom:4px">🌗 外觀模式</div>
+      <div class="tmeta" style="margin-bottom:8px">
+        點右上角太陽／月亮圖示亦可快速切換，選擇會存在這台瀏覽器。
+      </div>
+      <div class="quick" style="margin:0">
+        <button onclick="setTheme('light')">☀️ 白天模式</button>
+        <button onclick="setTheme('dark')">🌙 黑夜模式</button>
+        <button onclick="followSystemTheme()">🖥️ 跟隨系統</button>
+      </div>
+    </div>
     <div class="databox">
       <div style="font-weight:700;margin-bottom:4px">ℹ️ 關於</div>
       <div class="tmeta">
@@ -1839,6 +2212,42 @@ function viewSettings(){
   const n=document.getElementById('bkn'); if(n) n.textContent=siteDataKeys().length;
   syncAnimUI();
 }
+
+/* ===== 修改位置：跟隨系統主題 =====
+   清掉 localStorage 的手動選擇，改依系統偏好即時決定。 */
+function followSystemTheme(){
+  try{ localStorage.removeItem('f6note.theme'); }catch(e){}
+  var m='dark';
+  try{
+    if(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) m='light';
+  }catch(e){}
+  document.documentElement.setAttribute('data-theme', m);
+  var mt=document.querySelector('meta[name="theme-color"]');
+  if(mt) mt.setAttribute('content', m==='dark' ? '#12141a' : '#0f766e');
+  var sw=document.getElementById('themetoggle');
+  if(sw) sw.setAttribute('aria-checked', m==='dark' ? 'true' : 'false');
+}
+/* 若使用者尚未手動選擇，系統切換時即時跟隨 */
+(function(){
+  try{
+    if(!window.matchMedia) return;
+    var mql=window.matchMedia('(prefers-color-scheme: dark)');
+    var handler=function(){
+      var saved='';
+      try{ saved=localStorage.getItem('f6note.theme')||''; }catch(e){}
+      if(saved==='light'||saved==='dark') return;   // 使用者手動選過，不跟隨
+      var m=mql.matches?'dark':'light';
+      document.documentElement.setAttribute('data-theme', m);
+      var mt=document.querySelector('meta[name="theme-color"]');
+      if(mt) mt.setAttribute('content', m==='dark' ? '#12141a' : '#0f766e');
+      var sw=document.getElementById('themetoggle');
+      if(sw) sw.setAttribute('aria-checked', m==='dark' ? 'true' : 'false');
+    };
+    if(mql.addEventListener) mql.addEventListener('change', handler);
+    else if(mql.addListener) mql.addListener(handler);
+  }catch(e){}
+})();
+
 /* ---- 動畫設定 UI 同步與互動 ---- */
 function syncAnimUI(){
   const mode=animMode();
@@ -2111,7 +2520,7 @@ function virtRender(){
   // 已存在的索引
   const existing = new Set();
   L.querySelectorAll('.vitem').forEach(el => existing.add(+el.dataset.idx));
-  // 插入需要的新卡片，保持順序
+  // 插入需要的新卡片，保持顺序
   for(let i=first; i<=last; i++){
     if(existing.has(i)) continue;
     const card = document.createElement('div');
@@ -2722,6 +3131,12 @@ function drawGraph(nodes,edges,isAll){
   const W=1000,H=620;
   const cx=W/2,cy=H/2;
 
+  /* ===== 修改位置：圖表文字顏色改為讀取 CSS 變數，讓深色模式下自動提亮 ===== */
+  const _cs=getComputedStyle(document.documentElement);
+  const CV_INK=(_cs.getPropertyValue('--ink')||'').trim()||'#3a3833';
+  const CV_MUTED=(_cs.getPropertyValue('--muted')||'').trim()||'#7a756a';
+  const CV_BG=(_cs.getPropertyValue('--bg')||'').trim()||'#faf7f2';
+
   // 確定性佈局：11 個課題用均勻環形（固定位置，無物理模擬），
   // 聚焦模式把本課題章節排成內環、牽連到的鄰課題排成外環。
   // 不用力導向——節點少、標籤長，物理模擬只會把圖疊成一團。
@@ -2767,8 +3182,8 @@ function drawGraph(nodes,edges,isAll){
       const label=n.label.length>12?n.label.slice(0,11)+'…':n.label;
       s+=`<g class="gn" data-i="${i}" style="cursor:pointer">
         <circle cx="${n.x.toFixed(1)}" cy="${n.y.toFixed(1)}" r="${n.r.toFixed(1)}" fill="${colorOf(n.topic.id)}" opacity=".93" stroke="#fff" stroke-width="2.5"/>
-        <text x="${n.x.toFixed(1)}" y="${(n.y+n.r+15).toFixed(1)}" text-anchor="middle" font-size="${isAll?14:11.5}" font-weight="${isAll?700:400}" fill="#3a3833" stroke="#faf7f2" stroke-width="3.5" paint-order="stroke">${esc(label)}</text>
-        <text x="${n.x.toFixed(1)}" y="${(n.y-n.r-8).toFixed(1)}" text-anchor="middle" font-size="10.5" fill="#7a756a" stroke="#faf7f2" stroke-width="3" paint-order="stroke">${esc(n.sub)}</text></g>`;
+        <text x="${n.x.toFixed(1)}" y="${(n.y+n.r+15).toFixed(1)}" text-anchor="middle" font-size="${isAll?14:11.5}" font-weight="${isAll?700:400}" fill="${CV_INK}" stroke="${CV_BG}" stroke-width="3.5" paint-order="stroke">${esc(label)}</text>
+        <text x="${n.x.toFixed(1)}" y="${(n.y-n.r-8).toFixed(1)}" text-anchor="middle" font-size="10.5" fill="${CV_MUTED}" stroke="${CV_BG}" stroke-width="3" paint-order="stroke">${esc(n.sub)}</text></g>`;
     });
     svg.innerHTML=s;
     svg.querySelectorAll('.gn').forEach(gEl=>{
