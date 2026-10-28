@@ -3832,15 +3832,19 @@ function ppCard(q){
     : (opts.length
       ? `<div class="ppopts">${opts.map(o=>`<button class="ppo" data-k="${esc(o.k)}" onclick="ppPick(this,'${esc(q.id)}','${esc(o.k)}')"><b>${esc(o.k)}</b><span>${esc(o.v)}</span></button>`).join('')}</div>`
       : `<div class="ppfig">此題選項為圖片，請對照原卷作答。</div>`);
+  const isSample=(q.year==='PP'||q.year==='SP');
   const ex=q.explanation
     ? (q.explSource==='notes'?`<div class="ppsrc">依筆記整理</div>`:'')+mdLite(q.explanation)
-    : '<span class="ppnoex">原稿未附詳解，可對照筆記相應章節複習。</span>';
+    : (isSample
+        ? '<span class="ppnoex">樣本試卷（PP／SP）的題解整理中，先對照筆記的相應課題溫習。</span>'
+        : '<span class="ppnoex">原稿未附詳解，可對照筆記相應章節複習。</span>');
   const img=q.img?`<div class="ppfigbox"><img class="pplazy" data-src="${esc(q.img)}" alt="${q.year} 第 ${q.qnum} 題圖" decoding="async"></div>`:'';
+  const yrLab=q.year==='PP'?'PP 樣本卷':(q.year==='SP'?'SP 練習卷':q.year);
   return `<div class="ppq" data-ans="${esc(q.answer||'')}" data-id="${esc(q.id)}">
-    <div class="ppqh"><span class="ppy">${q.year}</span><span class="ppqn">Q${q.qnum}</span>
+    <div class="ppqh"><span class="ppy">${yrLab}</span><span class="ppqn">Q${q.qnum}</span>
       <span class="pptag">${esc(ppTopicName(q.topic))}</span>
       ${q.ocr?'<span class="ppocr" title="此题由 OCR 还原，文字可能有错字">OCR</span>':''}
-      <span class="pppct ${ppCls(q.pct)}">答對率 ${q.pct}%</span></div>
+      ${q.pct>0?`<span class="pppct ${ppCls(q.pct)}">答對率 ${q.pct}%</span>`:'<span class="pppct">樣本卷 · 無官方得分率</span>'}</div>
     ${img}
     ${qImg}
     <div class="md ppstem">${mdLite(q.q||'')}</div>
@@ -3852,8 +3856,8 @@ function ppCard(q){
     <div class="ppans">
       <div class="ppans-in">
       <div class="ppansrow"><span class="lab">正確答案</span><b class="ppkey">${q.answer||'—'}</b>
-        <span class="lab">答對率</span><b>${q.pct}%</b>
-        <span class="lab">難度</span><b>${ppLvl(q.pct)}</b></div>
+        <span class="lab">答對率</span><b>${q.pct>0?q.pct+'%':'—'}</b>
+        <span class="lab">難度</span><b>${q.pct>0?ppLvl(q.pct):'—'}</b></div>
       <div class="ppexpl"><span class="lab">題解</span><div class="md">${ex}</div></div>
       </div>
     </div>
