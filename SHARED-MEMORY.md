@@ -42,7 +42,7 @@
 
 | 项目 | 值 |
 |---|---|
-| 站点版本 | V0.18.17 |
+| 站点版本 | V0.18.18 |
 | 题库 | 374 / 396 题（2012–2022，缺 22 道多為選項為圖者） |
 | 课题分类 | 27 个（bio02–bio29，bio99 已归零） |
 | 题解 | **195 / 374**（缺 179） |
@@ -135,6 +135,38 @@ blocks.forEach(b=>new vm.Script(b[1]));   // 抛错即语法错
 python scripts/guard_data.py --allow pp_2019_q34:options
 git commit -m "fix：pp_2019_q34 选项吞并后 11 题（48→4），已核对原卷"
 ```
+
+### ⚠️ 4.9 不要照抄外部 AI 给的「补丁方案」
+
+2026-10-28 收到一份 9 项需求的修改文档（含可直接替换的函数代码）。逐条核对真实代码后，
+**5 项是错的或有害的**：
+
+| 文档主张 | 实际情况 |
+|---|---|
+| 加 CSP `unsafe-inline 'unsafe-eval'` | 等于没有防护；还可能挡掉 blob: 搜索 worker 与离线缓存 |
+| 删除知识图谱入口 | `viewGraph()` 功能正常，纯属误删 |
+| 「停用虚拟滚动」整段替换 `viewTopic` | 前提成立（确有 virt 模式），但整段替换会丢 anchor 定位、`observePointReads()` 等 |
+| `viewPastPaper` 换成 `allMC.slice(0,25)` | **374 题砍成 25 题**，并丢失话题筛选、错题本联动、图片懒加载 |
+| 内置示范 LQ 题目 | 所谓「2024 Q7 / 2023 Q4」是虚构内容，学生会被误导 |
+
+**判据**：外部方案里凡是「整段替换某函数」的，先 `git show` 看原函数有多少行、被谁调用，
+再决定要不要动。真正的改进往往是**一行**（如 `VIRT_THRESHOLD = 50 → 100000`）。
+
+### ⚠️ 4.10 部署前必须 `git fetch`，否则会覆盖别人的成果
+
+2026-10-28 实际发生：我在改 `template.html` 的同时，DSH 往 `source` 推了 419 行深色模式代码。
+我的提交推送被拒（non-fast-forward），但**在此之前我已经 `push -f` 部署了 `main`**，
+于是线上短暂丢失了 DSH 的深色模式，直到我 rebase 后重新部署才补回。
+
+**部署前固定动作**：
+
+```bash
+git fetch origin && git log --oneline -1 origin/source   # 有没有别人的新提交？
+git status -sb                                            # 本地是否落后
+```
+
+如果落后：`git rebase origin/source` → 解冲突 → 重新 `build.py` + `verify_build.py` → 再部署。
+**不要**用 `push -f` 去覆盖 `source`（那是源码分支，覆盖会直接毁掉别人的工作）。
 
 ---
 
@@ -377,3 +409,11 @@ python _expl_coverage.py --check      # 校驗：過短、缺 explSource、整�
 3. 構建：`cd site && python build.py`（**不要用 build.mjs**），再按 §4.7 逐塊檢查腳本語法
 4. 部署：按 §6 六步（**別忘了 `cp -rn .../img/.`**）
 5. 回寫：更新本文件 **§2 現狀**（題解數字）與 **§5 變更日誌**
+
+### [2026-10-28 20:15] WorkBuddy · V0.18.18 体验优化（外部补丁方案核实后择優）
+- 收到一份外部 AI 写的 9 项需求补丁文档，逐条对照真实代码核实：**采用 4 项、驳回 5 项**（明细见 §4.9 与 version.json 的 note）。
+- 采用：① iOS 风格启动加载屏（品牌名＋脉动图标＋进度条，双 rAF 淡出，4 秒保险丝防白屏卡死）；② 停用虚拟滚动（`VIRT_THRESHOLD` 50→100000，修好 Ctrl+F 搜不到未渲染卡片）；③ 课题卡片描述 44px 固定高→2 行 clamp；④ `--ease-ios` 弹性缓动变量。
+- 驳回：CSP（unsafe-inline/unsafe-eval 无防护且挡 blob worker）、删知识图谱入口、整段替换 `viewTopic`/`viewPastPaper`（会把 374 题砍成 25 题）、虚构的 LQ 示范题目、「总结重点」按钮（实为跳第一章）。
+- **并发事故（已记录为 §4.10）**：改 `template.html` 期间 DSH 推了 419 行深色模式代码（`cf5b5ec`）。我先部署了不含它改动的版本，推送被拒后 rebase 解决 `:root` 冲突（双方变量都保留），重新部署补回。线上现同时含深色模式与本轮优化。
+- 验证：`build.py` 3,900,743 bytes；`verify_build.py` 11/11；无头 Chrome 实测 8/8（深浅两主题加载屏正常、chem/2a 88 点直出、描述 h=47<sh=71、真题页 28 话题、零异常）。线上 HTTP 200，`SW_VERSION=V0.18.18`，`VIRT_THRESHOLD=100000`，`data-theme` 209 处。
+- 推送：`9903ec9` → origin/source；部署 `0db3fd0` → origin/main。
