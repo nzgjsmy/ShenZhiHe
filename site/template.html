@@ -273,6 +273,40 @@ pre.mdcodewrap[data-lang]::before{content:attr(data-lang);position:absolute;top:
 .glegend{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px;border-top:1px solid var(--line);font-size:13px}
 .glegend span{display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--text-soft)}
 .glegend i{width:11px;height:11px;border-radius:50%;display:inline-block}
+
+/* ---------- 關聯地圖（2026-10-28 重做）---------- */
+.lkcdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:0}
+.chip b{font-weight:400;opacity:.6;margin-left:5px}
+.lk-h{margin:22px 0 6px;font-size:17px}
+.lk-h span{font-size:13px;color:var(--muted);font-weight:400;margin-left:6px}
+.lkrank{margin:0}
+.lkpair{border:1px solid var(--line);border-radius:12px;background:var(--paper);margin-bottom:10px;overflow:hidden}
+.lkpair>summary{cursor:pointer;padding:11px 14px;display:flex;align-items:center;gap:8px;font-size:15px;list-style:none;flex-wrap:wrap}
+.lkpair>summary::-webkit-details-marker{display:none}
+.lkpair>summary::before{content:'\25B8';color:var(--muted);font-size:12px;transition:transform var(--dur-base) var(--ease-ios)}
+.lkpair[open]>summary::before{transform:rotate(90deg)}
+.lkdot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+.lkn{margin-left:auto;font-size:12.5px;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:1px 9px;font-weight:700;white-space:nowrap}
+.lklist{margin:0;padding:2px 16px 12px 34px;font-size:13.5px;line-height:1.95;color:var(--text-soft)}
+.lklist li{margin:0}
+.lk-go{border:none;background:none;padding:0;font:inherit;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:2px;text-align:left}
+.lk-go:hover{color:var(--ink)}
+.lk-arrow{color:var(--muted);margin:0 5px}
+.lk-why{color:var(--muted);font-size:12.5px;margin-left:6px}
+.lkstar{background:var(--paper-soft);border:1px solid var(--line);border-radius:var(--radius);padding:4px;margin:14px 0 12px}
+.lkstar svg{display:block;width:100%;height:auto}
+.lkstar text{fill:var(--ink);font-size:12px;font-family:inherit}
+.lkstar text.sub{fill:var(--muted);font-size:11px}
+.lkstar text.lkctr{fill:var(--ink);font-size:14px;font-weight:700}
+.lkstar line{stroke:var(--accent);opacity:.32}
+.lkstar circle.lkpeer{cursor:pointer;transition:opacity var(--dur-base)}
+.lkstar circle.lkpeer:hover{opacity:.75}
+@media (max-width:640px){
+  .lkstar text{font-size:10.5px}
+  .lkstar text.sub{font-size:9.5px}
+  .lkstar text.lkctr{font-size:12px}
+  .lklist{padding-left:22px}
+}
 /* ---------- quiz ---------- */
 .qpanel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;max-width:780px;margin:0 auto}
 .qpanel h2{margin-top:0}
@@ -1295,7 +1329,7 @@ html[data-theme="dark"] .emptybox code{background:var(--code-bg);color:var(--ink
 html[data-theme="dark"] .subcard .soon{background:var(--paper-alt);color:var(--muted)}
 html[data-theme="dark"] .tcard .meta{color:var(--muted)}
 html[data-theme="dark"] .stat b{color:var(--accent)}
-/* graph SVG 內建文字色由 JS 讀 CSS 變數（下方 drawGraph 修改）*/
+/* 關聯地圖的 SVG 文字色直接用 CSS 變數（.lkstar text），不需 JS 讀色 */
 </style>
 <script>
 /* iOS 舊版 Safari 的 vh 問題補償：真實可視高度寫進 CSS 變數 */
@@ -1453,7 +1487,7 @@ setTimeout(function(){
     <nav id="nav">
       <button data-r="subjects" onclick="go('#/subjects')">科目</button>
       <button data-r="home" onclick="go('#/home')">首頁</button>
-      <button data-r="graph" onclick="go('#/graph')">知識圖譜</button>
+      <button data-r="graph" onclick="go('#/graph')">關聯地圖</button>
       <button data-r="quiz" onclick="go('#/quiz')">測驗</button>
       <button data-r="review" onclick="go('#/review')">複習<span class="navdot" id="rbadge"></span></button>
       <button data-r="wrong" onclick="go('#/wrong')">錯題本</button>
@@ -2545,7 +2579,7 @@ function viewHome(){
     <div class="quick">
       <button onclick="go('#/review')">📅 今日複習${due?'（'+due+'）':''}</button>
       <button onclick="go('#/quiz')">🚀 開始測驗</button>
-      <button onclick="go('#/graph')">🕸️ 看知識圖譜</button>
+      <button onclick="go('#/graph')">🕸️ 看關聯地圖</button>
       <button onclick="go('#/wrong')">📕 重練錯題（${w}）</button>
       ${extrasOf().length?'<button onclick="go(\'#/extras\')">⚛️ 額外資訊</button>':''}
       ${SUB&&SUB.id==='bio'?'<button onclick="go(\'#/pastpaper\')">📝 DSE 真題</button>':''}
@@ -3124,245 +3158,180 @@ function jumpPoint(pid){
   },wait);
 }
 
-/* ---------------- graph ---------------- */
-let gSim=null;
-let gFocus='';      // 目前聚焦的課題（空字串＝全部）
+/* ---------------- 關聯地圖 ---------------- */
+/* 2026-10-28 重做。舊版是力導向的全科圖：化學 12 節點 24 條邊、物理 20 節點 47 條邊，
+   線全部穿過中心、標籤互相壓字，使用者反饋「太亂、沒什麼用」。
+   新版三條原則：
+     1. 全科不畫圖（節點一多必然亂）→ 改成「關聯排行」清單
+     2. 只有單一課題才畫圖，用星形佈局（中心＋環），邊只從中心往外，永不交叉
+     3. 每條關聯都寫出「哪個知識點 → 哪個知識點 ＋ 為什麼」，可直接點擊跳轉
+   為什麼敢砍掉全科圖：筆記頁每個知識點下方本來就有「這個知識點還與……相連」，
+   圖的價值只剩「哪些課題該一起複習」，排行 + 星形圖就夠了。 */
+let gFocus = '';
+let gAllLimit = 20;   // 全部模式默认只列前 20 对，其余点按钮展开
+
+/* 把 LINKS 依「課題對」聚合 → [{a,b,n,items[]}]，同課題內的不算（筆記頁已有） */
+function topicPairs(){
+  const m = {};
+  LINKS.forEach(l=>{
+    const A = PMAP[l.from], B = PMAP[l.to];
+    if(!A || !B) return;
+    const ka = A.t.id, kb = B.t.id;
+    if(ka === kb) return;
+    const k = [ka,kb].sort().join('|');
+    if(!m[k]) m[k] = {a:ka, b:kb, n:0, items:[]};
+    m[k].n++;
+    m[k].items.push(l);
+  });
+  return Object.values(m);
+}
+
+/* 一个知识点 → 可点击的按钮（跳到该知识点的笔记位置） */
+function lkPointBtn(pid){
+  const o = PMAP[pid];
+  if(!o) return esc(String(pid));
+  return '<button class="lk-go" onclick="go(\'#/'+SUB.id+'/t/'+o.t.id+'@'+o.p.id+'\')">'+esc(o.p.title)+'</button>';
+}
+
+function lkItemHTML(l){
+  return '<li>'+lkPointBtn(l.from)
+    + '<span class="lk-arrow">→</span>' + lkPointBtn(l.to)
+    + (l.label ? '<span class="lk-why">「'+esc(l.label)+'」</span>' : '')
+    + '</li>';
+}
+
+/* 一對課題：可展開的 <details>，展開後列出每一條串連 */
+function lkPairHTML(p, open){
+  const A = TMAP[p.a], B = TMAP[p.b];
+  if(!A || !B) return '';
+  return '<details class="lkpair"'+(open?' open':'')+'>'
+    + '<summary>'
+    +   '<span class="lkdot" style="background:'+colorOf(A.id)+'"></span><b>'+esc(A.title)+'</b>'
+    +   '<span class="lk-arrow">↔</span>'
+    +   '<span class="lkdot" style="background:'+colorOf(B.id)+'"></span><b>'+esc(B.title)+'</b>'
+    +   '<span class="lkn">'+p.n+' 條</span>'
+    + '</summary>'
+    + '<ul class="lklist">'+p.items.map(lkItemHTML).join('')+'</ul>'
+    + '</details>';
+}
+
+/* 星形圖：中心＝本課題，外圈＝有關聯的課題。
+   因為邊全部從中心放射出去，幾何上不可能交叉，這正是它比力導向佈局好的地方。 */
+function lkStarSVG(tid, mine){
+  const W = 720, H = 480, cx = W/2, cy = H/2;
+  const shown = mine.slice(0, 8);
+  const n = shown.length;
+  const rx = n <= 4 ? 175 : 265, ry = n <= 4 ? 120 : 165;
+  const T = TMAP[tid];
+  const total = mine.reduce((a,x)=>a+x.n, 0);
+
+  let out = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="課題關聯星形圖">';
+  // 先畫邊，讓節點壓在上面
+  shown.forEach((it,i)=>{
+    const ang = (-90 + i*360/n) * Math.PI/180;
+    it._x = cx + rx*Math.cos(ang);
+    it._y = cy + ry*Math.sin(ang);
+    const w = Math.min(6, 1.2 + it.n*0.7);
+    out += '<line x1="'+cx+'" y1="'+cy+'" x2="'+it._x.toFixed(1)+'" y2="'+it._y.toFixed(1)
+        + '" stroke-width="'+w.toFixed(1)+'"/>';
+  });
+  // 外圈節點 + 標籤
+  shown.forEach(it=>{
+    const P = TMAP[it.peer];
+    const r = 14 + Math.min(11, it.n*1.5);
+    const name = P.title.length > 7 ? P.title.slice(0,6)+'…' : P.title;
+    /* 標籤一律放在圓點外側：下半圈放下面、上半圈放上面。
+       之前上半圈用 ly+14 放「N 條」，結果正好落進圓點裡被蓋住。 */
+    const below = it._y > cy;
+    const ly = below ? it._y + r + 18 : it._y - r - 26;
+    out += '<circle class="lkpeer" cx="'+it._x.toFixed(1)+'" cy="'+it._y.toFixed(1)
+        + '" r="'+r.toFixed(1)+'" fill="'+colorOf(it.peer)+'" onclick="go(\'#/'+SUB.id+'/graph/'+it.peer+'\')">'
+        + '<title>'+esc(P.title)+'：'+it.n+' 條串連（點擊切換到這個課題）</title></circle>';
+    out += '<text x="'+it._x.toFixed(1)+'" y="'+ly.toFixed(1)+'" text-anchor="middle">'+esc(name)+'</text>';
+    out += '<text class="sub" x="'+it._x.toFixed(1)+'" y="'+(ly+14).toFixed(1)+'" text-anchor="middle">'+it.n+' 條</text>';
+  });
+  // 中心節點
+  out += '<circle class="lkcenter" cx="'+cx+'" cy="'+cy+'" r="42" fill="'+colorOf(tid)+'"/>';
+  out += '<text class="lkctr" x="'+cx+'" y="'+(cy+62)+'" text-anchor="middle">'+esc(T.title)+'</text>';
+  out += '<text class="sub" x="'+cx+'" y="'+(cy+80)+'" text-anchor="middle">'+total+' 條對外串連</text>';
+  out += '</svg>';
+  return out;
+}
+
+/* 聚焦模式的主体：星形圖 + 每對課題的明細 */
+function lkFocusBody(tid, pairs){
+  const T = TMAP[tid];
+  const mine = pairs
+    .filter(p=>p.a===tid || p.b===tid)
+    .map(p=>({peer: p.a===tid ? p.b : p.a, n:p.n, items:p.items}))
+    .sort((x,y)=> y.n - x.n || (String(x.peer) < String(y.peer) ? -1 : 1));
+
+  if(!mine.length){
+    return '<div class="empty">這個課題的知識點目前沒有標註跨課題串連。<br>'
+      + '可以到筆記頁看它與本科其他章節的關聯（每個知識點下方都有）。</div>';
+  }
+  const total = mine.reduce((a,x)=>a+x.n, 0);
+  const capped = mine.length > 8;
+  return '<div class="lkstar">'+lkStarSVG(tid, mine)+'</div>'
+    + (capped ? '<div class="tmeta" style="margin:-6px 0 12px">圖中只畫出關聯最多的 8 個課題，'
+        + '完整的 '+mine.length+' 個見下方清單。</div>' : '')
+    + '<div class="tmeta" style="margin:0 0 14px">共 <b>'+total+'</b> 條對外串連，涉及 <b>'+mine.length+'</b> 個課題。'
+    + '點圓點可切換過去；下方每一條都寫明「從哪個知識點到哪個知識點、為什麼有關」，點名稱直接跳到筆記。</div>'
+    + mine.map((x,i)=>lkPairHTML({a:tid, b:x.peer, n:x.n, items:x.items}, i===0)).join('');
+}
+
 function viewGraph(focus){
   navOn('graph');
-  if(needsContent())return;
-  if(focus!==undefined)gFocus=focus;
-  const isAll=!gFocus;
+  if(needsContent()) return;
+  if(focus !== undefined) gFocus = focus || '';
+  if(gFocus && !TMAP[gFocus]) gFocus = '';
 
-  // nodes：全部模式＝課題節點；聚焦模式＝本課題各章 + 有串連的其他課題
-  let nodes=[],idx={};
-  if(isAll){
-    TOPICS.forEach(t=>{
-      idx[t.id]=nodes.length;
-      const np=(t.sections||[]).reduce((a,s)=>a+(s.points||[]).length,0);
-      const nq=(QUIZ[t.id]||[]).length;
-      nodes.push({key:t.id,label:t.title,topic:t,r:16+Math.min(20,np/5),sub:np+' 知識點 · '+(t.sections||[]).length+' 章 · '+nq+' 題',x:0,y:0,vx:0,vy:0});
-    });
-  }else{
-    const T=TMAP[gFocus];
-    // 先收集與本課題有串連的其他課題
-    const peerT={};
-    LINKS.forEach(l=>{
-      const a=PMAP[l.from],b=PMAP[l.to];
-      if(!a||!b)return;
-      if(a.t.id===gFocus&&b.t.id!==gFocus)peerT[b.t.id]=1;
-      if(b.t.id===gFocus&&a.t.id!==gFocus)peerT[a.t.id]=1;
-    });
-    (T.sections||[]).forEach(s=>{
-      idx[s.id]=nodes.length;
-      nodes.push({key:s.id,label:s.title,topic:T,r:9+Math.min(10,(s.points||[]).length),sub:(s.points||[]).length+' 個知識點',x:0,y:0,vx:0,vy:0});
-    });
-    // 牽連到的其他課題各作為一個節點（不是它們所有章節）
-    Object.keys(peerT).forEach(tid=>{
-      if(idx[tid]!==undefined)return;
-      const PT=TMAP[tid];if(!PT)return;
-      idx[tid]=nodes.length;
-      const np=(PT.sections||[]).reduce((a,s)=>a+(s.points||[]).length,0);
-      nodes.push({key:tid,label:PT.title,topic:PT,r:13+Math.min(12,np/12),sub:'其他課題 · '+np+' 知識點',isPeer:true,x:0,y:0,vx:0,vy:0});
-    });
-  }
-  // 邊：全部模式＝課題之間的連結數；聚焦模式＝本課題章節 ↔ 其他課題（連線到該課題節點）
-  const emap={};
-  const keyOf=p=>isAll?p.t.id:p.s.id;
-  LINKS.forEach(l=>{
-    const a=PMAP[l.from],b=PMAP[l.to];
-    if(!a||!b)return;
-    const ka=keyOf(a),kb=keyOf(b);
-    if(ka===kb)return;
-    if(isAll){
-      if(idx[ka]===undefined||idx[kb]===undefined)return;
-    }else{
-      // 聚焦模式：任一端屬於本課題；把對端映射到「課題節點」（若對端同課題則用章節）
-      const key=p=>{
-        if(p.t.id===gFocus)return p.s.id;      // 本課題 → 用章節節點
-        if(idx[p.t.id]!==undefined)return p.t.id; // 其他課題 → 用課題節點
-        return null;                            // 該課題沒被牽連到，忽略
-      };
-      let na=key(a),nb=key(b);
-      if(!na||!nb)return;
-      // 若兩端映射到同一節點（例如都映射到某課題），跳過
-      if(na===nb)return;
-      const key2=na,key3=nb;
-      var ekey=[key2,key3].sort().join('|');
-      if(!emap[ekey])emap[ekey]={a:key2,b:key3,n:0,labels:[]};
-      emap[ekey].n++;
-      if(l.label&&emap[ekey].labels.length<3)emap[ekey].labels.push(l.label);
-      return;
-    }
-    const k=[ka,kb].sort().join('|');
-    if(!emap[k])emap[k]={a:ka,b:kb,n:0,labels:[]};
-    emap[k].n++;
-    if(l.label&&emap[k].labels.length<3)emap[k].labels.push(l.label);
-  });
-  const edges=Object.values(emap).map(e=>({s:idx[e.a],t:idx[e.b],n:e.n,labels:e.labels,ka:e.a,kb:e.b}));
-  // 課題色票：聚焦模式下被牽連到的其他課題
-  const peerSet={};if(!isAll)edges.forEach(e=>{peerSet[e.ka]=1;peerSet[e.kb]=1;});
-  const chips=TOPICS.map(t=>{
-    const n=(t.sections||[]).reduce((a,s)=>a+(s.points||[]).length,0);
-    const deg=edges.filter(e=>(isAll?e.ka===t.id:e.ka===t.id||e.kb===t.id)).length;
-    const on=isAll?true:t.id===gFocus;
-    return `<span class="chip ${on?'on':''}" onclick="viewGraph('${t.id}')" title="${deg} 條關聯"><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${colorOf(t.id)};margin-right:5px;vertical-align:-1px"></i>${esc(t.title)}<b style="opacity:.65;font-weight:400;margin-left:4px">${deg}</b></span>`;
+  const pairs = topicPairs();
+  const degOf = {};
+  pairs.forEach(p=>{ degOf[p.a] = (degOf[p.a]||0) + p.n; degOf[p.b] = (degOf[p.b]||0) + p.n; });
+
+  /* 按對外關聯數從多到少排，讓「最值得一起複習的課題」排在最前面 */
+  const chipOrder = TOPICS.slice().sort((a,b)=>(degOf[b.id]||0)-(degOf[a.id]||0));
+  const chips = chipOrder.map(t=>{
+    const d = degOf[t.id] || 0;
+    const on = t.id === gFocus;
+    return '<button class="chip'+(on?' on':'')+'" onclick="go(\'#/'+SUB.id+'/graph/'+t.id+'\')"'
+      + ' title="'+d+' 條對外串連">'
+      + '<i class="lkcdot" style="background:'+colorOf(t.id)+'"></i>'+esc(t.title)
+      + '<b>'+d+'</b></button>';
   }).join('');
-  // 知识图谱过滤状态（保存原始数据以便切换）
-  GRAPH_THRESHOLD = isAll ? 20 : 30;   // 节点阈值：全部 20 / 聚焦 30
-  GRAPH_MAX_NODES = GRAPH_THRESHOLD;
-  GRAPH_ALL_NODES = nodes;
-  GRAPH_ALL_EDGES = edges;
-  GRAPH_IS_ALL = isAll;
-  // 超过阈值默认开启过滤：只渲染核心节点（度最高者），不渲染全部
-  GRAPH_FILTERED = nodes.length > GRAPH_THRESHOLD;
 
-  app.innerHTML=`
-  <div class="view">
-    <div class="thead"><button class="back" onclick="go('#/home')">← 返回首頁</button>
-      <h2>🕸️ ${isAll?'跨課題知識圖譜':esc(TMAP[gFocus].title)+' 的知識地圖'}</h2>
-      ${isAll?'':'<button class="qbtn" style="margin-left:0" onclick="viewGraph(\'\')">看全部課題</button>'}
-    </div>
-    <div class="tmeta">${isAll
-      ?'每個圓點是一個課題，大小代表知識點數量；線越粗＝兩課題之間的知識串連越多。點圓點展開該課題的章節地圖，滑鼠移上去看關聯原因。'
-      :'每個圓點是這個課題的一章，連到有串連的其他課題與章節。點圓點跳到該章節，滑鼠移上去看串連原因。'}</div>
-    <div class="chips">${chips}</div>
-    ${GRAPH_FILTERED ? `<div class="gthreshold" id="gthreshold">圖譜有 <b>${nodes.length}</b> 個節點，預設只顯示核心 <b>${GRAPH_MAX_NODES}</b> 個（關聯最多者）。
-      <button onclick="toggleGraphFilter()">顯示全部節點</button></div>` : ''}
-    <div class="gwrap"><svg id="graphsvg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet"></svg><div class="gtip" id="gtip"></div>
-      <div class="glegend">${TOPICS.filter(t=>isAll||t.id===gFocus||peerSet[t.id]).map(t=>`<span onclick="go('#/t/${t.id}')"><i style="background:${colorOf(t.id)}"></i>${esc(t.title)}</span>`).join('')}</div>
-    </div>
-  </div>`;
-  const show = GRAPH_FILTERED
-    ? filterCoreNodes(nodes,edges,GRAPH_MAX_NODES, isAll?null:nodes.filter(n=>!n.isPeer).map(n=>n.key))
-    : {nodes:nodes,edges:edges};
-  drawGraph(show.nodes,show.edges,isAll);
-}
-/* 图谱过滤：全局状态与工具（drawGraph / toggleGraphFilter 共用） */
-let GRAPH_THRESHOLD=0, GRAPH_MAX_NODES=0, GRAPH_FILTERED=false,
-    GRAPH_ALL_NODES=null, GRAPH_ALL_EDGES=null, GRAPH_IS_ALL=true;
-function computeNodeDegrees(nodes,edges){
-  const deg=new Array(nodes.length).fill(0);
-  edges.forEach(e=>{deg[e.s]++;deg[e.t]++;});
-  return deg;
-}
-/* 只保留度（关联数）最高的前 N 个节点，并重映射边的索引；
-   mustKeep（可选）＝必須保留的節點 key（聚焦模式下保留本課題自己的章節，
-   避免過濾把「這張圖的主角」濾掉） */
-function filterCoreNodes(nodes,edges,maxNodes,mustKeep){
-  if(nodes.length<=maxNodes) return {nodes:nodes,edges:edges};
-  const deg=computeNodeDegrees(nodes,edges);
-  const order=nodes.map((n,i)=>({i,deg:deg[i]})).sort((a,b)=>b.deg-a.deg);
-  const keep=new Set();
-  if(mustKeep&&mustKeep.length){
-    const idxByKey={};
-    nodes.forEach((n,i)=>{ if(n.key!==undefined) idxByKey[n.key]=i; });
-    mustKeep.forEach(k=>{ const i=idxByKey[k]; if(i!==undefined&&keep.size<maxNodes) keep.add(i); });
-  }
-  order.forEach(x=>{ if(keep.size<maxNodes) keep.add(x.i); });
-  const idxMap={};
-  const newNodes=[];
-  nodes.forEach((n,i)=>{ if(keep.has(i)){ idxMap[i]=newNodes.length; newNodes.push(n); } });
-  const newEdges=edges.filter(e=>keep.has(e.s)&&keep.has(e.t)).map(e=>({
-    s:idxMap[e.s],t:idxMap[e.t],n:e.n,labels:e.labels,ka:e.ka,kb:e.kb
-  }));
-  return {nodes:newNodes,edges:newEdges};
-}
-function drawGraph(nodes,edges,isAll){
-  const svg=document.getElementById('graphsvg');
-  const W=1000,H=620;
-  const cx=W/2,cy=H/2;
-
-  /* ===== 修改位置：圖表文字顏色改為讀取 CSS 變數，讓深色模式下自動提亮 ===== */
-  const _cs=getComputedStyle(document.documentElement);
-  const CV_INK=(_cs.getPropertyValue('--ink')||'').trim()||'#3a3833';
-  const CV_MUTED=(_cs.getPropertyValue('--muted')||'').trim()||'#7a756a';
-  const CV_BG=(_cs.getPropertyValue('--bg')||'').trim()||'#faf7f2';
-
-  // 確定性佈局：11 個課題用均勻環形（固定位置，無物理模擬），
-  // 聚焦模式把本課題章節排成內環、牽連到的鄰課題排成外環。
-  // 不用力導向——節點少、標籤長，物理模擬只會把圖疊成一團。
-  if(isAll){
-    const N=nodes.length;
-    nodes.forEach((n,i)=>{
-      const a=(i/N)*Math.PI*2-Math.PI/2;
-      const rr=242+n.r*1.4;
-      n.x=cx+Math.cos(a)*rr;
-      n.y=cy+Math.sin(a)*rr*0.86;
-    });
+  let body;
+  if(gFocus){
+    body = lkFocusBody(gFocus, pairs);
+  }else if(!pairs.length){
+    body = '<div class="empty">這個科目目前沒有標註跨課題的知識串連。<br>'
+      + '（筆記頁每個知識點下方仍會顯示同課題內的相關知識點。）</div>';
   }else{
-    const own=nodes.filter(x=>x.topic.id===gFocus);
-    const peers=nodes.filter(x=>x.topic.id!==gFocus);
-    // 內環：本課題各章（依章節數自動決定環數，多於 12 章排雙環避免標籤重疊）
-    const n1=own.length;
-    const rings=Math.ceil(n1/12);
-    own.forEach((n,i)=>{
-      const ring=Math.floor(i/12);
-      const per=Math.min(12,n1-ring*12);
-      const k=i-ring*12;
-      const a=(k/Math.max(1,per))*Math.PI*2-Math.PI/2+ring*(Math.PI/per);
-      const rr=112+ring*74+n.r*0.5;
-      n.x=cx+Math.cos(a)*rr*1.18;
-      n.y=cy+Math.sin(a)*rr;
-    });
-    // 外環：牽連到的其他課題
-    const n2=peers.length;
-    peers.forEach((n,i)=>{
-      const a=(i/Math.max(1,n2))*Math.PI*2-Math.PI/2;
-      n.x=cx+Math.cos(a)*352;
-      n.y=cy+Math.sin(a)*272;
-    });
+    const sorted = pairs.slice().sort((a,b)=> b.n - a.n || (String(a.a) < String(b.a) ? -1 : 1));
+    const shown = sorted.slice(0, gAllLimit);
+    body = '<h3 class="lk-h">關聯最緊密的課題對 <span>共 '+pairs.length+' 對</span></h3>'
+      + '<div class="tmeta" style="margin:0 0 12px">數字＝兩個課題之間人工標註的知識串連條數。'
+      + '點一列展開，看每一條串連是從哪個知識點到哪個知識點、為什麼有關。</div>'
+      + '<div class="lkrank">'+shown.map(p=>lkPairHTML(p, false)).join('')+'</div>'
+      + (sorted.length > shown.length
+          ? '<div style="text-align:center;margin:14px 0"><button class="ppmore" onclick="gAllLimit=99999;viewGraph()">'
+            + '顯示其餘 '+(sorted.length-shown.length)+' 對 ▾</button></div>'
+          : '');
   }
-  const tip=document.getElementById('gtip');
-  function render(){
-    let s='';
-    edges.forEach(e=>{
-      const a=nodes[e.s],b=nodes[e.t];
-      s+=`<line x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}" stroke="#c9c2b3" stroke-width="${Math.min(5,1+e.n*0.5).toFixed(1)}" opacity=".72"/>`;
-    });
-    nodes.forEach((n,i)=>{
-      const label=n.label.length>12?n.label.slice(0,11)+'…':n.label;
-      s+=`<g class="gn" data-i="${i}" style="cursor:pointer">
-        <circle cx="${n.x.toFixed(1)}" cy="${n.y.toFixed(1)}" r="${n.r.toFixed(1)}" fill="${colorOf(n.topic.id)}" opacity=".93" stroke="#fff" stroke-width="2.5"/>
-        <text x="${n.x.toFixed(1)}" y="${(n.y+n.r+15).toFixed(1)}" text-anchor="middle" font-size="${isAll?14:11.5}" font-weight="${isAll?700:400}" fill="${CV_INK}" stroke="${CV_BG}" stroke-width="3.5" paint-order="stroke">${esc(label)}</text>
-        <text x="${n.x.toFixed(1)}" y="${(n.y-n.r-8).toFixed(1)}" text-anchor="middle" font-size="10.5" fill="${CV_MUTED}" stroke="${CV_BG}" stroke-width="3" paint-order="stroke">${esc(n.sub)}</text></g>`;
-    });
-    svg.innerHTML=s;
-    svg.querySelectorAll('.gn').forEach(gEl=>{
-      const ni=+gEl.dataset.i,n=nodes[ni];
-      gEl.addEventListener('mousemove',ev=>{
-        const rel=edges.filter(e=>e.s===ni||e.t===ni);
-        const other=[...new Set(rel.map(e=>nodes[e.s]===n?nodes[e.t]:nodes[e.s]).map(o=>o.label))];
-        tip.innerHTML='<b>'+esc(n.topic.title)+' · '+esc(n.label)+'</b><br>'+esc(n.sub)+
-          '<br>關聯：'+(other.map(esc).join('<br>')||'（暫無串連）');
-        const box=svg.getBoundingClientRect();
-        tip.style.display='block';
-        tip.style.left=Math.max(6,Math.min(box.width-336,ev.clientX-box.left+14))+'px';
-        tip.style.top=Math.max(6,ev.clientY-box.top+14)+'px';
-      });
-      gEl.addEventListener('mouseleave',()=>tip.style.display='none');
-      gEl.addEventListener('click',()=>{
-        if(isAll){viewGraph(n.key);return;}
-        if(n.isPeer){viewGraph(n.key);return;}   // 點其他課題＝切換聚焦
-        go('#/t/'+n.topic.id);
-        setTimeout(()=>jumpSec(n.key),160);
-      });
-    });
-  }
-  render();
-  // 佈局已靜態收斂，不再動畫（避免每幀把節點重新拉回）
-  if(gSim)cancelAnimationFrame(gSim);
-  gSim=null;
-}
-function toggleGraphFilter(){
-  GRAPH_FILTERED = !GRAPH_FILTERED;
-  const btn = document.querySelector('#gthreshold button');
-  // 目前在过滤态 → 按钮提供「显示全部」；已显示全部 → 按钮提供「回到核心」
-  if(btn) btn.textContent = GRAPH_FILTERED ? '顯示全部節點' : '只顯示核心節點';
-  const show = GRAPH_FILTERED
-    ? filterCoreNodes(GRAPH_ALL_NODES||[], GRAPH_ALL_EDGES||[], GRAPH_MAX_NODES,
-                      GRAPH_IS_ALL?null:(GRAPH_ALL_NODES||[]).filter(n=>!n.isPeer).map(n=>n.key))
-    : {nodes:GRAPH_ALL_NODES||[], edges:GRAPH_ALL_EDGES||[]};
-  drawGraph(show.nodes, show.edges, GRAPH_IS_ALL);
+
+  app.innerHTML = '<div class="view">'
+    + '<div class="thead">'
+    +   '<button class="back" onclick="go(\'#/home\')">← 返回首頁</button>'
+    +   '<h2>🕸️ '+(gFocus ? esc(TMAP[gFocus].title)+' 的關聯' : esc(SUB.title)+' 關聯地圖')+'</h2>'
+    +   (gFocus ? '<button class="qbtn" style="margin-left:0" onclick="go(\'#/'+SUB.id+'/graph\')">看全部課題</button>' : '')
+    + '</div>'
+    + '<div class="tmeta">'+(gFocus
+        ? '中心是這個課題，外圈是與它有知識串連的其他課題；線越粗＝串連越多。'
+        : '先選一個課題看它的星形關聯圖，或直接看下面的關聯排行。')+'</div>'
+    + '<div class="chips">'+chips+'</div>'
+    + body
+    + '</div>';
 }
 
 /* ---------------- quiz ---------------- */
@@ -4374,6 +4343,7 @@ function route(){
     // 單元頁：#/<科目>/unit/<單元id>
     viewUnit(decodeURIComponent(rest.slice(6)));
   }
+  else if(rest.indexOf('/graph/')===0){ viewGraph(decodeURIComponent(rest.slice(7))); }
   else if(rest==='/graph')viewGraph();
   else if(rest==='/pastpaper')viewPastPaper();
   else if(rest==='/extras')viewExtras();
