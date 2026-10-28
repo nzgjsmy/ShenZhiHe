@@ -42,7 +42,7 @@
 
 | 项目 | 值 |
 |---|---|
-| 站点版本 | V0.18.18 |
+| 站点版本 | V0.18.19 |
 | 题库 | 374 / 396 题（2012–2022，缺 22 道多為選項為圖者） |
 | 课题分类 | 27 个（bio02–bio29，bio99 已归零） |
 | 题解 | **195 / 374**（缺 179） |
@@ -417,3 +417,11 @@ python _expl_coverage.py --check      # 校驗：過短、缺 explSource、整�
 - **并发事故（已记录为 §4.10）**：改 `template.html` 期间 DSH 推了 419 行深色模式代码（`cf5b5ec`）。我先部署了不含它改动的版本，推送被拒后 rebase 解决 `:root` 冲突（双方变量都保留），重新部署补回。线上现同时含深色模式与本轮优化。
 - 验证：`build.py` 3,900,743 bytes；`verify_build.py` 11/11；无头 Chrome 实测 8/8（深浅两主题加载屏正常、chem/2a 88 点直出、描述 h=47<sh=71、真题页 28 话题、零异常）。线上 HTTP 200，`SW_VERSION=V0.18.18`，`VIRT_THRESHOLD=100000`，`data-theme` 209 处。
 - 推送：`9903ec9` → origin/source；部署 `0db3fd0` → origin/main。
+
+### [2026-10-28 20:40] WorkBuddy · V0.18.19 主题开关归位 + 跟随系统可视化
+- **Bug**：DSH 加的 header 主题开关是 `position:absolute;right:58px;width:52px`，而 `.hwrap` 的 `padding-right:60px` 只够放齿轮（38px+right:12px），于是开关向左侵占 nav，压住「額外資訊」。
+- **修法**：移除 header 那颗开关。设置页本来就有「白天／黑夜／跟随系统」三颗按钮，顶部那颗是重复入口。`.themetoggle` 的 CSS 保留并注释恢复条件（`.hwrap padding-right ≥ 118px`）。
+- **补齐跟随系统**：新增 `curThemeMode()`（localStorage 有无手动值 → light/dark/auto）与 `syncThemeBtns()`（按钮高亮 + 状态说明）；`matchMedia` 变化时也调用，说明文字即时更新为「目前跟随系统：黑夜（系统切换时会自动跟着变）」。
+- 新增 `.quick button.on` 选中态样式（深色模式单独配色）。
+- 验证：无头 Chrome 16/16（含 `Emulation.setEmulatedMedia` 模拟系统深浅色双向切换、手动固定后不跟随、点跟随系统清空选择）。
+- 推送 `aee1732` → source；部署 `eabf77d` → main；线上 HTTP 200 / 3,899,070 bytes / `SW_VERSION=V0.18.19`。

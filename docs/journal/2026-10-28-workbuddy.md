@@ -77,3 +77,54 @@ node t_merge.cjs  → 8/8 通过
 HTTP 200 · 3,895,792 bytes（本地 3,900,743，差值是 git 换行符归一化）
 id="boot" ×1 · data-theme ×209 · VIRT_THRESHOLD = 100000 · SW_VERSION = V0.18.18
 ```
+
+---
+
+## V0.18.19：主题开关挡住导航 + 补齐「跟随系统」
+
+### 用户反馈
+
+截图显示 header 右上角的深浅色开关压在 nav 最后一项「額外資訊」上。用户建议放进设置页。
+
+### 根因（是布局算错，不是运气不好）
+
+```css
+.hwrap{ padding:10px 60px 10px 20px; }   /* 右侧只留 60px */
+.gearbtn{ position:absolute; right:12px; width:38px; }   /* 占 50px */
+.themetoggle{ position:absolute; right:58px; width:52px; } /* 从 58px 往左吃掉 52px */
+```
+
+齿轮占 12+38=50px，剩 10px；开关从 58px 开始往左延伸，直接盖在 nav 上。
+**两个 absolute 元素在同一角落，却只有一个被 padding 预留了空间。**
+
+### 改法
+
+直接删掉顶部那颗。理由：设置页本来就有「白天／黑夜／跟随系统」三颗按钮，
+顶部那颗是重复入口，删掉不损失功能。
+
+CSS 没删，改成一段注释说明为什么移除、以及怎么恢复（`.hwrap padding-right ≥ 118px`）。
+删掉 50 行别人的代码风险大于收益，留注释更负责任。
+
+### 「跟随系统」其实早就写了，但看不出来
+
+DSH 实现了 `followSystemTheme()` 和 `matchMedia` 监听，可是：
+- 三颗按钮没有任何选中态，用户不知道当前是哪个模式
+- 系统切换时页面确实变了，但界面没有任何说明
+
+补了：
+- `curThemeMode()`：localStorage 有 light/dark → 手动模式；没有 → auto
+- `syncThemeBtns()`：同步按钮高亮 + 一行说明
+- `matchMedia` 的 handler 里也调用它，系统一变说明文字就跟着变
+
+### 验证手段：CDP 模拟系统配色
+
+`Emulation.setEmulatedMedia({features:[{name:'prefers-color-scheme',value:'dark'}]})`
+可以真的模拟「系统切到深色」，然后检查 `data-theme` 有没有跟着变。
+
+测了完整闭环：跟随（dark↔light 双向）→ 手动固定 → 系统再变不跟随 → 点跟随系统清空选择并立刻套用。
+16 项全过。
+
+### 遗留观察
+
+系统**没有**偏好（`prefers-color-scheme` 两者都不匹配）时，默认取 dark。
+这是 DSH 的原始选择，本次未改。如果觉得默认该是浅色，改 `followSystemTheme()` 里的兜底即可。
