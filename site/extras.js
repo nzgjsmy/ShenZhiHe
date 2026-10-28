@@ -47,7 +47,7 @@ if(x.type==="files"){ viewFiles(x); return; }
   app.innerHTML="<div class=\"view\"><div class=\"thead\"><button class=\"back\" onclick=\"go(\'#/extras\')\">← 額外資訊</button><h2>"+esc(x.emoji||"📎")+" "+esc(x.title||x.id)+"</h2></div>"
     +"<div class=\"tmeta\">"+esc(x.subtitle||"")+"</div>"
     +"<div class=\"note\">這個額外資訊的型別（"+esc(x.type||"未指定")+"）還沒有專屬版面，先在下方看原始內容。</div>"
-    +"<pre style=\"overflow:auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;font-size:13px\">"+esc(JSON.stringify(x,null,1).slice(0,20000))+"</pre></div>";
+    +"<pre style=\"overflow:auto;background:var(--paper-soft);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:14px;font-size:13px\">"+esc(JSON.stringify(x,null,1).slice(0,20000))+"</pre></div>";
 }
 
 /* ---- 公式表對照：要背 × 不用背 ----
@@ -588,9 +588,9 @@ function viewFiles(x){
     html+='<p style="margin:6px 0 8px;font-size:14px;color:var(--text-soft);">'+esc(f.desc||"")+sizeText+'</p>';
     html+='<div style="margin-top:12px;border-top:1px dashed var(--line);padding-top:8px;display:flex;gap:8px;">';
     if(f.type==="html"){
-      html+='<button onclick="viewFile(\''+escJs(f.name)+'\', \''+escJs(x.id)+'\')" style="flex:1;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;font-size:14px;">🔍 在頁中查看</button>';
+      html+='<button onclick="viewFile(\''+escJs(f.name)+'\', \''+escJs(x.id)+'\')" style="flex:1;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--paper-soft);color:var(--ink);cursor:pointer;font-size:14px;">🔍 在頁中查看</button>';
     }
-    html+='<a href="files/'+encodeURIComponent(f.name)+'" download style="flex:1;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--accent,#0f766e);text-decoration:none;text-align:center;font-size:14px;">⬇️ 下載</a>';
+    html+='<a href="files/'+encodeURIComponent(f.name)+'" download style="flex:1;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--paper-soft);color:var(--accent);text-decoration:none;text-align:center;font-size:14px;">⬇️ 下載</a>';
     html+='</div></div>';
   });
   html+='</div></div>';
@@ -610,7 +610,7 @@ function viewFile(fileName, extraId){
     html+='<iframe src="files/'+encodeURIComponent(fileName)+'" style="width:100%;height:70vh;border:none;border-radius:12px;background:#fff;"></iframe>';
   } else {
     html+='<div class="note">此檔案類型（'+ext+'）無法直接在頁中預覽，請下載後查看。</div>';
-    html+='<div style="margin-top:20px;text-align:center;"><a href="files/'+encodeURIComponent(fileName)+'" download style="padding:12px 24px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--accent,#0f766e);text-decoration:none;font-size:15px;">⬇️ 下載 '+esc(f.name)+'</a></div>';
+    html+='<div style="margin-top:20px;text-align:center;"><a href="files/'+encodeURIComponent(fileName)+'" download style="padding:12px 24px;border:1px solid var(--line);border-radius:8px;background:var(--paper-soft);color:var(--accent);text-decoration:none;font-size:15px;">⬇️ 下載 '+esc(f.name)+'</a></div>';
   }
   html+='</div>';
   app.innerHTML=html;

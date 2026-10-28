@@ -11,7 +11,7 @@
 
 資料來源：data/bio/_mc_answers.json（每題的 answer 與 pct；由手工版表格一次性抽出，
           含題庫缺少的 21 道題，所以不要改讀 _pastpaper.json）
-模板：extras/bio/_mc_answers_template.html（骨架 + CSS，含 {{SUB}} {{KPI}} <!--T1..T4--> 佔位）
+模板：data/bio/_mc_answers_template.html（骨架 + CSS，含 {{SUB}} {{KPI}} <!--T1..T4--> 佔位）
 
 樣本卷（PP/SP）官方沒有公布每題答對率，pct 記為 0：
   - 矩陣裡照樣顯示答案，得分率以「—」表示
@@ -23,7 +23,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data", "bio", "_mc_answers.json")
-TPL = os.path.join(ROOT, "extras", "bio", "_mc_answers_template.html")
+TPL = os.path.join(ROOT, "data", "bio", "_mc_answers_template.html")
 OUT_HTML = os.path.join(ROOT, "extras", "bio", "生物DSE_卷一MC_答案與得分率.html")
 OUT_XLSX = os.path.join(ROOT, "extras", "bio", "生物DSE_卷一MC_答案與得分率_2012-2022.xlsx")
 
