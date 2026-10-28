@@ -577,7 +577,7 @@ function viewFiles(x){
   var cards=x.files||[];
   var html='<div class="view"><div class="thead"><button class="back" onclick="go(\'#/extras\')">← 額外資訊</button><h2>'+esc(x.emoji||"📎")+' '+esc(x.title||x.id)+'</h2></div>';
   html+='<div class="tmeta">'+esc(x.subtitle||"")+'</div>';
-  if(x.intro){ html+='<div class="note" style="margin:12px 0;padding:14px;background:#f4f6f8;border-radius:12px;line-height:1.6;white-space:pre-wrap;">'+esc(x.intro)+'</div>'; }
+  if(x.intro){ html+='<div class="note" style="margin:12px 0;padding:14px;border-radius:12px;line-height:1.6;white-space:pre-wrap;">'+esc(x.intro)+'</div>'; }
   html+='<div class="extras-grid">';
   cards.forEach(function(f){
     var icon = f.type==="html"?'🌐':(f.type==="xlsx"?'📊':(f.type==="pdf"?'📄':'📎'));
@@ -585,7 +585,7 @@ function viewFiles(x){
     html+='<div class="extracard" style="cursor:default">';
     html+='<div class="exemoji">'+icon+'</div>';
     html+='<h3 style="margin:8px 0 4px;">'+esc(f.title||f.name)+'</h3>';
-    html+='<p style="margin:6px 0 8px;font-size:14px;color:#57534a;">'+esc(f.desc||"")+sizeText+'</p>';
+    html+='<p style="margin:6px 0 8px;font-size:14px;color:var(--text-soft);">'+esc(f.desc||"")+sizeText+'</p>';
     html+='<div style="margin-top:12px;border-top:1px dashed var(--line);padding-top:8px;display:flex;gap:8px;">';
     if(f.type==="html"){
       html+='<button onclick="viewFile(\''+escJs(f.name)+'\', \''+escJs(x.id)+'\')" style="flex:1;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;font-size:14px;">🔍 在頁中查看</button>';
