@@ -42,13 +42,13 @@
 
 | 项目 | 值 |
 |---|---|
-| 站点版本 | V0.18.30 |
+| 站点版本 | V0.18.31 |
 | 题库 | 374 / 396 题（2012–2022，缺 22 道多為選項為圖者） |
 | 课题分类 | 27 个（bio02–bio29，bio99 已归零） |
 | 题解 | **355 / 374**（缺 19，94.9%） |
 | 配图 | 121 张题目图 + 21 张选项图 + 14 张整题原卷图 |
 | 数据主档 | `f6chem/data/bio/_pastpaper.json`（315 KB） |
-| 线上体积 | index.html 3.69 MB（图片外置） |
+| 线上体积 | index.html 3.87 MB（图片外置） |
 | 协作文档 | `docs/贡献指南.md`（给人看）、`AGENTS.md`（给 AI 看）、`docs/journal/`（各自的日志） |
 | 检查工具 | `scripts/verify_build.py`（构建自检）、`scripts/guard_data.py`（题库守门员）、`scripts/check_quiz.py`（测验题自检） |
 | 部署包 | `default-workspace/神智核-GitHub部署包`（独立 git 仓库，remote `nzgjsmy/ShenZhiHe`） |
@@ -194,6 +194,21 @@ grep -nE "color:#[0-9a-f]{6}" site/template.html | grep -v "^[0-9]*:  --"
 否则深色下会拿到浅色的值。
 
 ---
+
+### ⚠️ 4.12 改「答案與題解」前必看：它已經不是 `hidden` 了
+
+2026-10-28（V0.18.31）把展開機制從 `hidden` 屬性換成 class，因為 `hidden` = `display:none`，
+**無法做過渡**，展開時整頁高度會瞬間突變、視線丟失。
+
+| | 舊（≤V0.18.30） | 新（V0.18.31+） |
+|---|---|---|
+| HTML | `<div class="ppans" hidden>` 直接放兩個 div | `<div class="ppans"><div class="ppans-in">…</div></div>` |
+| 展開 | `box.removeAttribute('hidden')` | `box.classList.add('open')` |
+| 收起 | `box.setAttribute('hidden','')` | `box.classList.remove('open')` |
+
+**`.ppans-in{overflow:hidden;min-height:0}` 這一層不能刪**——刪了 `grid-template-rows:0fr` 就壓不住內容。
+
+之後新增任何折疊塊（例如 LQ 的「展開答案」），照這個結構抄，**不要用 `hidden`**。
 
 ## 5. 变更日志（只追加）
 
@@ -541,3 +556,5 @@ python _expl_coverage.py --check      # 校驗：過短、缺 explSource、整�
   V0.18.30 用此法救回 11 題（2015 Q1、2018 Q27、2019 Q8、2020 Q11/Q14/Q22/Q24、2022 Q9/Q25、2013 Q26、2018 Q36）。
 - 剩餘 19 題全為資料問題（缺圖／配圖錯誤／題幹殘缺／數據矛盾），已逐題分類記入 §8。
 - 驗證：`guard_data.py` 45 處全在允許範圍；`verify_build.py` 11/11；線上 `V0.18.30`。
+
+- 2026-10-28 22:33 WorkBuddy：V0.18.31「答案與題解」展開由 `hidden` 瞬切改為 `grid-template-rows` 過渡（修「整頁高度突變、視線丟失」）＋按壓快壓慢彈＋details／題解入場緩動統一 → 詳見 `docs/journal/2026-10-28-workbuddy.md`

@@ -98,6 +98,7 @@ html[data-anim="simple"] .ptcell:hover,
 html[data-anim="simple"] .ptcell.on{transform:none}
 html[data-anim="simple"] .gearbtn:hover{transform:none}
 html[data-anim="simple"] .expl.show{animation:none}
+html[data-anim="simple"] .lkpair[open] .lklist{animation:none}
 html[data-anim="simple"] .memwarn{transition:opacity var(--dur-base)}
 html[data-anim="off"] *,
 html[data-anim="off"] *::before,
@@ -115,6 +116,9 @@ html[data-anim="off"] .pip.on{animation:none!important}
   .view{animation:none}
   .tcard:hover,.subcard:hover,.extracard:hover,.sres:hover{transform:none}
   .expl.show{animation:none}
+  /* 展開／收起直接切換，不要中間態（減少動態偏好） */
+  .ppans,.ppans.open{transition:none}
+  .lkpair[open] .lklist{animation:none}
 }
 /* ---------- 通用按壓回饋（滑鼠 + 觸屏；iOS 無 hover 靠 :active） ---------- */
 button,.tcard,.subcard,.extracard,.sres,.hchip,.scope,.opt,.ptcell,.ptlegend span,.chip,.subbar button,.rrow .go{
@@ -130,6 +134,19 @@ button:active{transform:scale(.97);filter:brightness(.96)}
 .ptlegend span:active{transform:scale(.96);opacity:.85}
 .chip:active{transform:scale(.96)}
 .rrow .go:active{transform:scale(.96);filter:brightness(.94)}
+/* iOS 手感：壓下必須「立即」響應，鬆手才走各元素原本的長曲線（回彈）。
+   這裡只覆蓋時長與曲線，不改各元素自己的 transition 簡寫，避免動到 hover 效果。
+   沒有自訂 transition 的按鈕由下方 button 規則補上基態曲線。 */
+button{transition:transform calc(.3s * var(--anim-k)) var(--ease-ios),
+       filter var(--dur-fast),background-color var(--dur-base),
+       color var(--dur-base),border-color var(--dur-base)}
+button:active:not([disabled]),
+.tcard:active,.subcard:active,.extracard:active,.sres:active,.qpick:active,
+.opt:active:not([disabled]),.hchip:active,.scope:active,.ptcell:active,
+.ptlegend span:active,.chip:active,.subbar button:active,.rrow .go:active{
+  transition-duration:calc(.09s * var(--anim-k));
+  transition-timing-function:var(--ease-ios);
+}
 /* 進度條寬度動畫在「完全關閉」時不要殘留 transition */
 .qbar i,.pbar i{transition:width calc(.45s * var(--anim-k)) ease}
 /* ---------- header ---------- */
@@ -285,6 +302,10 @@ pre.mdcodewrap[data-lang]::before{content:attr(data-lang);position:absolute;top:
 .lkpair>summary::-webkit-details-marker{display:none}
 .lkpair>summary::before{content:'\25B8';color:var(--muted);font-size:12px;transition:transform var(--dur-base) var(--ease-ios)}
 .lkpair[open]>summary::before{transform:rotate(90deg)}
+/* <details> 的原生展開是「瞬間」的，無法用 CSS 過渡高度；
+   這裡至少讓內容淡入＋微微下滑，避免硬跳。收起仍是瞬間（原生限制）。 */
+.lkpair[open] .lklist{animation:lkIn calc(.3s * var(--anim-k)) var(--ease-ios)}
+@keyframes lkIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .lkdot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
 .lkn{margin-left:auto;font-size:12.5px;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:1px 9px;font-weight:700;white-space:nowrap}
 .lklist{margin:0;padding:2px 16px 12px 34px;font-size:13.5px;line-height:1.95;color:var(--text-soft)}
@@ -319,7 +340,7 @@ pre.mdcodewrap[data-lang]::before{content:attr(data-lang);position:absolute;top:
 .qtext{font-size:18px;font-weight:700;margin:2px 0 14px}
 .qtype{display:inline-block;font-size:12px;border-radius:6px;padding:1px 8px;background:var(--amber-soft);color:var(--amber);margin-right:8px;vertical-align:2px}
 .expl{border-radius:11px;padding:12px 15px;margin-top:12px;font-size:14.5px;display:none}
-.expl.show{display:block;animation:fade var(--dur-base)}
+.expl.show{display:block;animation:fade calc(.32s * var(--anim-k)) var(--ease-ios)}
 .expl.good{background:var(--green-soft);border:1px solid #bbe5c8}
 .expl.bad{background:var(--red-soft);border:1px solid #f3c2c2}
 .fillrow{display:flex;gap:10px;margin:10px 0}
@@ -493,8 +514,8 @@ mark{background:#fff3bf;padding:0 2px;border-radius:3px}
   /* 常駐但不可見；開啟時才顯示 */
   visibility:hidden;opacity:0;pointer-events:none;
   transform:translateY(10px) scale(.985);
-  transition:opacity calc(.2s * var(--anim-k)) ease,
-             transform calc(.2s * var(--anim-k)) ease,
+  transition:opacity calc(.24s * var(--anim-k)) var(--ease-ios),
+             transform calc(.24s * var(--anim-k)) var(--ease-ios),
              visibility 0s linear calc(.2s * var(--anim-k));
   will-change:opacity,transform;
   -webkit-backface-visibility:hidden;
@@ -502,8 +523,8 @@ mark{background:#fff3bf;padding:0 2px;border-radius:3px}
 }
 .pip.on{
   visibility:visible;opacity:1;pointer-events:auto;transform:none;
-  transition:opacity calc(.2s * var(--anim-k)) ease,
-             transform calc(.2s * var(--anim-k)) ease,
+  transition:opacity calc(.24s * var(--anim-k)) var(--ease-ios),
+             transform calc(.24s * var(--anim-k)) var(--ease-ios),
              visibility 0s linear 0s;
 }
 /* 拖拽中：關掉所有過渡（含位置），避免抖動；拖完放開才恢復 */
@@ -889,7 +910,27 @@ footer{max-width:1120px;margin:0 auto;padding:18px 20px 40px;color:var(--muted);
 .ppbtn{margin-top:8px;border:1px solid var(--accent);background:var(--accent-tint);color:var(--accent);border-radius:8px;padding:6px 12px;font-size:13.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .ppbtn:hover{background:#ccfbf1}
 .ppbtn.open{background:var(--accent);color:var(--on-accent)}
-.ppans{margin-top:10px;border-top:1px dashed #d1d5db;padding-top:10px}
+/* 答案與題解：用 grid-template-rows 0fr↔1fr 做高度過渡。
+   為什麼不用 display:none 或 hidden 屬性——那會讓整頁高度「啪」地突變，視線直接丟失。
+   grid 方案純 CSS、不需 JS 量高度、走合成層，能穩在 60fps。
+   收起時 visibility:hidden，避免讀屏念出還沒展開的答案。 */
+.ppans{display:grid;grid-template-rows:0fr;margin-top:0;padding-top:0;
+  border-top:1px dashed transparent;opacity:0;visibility:hidden;
+  transition:grid-template-rows calc(.34s * var(--anim-k)) var(--ease-ios),
+             margin-top calc(.34s * var(--anim-k)) var(--ease-ios),
+             padding-top calc(.34s * var(--anim-k)) var(--ease-ios),
+             border-color calc(.34s * var(--anim-k)) var(--ease-ios),
+             opacity calc(.26s * var(--anim-k)) var(--ease-ios),
+             visibility 0s linear calc(.34s * var(--anim-k))}
+.ppans.open{grid-template-rows:1fr;margin-top:10px;padding-top:10px;
+  border-top-color:#d1d5db;opacity:1;visibility:visible;
+  transition:grid-template-rows calc(.34s * var(--anim-k)) var(--ease-ios),
+             margin-top calc(.34s * var(--anim-k)) var(--ease-ios),
+             padding-top calc(.34s * var(--anim-k)) var(--ease-ios),
+             border-color calc(.34s * var(--anim-k)) var(--ease-ios),
+             opacity calc(.26s * var(--anim-k)) var(--ease-ios),
+             visibility 0s}
+.ppans-in{overflow:hidden;min-height:0}
 .ppansrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px}
 .ppansrow .lab,.ppexpl .lab{font-size:12px;color:#6b7280;background:#f3f4f6;border-radius:5px;padding:1px 6px}
 .ppkey{font-size:17px;color:var(--accent)}
@@ -1279,7 +1320,7 @@ html[data-theme="dark"] .ppfig{background:#2a2010;color:#fdba74}
 html[data-theme="dark"] .ppbtn{background:#0f3d38;color:var(--accent);border-color:var(--accent)}
 html[data-theme="dark"] .ppbtn:hover{background:#134e48}
 html[data-theme="dark"] .ppbtn.open{background:var(--accent);color:#0d1117}
-html[data-theme="dark"] .ppans{border-top-color:var(--line)}
+html[data-theme="dark"] .ppans.open{border-top-color:var(--line)}
 html[data-theme="dark"] .ppansrow .lab,
 html[data-theme="dark"] .ppexpl .lab{background:var(--paper-mute);color:var(--muted)}
 html[data-theme="dark"] .ppkey{color:var(--accent)}
@@ -3808,11 +3849,13 @@ function ppCard(q){
     <div class="ppbtns">
       <button class="ppbtn" onclick="ppToggle(this)"><span class="ppbtn-t">答案與題解</span><span class="ppbtn-i">▾</span></button>
     </div>
-    <div class="ppans" hidden>
+    <div class="ppans">
+      <div class="ppans-in">
       <div class="ppansrow"><span class="lab">正確答案</span><b class="ppkey">${q.answer||'—'}</b>
         <span class="lab">答對率</span><b>${q.pct}%</b>
         <span class="lab">難度</span><b>${ppLvl(q.pct)}</b></div>
       <div class="ppexpl"><span class="lab">題解</span><div class="md">${ex}</div></div>
+      </div>
     </div>
   </div>`;
 }
@@ -3831,12 +3874,12 @@ function ppPick(btn, qid, key){
   try{ if(ok) markRight(qid); else markWrong(qid); }catch(e){}
   // 自動展開答案與題解，讓你看得到詳解
   const t=card.querySelector('.ppbtn'), box=card.querySelector('.ppans');
-  if(t&&box&&box.hasAttribute('hidden')) ppToggle(t);
+  if(t&&box&&!box.classList.contains('open')) ppToggle(t);
 }
 function ppToggle(btn){
   const box=btn.closest('.ppq').querySelector('.ppans');
-  const open=box.hasAttribute('hidden');
-  if(open)box.removeAttribute('hidden'); else box.setAttribute('hidden','');
+  const open=!box.classList.contains('open');
+  box.classList.toggle('open',open);
   btn.classList.toggle('open',open);
   btn.querySelector('.ppbtn-t').textContent=open?'收起題解':'答案與題解';
   btn.querySelector('.ppbtn-i').textContent=open?'▴':'▾';

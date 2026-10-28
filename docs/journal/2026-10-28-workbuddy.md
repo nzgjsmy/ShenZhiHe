@@ -589,3 +589,77 @@ verify      11/11
 覆盖率      310 → 355 / 374（94.9%）
 线上        V0.18.30 · SW_VERSION=V0.18.30
 ```
+
+---
+
+## V0.18.31 · 第 5 条需求（iOS 手感微互动）
+
+### 需求来源
+
+用户转来一份外部 AI 写的 10 条需求文档（`text.txt`，微信转发的），让我判断哪些能实行。逐条核对真实代码后：
+
+| # | 需求 | 判定 |
+|---|---|---|
+| 1 | 部署/域名/后端分层 | 部分可做（静态站能做的只有域名+CF 代理） |
+| 2a | 移除笔记卡片描述 | 可做（另议） |
+| 2b | 移除知识图谱 | **驳回**：已于 V0.18.21 重做成「关联地图」，力导向乱图早删了 |
+| 3 | DDoS/WAF/CSP/混淆 | **驳回**：无后端就没有限速/CSRF 可谈；CSP 上次已论证有害 |
+| 4a | 品牌化加载屏 | **已实现**（V0.18.18 / V0.18.27） |
+| 4b | 禁用懒加载 | **驳回（有害）**：156 张真题图 + 872 张笔记图，一次全拉首屏就废 |
+| 4c | 禁用虚拟滚动 | **已实现**（VIRT_THRESHOLD=100000） |
+| 5 | iOS 弹性动效 | **可做 → 本轮做了** |
+| 6 | 深浅色切换 | **已全部实现**（含跟随系统、对比度全修） |
+| 7 | 真题分 MC/LQ | 方向对但做不了：`template.html` 里 grep「LQ」零命中，一条数据都没有 |
+| 8 | 知识点总结按钮 | 可做，难点在内容不在按钮 |
+| 9 | 全单元 MC 覆盖 | 已 94.4%；bio27 生物工程只有 1 题是 DSE 实况不是遗漏 |
+| 10 | 繁体中文 | 已是繁体 |
+
+### 动手前的实测（改之前先量，别猜）
+
+用无头 Chrome 量卡片高度：
+
+```
+首页单元卡   223px  (desc 24px 或 47px，同排被 grid 拉齐 → 短卡底部空 23px)
+测验页课题卡 183px  (desc 固定 39px，来自 min-height)
+```
+
+### 真正的缺口（原以为要做很多，实测发现基础已经很全）
+
+已有：`--ease-ios` 曲线、`--anim-k` 系数（0.5–2.0）、`data-anim` 三档降级、`.view` 进场 fade、`.pip` 画中画已是 iOS 式（visibility+opacity+transform）。
+
+**真正的缺口只有一处但影响最大**：`.ppans`（答案與題解）用 `hidden` 属性切换 → 瞬间显示 → **整页高度「啪」地突变，视线丢失**。这是 374 道题最高频的交互。
+
+### 改法
+
+1. **`.ppans` 高度过渡**：`display:grid` + `grid-template-rows:0fr↔1fr`。
+   - 纯 CSS，不需要 JS 量高度，不会因为内容异步加载算错。
+   - 结构和动效一起过渡：`grid-template-rows / margin-top / padding-top / border-color / opacity`，收起时 `visibility` 延迟到动画结束才 hidden（读屏不会念出未展开的答案）。
+   - HTML 加一层 `.ppans-in{overflow:hidden;min-height:0}`——**这一层是必须的**，否则 0fr 时内容会溢出显示。
+2. **`ppToggle` / `ppPick`**：`hasAttribute('hidden')` → `classList.contains('open')`。
+3. **按压手感**：按下 `.09s` 立即响应，松手走各元素原本的 `.3s ease-ios` 回弹。只覆盖 `transition-duration`，不动各元素自己的 transition 简写（避免破坏 hover）。
+4. **测验题解 `.expl.show`**：`.18s fade` → `.32s ease-ios`。
+5. **关联地图 `<details>`**：原生 details 高度无法用 CSS 过渡（`::details-content` 兼容性不够），退而求其次让内容淡入下滑，至少不硬跳。
+6. **`.pip` 与进度条**缓动统一 `--ease-ios`。
+7. **降级**：`data-anim="simple"` 关掉 lklist 的装饰动画；`prefers-reduced-motion` 下展开过渡直接切（`.ppans,.ppans.open{transition:none}`）。
+
+### 踩的坑
+
+**坑：测试测出「收起后高度不回去」和「分隔线是 transparent」，两次都是测试写错，不是代码错。**
+
+- 第一次：虚拟时间（`--virtual-time-budget`）下等了 1.2s，实际动画没跑完 → 误判收起失败。等到 3s 就正常回到 `rows=0px / h=1 / visibility:hidden`。
+- 第二次：切换主题后**页面重绘**，脚本里缓存的 DOM 节点变成孤儿 → `getComputedStyle` 返回 UA 默认值 `transparent`。重新 `querySelector` 一次就对了。
+
+**结论：读 `getComputedStyle` 一定要确认①过渡是否已结束 ②节点是否还在 DOM 里。** 这两个坑各花了 3 轮才定位。
+
+### 验证
+
+```
+build       3,966.9 KB
+verify      11/11（含脚本 5/5 块语法通过）
+真题页      79 卡渲染 · 初始收起 h=1 · 点选项自动展开 h=269 · 按钮文字同步 · 选项着色 right=1/dim=2
+展开/收起   0px → 258.4px → 0px，visibility visible/hidden 正确
+浅色分隔线  rgb(209,213,219) ✓   深色取 var(--line) ✓
+其他页面    首页 10 卡 · 测验页正常 · 零 JS 错误
+```
+
+版本 V0.18.30 → **V0.18.31**（UI 微调，按规则走 V0.0.x）。
