@@ -55,6 +55,9 @@
   --tip-bg:#2a2d36;            /* 提示浮條底（.memwarn / .gtip）*/
   --tip-fg:#e8e5de;            /* 提示浮條文字 */
   --scroll-thumb:#d8d2c5;      /* 虛擬滾動條 thumb */
+
+  /* iOS 經典彈性曲線：起步快、收尾極緩，用於載入屏淡出與卡片進場 */
+  --ease-ios:cubic-bezier(.32,.72,0,1);
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -159,12 +162,17 @@ main{max-width:1120px;margin:0 auto;padding:26px 20px 80px}
 .stat b{display:block;font-size:26px;color:var(--accent);line-height:1.3}
 .stat span{font-size:13px;color:var(--muted)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}
-.tcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 14px;cursor:pointer;transition:var(--dur-base);box-shadow:var(--shadow);position:relative;overflow:hidden}
+.tcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 14px;cursor:pointer;box-shadow:var(--shadow);position:relative;overflow:hidden;
+  transition:transform var(--dur-base) var(--ease-ios),box-shadow var(--dur-base) var(--ease-ios),border-color var(--dur-base) var(--ease-ios)}
 .tcard:hover{transform:translateY(-3px);box-shadow:0 8px 26px rgba(43,42,38,.13)}
 .tcard .bar{position:absolute;left:0;top:0;bottom:0;width:6px}
 .tcard h3{margin:0 0 4px;font-size:19px}
 .tcard .meta{font-size:13px;color:var(--muted)}
-.tcard .desc{font-size:14px;color:#57534a;margin:8px 0 10px;min-height:44px}
+/* 描述只留兩行：原本固定 min-height:44px 會讓每張卡多佔一行高度，
+   但內容其實很少看完（多數是章節名堆疊）。用行數截斷保留資訊又不佔版面。
+   顏色用 --text-soft，讓 light/dark 兩個主題共用同一個語意變數。 */
+.tcard .desc{font-size:13.5px;color:var(--text-soft);margin:6px 0 10px;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
 .tcard .foot{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px}
 .pill{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:12px;margin-right:6px}
 .quick{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0 24px}
@@ -1341,8 +1349,50 @@ function setAnimK(k){
 }
 applyAnim();
 </script>
+<style>
+/* ---------- 啟動載入屏（iOS 彈性淡出）----------
+   為什麼需要：本站是 3.8 MB 的單檔離線網站，手機首次解析＋渲染需要一點時間。
+   有了這一屏，使用者看到的是「正在載入」而不是空白頁。
+   為什麼不用 CSP：見 SHARED-MEMORY §4.9 —— 允許 unsafe-inline/unsafe-eval 的 CSP
+   等於沒有防護，卻會擋掉 blob: 搜尋 worker 與離線快取，得不償失。 */
+#boot{
+  position:fixed; inset:0; z-index:99999; background:var(--bg);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  opacity:1; visibility:visible;
+  transition:opacity calc(.42s*var(--anim-k)) var(--ease-ios),
+             visibility calc(.42s*var(--anim-k)) var(--ease-ios);
+}
+#boot.done{opacity:0;visibility:hidden;pointer-events:none}
+#boot .bmark{font-size:52px;line-height:1;animation:bootPulse calc(1.4s*var(--anim-k)) ease-in-out infinite}
+#boot .btitle{font-weight:800;font-size:20px;color:var(--accent);letter-spacing:.5px;margin-top:16px}
+#boot .bsub{font-size:13px;color:var(--muted);margin-top:6px}
+#boot .bbar{width:128px;height:3px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:20px}
+#boot .bbar i{display:block;height:100%;width:38%;border-radius:3px;background:var(--accent);
+  animation:bootSlide calc(1.15s*var(--anim-k)) var(--ease-ios) infinite}
+@keyframes bootPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.9);opacity:.72}}
+@keyframes bootSlide{0%{transform:translateX(-115%)}100%{transform:translateX(285%)}}
+@media (prefers-reduced-motion:reduce){
+  #boot .bmark,#boot .bbar i{animation:none}
+  #boot .bbar i{width:100%}
+}
+</style>
 </head>
 <body>
+<!-- 啟動載入屏：主程式 render 完成後會呼叫 hideBoot() 淡出 -->
+<div id="boot" role="status" aria-live="polite">
+  <div class="bmark">🧪</div>
+  <div class="btitle">/*__SITE_NAME__*/</div>
+  <div class="bsub">正在載入筆記、測驗與歷屆真題…</div>
+  <div class="bbar"><i></i></div>
+</div>
+<script>
+/* 保險絲：主程式若拋錯（白屏），載入屏最多留 4 秒也必須消失，
+   否則使用者會永遠卡在「正在載入」。這個計時器必須在主程式之前註冊。 */
+setTimeout(function(){
+  var b=document.getElementById('boot');
+  if(b)b.classList.add('done');
+},4000);
+</script>
 <header>
   <div class="hwrap">
     <div class="brand" onclick="go('#/subjects')"><span class="flask" id="brandemoji">🧪</span><span id="brandname">/*__SITE_NAME__*/</span><span class="verbadge" id="brandver">/*__SITE_VERSION__*/</span></div>
@@ -2456,7 +2506,13 @@ function viewUnit(uid){
      不用固定行高估算，避免卡片互相重叠
    - 滚动时 rAF 节流重算可见范围
    阈值：50 个知识点（可依设备性能调整） */
-const VIRT_THRESHOLD = 50;
+/* 虛擬滾動已停用（2026-10-28）。
+   原因：虛擬滾動會讓瀏覽器 Ctrl+F 找不到未渲染的卡片，也無法跨卡片選取文字，
+   對「查考點」這個主要用途傷害很大。
+   為什麼可以安全停用：全站 86 個課題只有 6 個超過舊閾值 50，
+   最多的一個（chem/2a）也才 88 個知識點，直出渲染完全不成負擔。
+   想恢復：把下面的數字改回 50 即可，其餘 virt* 程式碼都還在。 */
+const VIRT_THRESHOLD = 100000;
 const VIRT_BUFFER = 6;         // 上下各额外渲染几张卡片
 const VIRT_EST = 320;          // 未测量卡片的初始预估高度
 
@@ -4248,10 +4304,22 @@ function route(){
   // 路由切换后检查内存/存储
   checkMemoryAndStorage();
 }
+/* 首屏渲染完成 → 淡出載入屏。
+   用兩次 rAF 確保瀏覽器真的畫過一帧再淡出，否則會出現「閃一下空白」。
+   冪等：重複呼叫安全（hashchange 不會再顯示載入屏）。 */
+function hideBoot(){
+  var b=document.getElementById('boot');
+  if(!b||b.classList.contains('done'))return;
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){ b.classList.add('done'); });
+  });
+}
+
 window.addEventListener('hashchange',route);
 window.addEventListener('pagehide',flushSeen);
 document.addEventListener('visibilitychange',function(){if(document.hidden)flushSeen();});
 route();
+hideBoot();
 maybeShowPwaHint();
 </script>
 </body>
