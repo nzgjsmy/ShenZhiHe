@@ -1446,8 +1446,8 @@ applyAnim();
   position:fixed; inset:0; z-index:99999; background:var(--bg);
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   opacity:1; visibility:visible;
-  transition:opacity calc(.42s*var(--anim-k)) var(--ease-ios),
-             visibility calc(.42s*var(--anim-k)) var(--ease-ios);
+  transition:opacity 2s var(--ease-ios),
+             visibility 2s var(--ease-ios);
 }
 #boot.done{opacity:0;visibility:hidden;pointer-events:none}
 #boot .bmark{font-size:52px;line-height:1;animation:bootPulse calc(1.4s*var(--anim-k)) ease-in-out infinite}
@@ -1473,12 +1473,13 @@ applyAnim();
   <div class="bbar"><i></i></div>
 </div>
 <script>
-/* 保險絲：主程式若拋錯（白屏），載入屏最多留 4 秒也必須消失，
+/* 保險絲：主程式若拋錯（白屏），載入屏最多留 5 秒也必須消失，
    否則使用者會永遠卡在「正在載入」。這個計時器必須在主程式之前註冊。 */
+window.__bootT0 = Date.now();
 setTimeout(function(){
   var b=document.getElementById('boot');
   if(b)b.classList.add('done');
-},4000);
+},5000);
 </script>
 <header>
   <div class="hwrap">
@@ -4365,9 +4366,13 @@ function route(){
 function hideBoot(){
   var b=document.getElementById('boot');
   if(!b||b.classList.contains('done'))return;
-  requestAnimationFrame(function(){
-    requestAnimationFrame(function(){ b.classList.add('done'); });
-  });
+  var elapsed=Date.now()-(window.__bootT0||0);
+  var wait=Math.max(0,1500-elapsed);
+  setTimeout(function(){
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){ b.classList.add('done'); });
+    });
+  },wait);
 }
 
 window.addEventListener('hashchange',route);
