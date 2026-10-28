@@ -557,4 +557,4 @@ python _expl_coverage.py --check      # 校驗：過短、缺 explSource、整�
 - 剩餘 19 題全為資料問題（缺圖／配圖錯誤／題幹殘缺／數據矛盾），已逐題分類記入 §8。
 - 驗證：`guard_data.py` 45 處全在允許範圍；`verify_build.py` 11/11；線上 `V0.18.30`。
 
-- 2026-10-28 22:33 WorkBuddy：V0.18.31「答案與題解」展開由 `hidden` 瞬切改為 `grid-template-rows` 過渡（修「整頁高度突變、視線丟失」）＋按壓快壓慢彈＋details／題解入場緩動統一 → 詳見 `docs/journal/2026-10-28-workbuddy.md`
+- 2026-10-28 22:33 WorkBuddy：V0.18.31「答案與題解」展開由 `hidden` 瞬切改為 `grid-template-rows` 過渡（修「整頁高度突變、視線丟失」）＋按壓快壓慢彈＋details／題解入場緩動統一 ｜已部署 `773ec40`，線上 HTTP 200 / V0.18.31 / SW=V0.18.31，與本地逐行一致 → 詳見 `docs/journal/2026-10-28-workbuddy.md`
