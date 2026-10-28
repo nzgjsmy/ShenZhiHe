@@ -178,6 +178,9 @@ main{max-width:1120px;margin:0 auto;padding:26px 20px 80px}
 .quick{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0 24px}
 .quick button{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:9px 18px;cursor:pointer;font-size:15px;box-shadow:var(--shadow);transition:var(--dur-base)}
 .quick button:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+/* 目前選中的那一個（用於設定頁的「外觀模式」三顆按鈕） */
+.quick button.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);font-weight:700}
+html[data-theme="dark"] .quick button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 /* ---------- topic ---------- */
 .thead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
 .thead h2{margin:0;font-size:26px}
@@ -944,9 +947,13 @@ details.wfixed[open]>summary:before{content:"▾ "}
 .wbtab.on span{color:#c7f0e8}
 
 /* =============================================================
-   ===== 修改位置：iOS 風格主題切換開關（Light / Dark Toggle）=====
-   位置：header 右上角、齒輪按鈕左側
-   行為：純 CSS 依 html[data-theme] 切換 track 顏色、thumb 位置與圖標
+   主題切換開關（Light / Dark Toggle）已於 2026-10-28 從 header 移除。
+   原因：它是 position:absolute right:58px、寬 52px，而 .hwrap 右側只
+   預留 60px 給齒輪按鈕，於是它會壓住 nav 最後一項「額外資訊」。
+   現在深淺色只在「設定頁 → 🌗 外觀模式」切換（白天／黑夜／跟隨系統三顆按鈕），
+   功能沒有少，只是換了位置。
+   若日後想把開關放回 header：先把 .hwrap 的 padding-right 加到 118px 以上，
+   再恢復下面這段 CSS 與 header 裡的 button。
    ============================================================= */
 .themetoggle{
   position:absolute;right:58px;top:8px;
@@ -1406,10 +1413,9 @@ setTimeout(function(){
       <button data-r="wrong" onclick="go('#/wrong')">錯題本</button>
       <button data-r="extras" onclick="go('#/extras')">額外資訊</button>
     </nav>
-    <!-- ===== 修改位置：新增日夜模式切換開關（齒輪按鈕左側）===== -->
-    <button class="themetoggle" id="themetoggle" onclick="toggleTheme()" title="切換日夜模式" aria-label="切換日夜模式" role="switch" aria-checked="false">
-      <span class="thumb"><span class="ic-sun">☀️</span><span class="ic-moon">🌙</span></span>
-    </button>
+    <!-- 深淺色開關已移到「設定 → 🌗 外觀模式」。
+         原本這裡有一顆 .themetoggle，是 absolute 定位壓在 nav 上，
+         會蓋住「額外資訊」，故移除。 -->
     <button class="gearbtn" id="gearbtn" data-r="settings" onclick="go('#/settings')" title="設定" aria-label="設定">⚙️</button>
   </div>
   <div class="subbar" id="subbar"></div>
@@ -1448,10 +1454,39 @@ function setTheme(t){
   if(mt) mt.setAttribute('content', t==='dark' ? '#12141a' : '#0f766e');
   var sw=document.getElementById('themetoggle');
   if(sw) sw.setAttribute('aria-checked', t==='dark' ? 'true' : 'false');
+  syncThemeBtns();
 }
 function toggleTheme(){
   var cur=document.documentElement.getAttribute('data-theme')==='dark' ? 'dark' : 'light';
   setTheme(cur==='dark' ? 'light' : 'dark');
+}
+/* 目前的主題模式：
+     'light' / 'dark' = 使用者手動固定
+     'auto'           = 沒存手動選擇 → 跟隨系統（含系統即時切換） */
+function curThemeMode(){
+  var m='';
+  try{ m=localStorage.getItem('f6note.theme')||''; }catch(e){}
+  return (m==='light'||m==='dark') ? m : 'auto';
+}
+/* 把設定頁三顆按鈕的「選中」狀態與下方說明同步到當前模式。
+   元素不存在（不在設定頁）時靜默返回，可安全地在任何地方呼叫。 */
+function syncThemeBtns(){
+  var box=document.getElementById('themebtns');
+  if(!box) return;
+  var mode=curThemeMode();
+  var btns=box.querySelectorAll('button');
+  for(var i=0;i<btns.length;i++){
+    var on=btns[i].getAttribute('data-mode')===mode;
+    btns[i].classList.toggle('on', on);
+    btns[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+  var tip=document.getElementById('thememode-tip');
+  if(tip){
+    var cur=document.documentElement.getAttribute('data-theme')==='dark' ? '黑夜' : '白天';
+    tip.textContent = (mode==='auto')
+      ? ('目前跟隨系統：' + cur + '（系統切換時會自動跟著變）')
+      : ('目前固定為：' + cur + '（不會跟隨系統）');
+  }
 }
 
 /* ============ 科目層 ============
@@ -2233,17 +2268,18 @@ function viewSettings(){
         <span class="tmeta" style="align-self:center">按下去看目前設定下的按壓與高亮回饋</span>
       </div>
     </div>
-    <!-- ===== 修改位置：設定頁也提供「外觀」切換（與 header 開關同步）===== -->
+    <!-- ===== 外觀模式：深淺色只在這裡切換（header 的開關已移除，會壓住「額外資訊」）===== -->
     <div class="databox">
       <div style="font-weight:700;margin-bottom:4px">🌗 外觀模式</div>
       <div class="tmeta" style="margin-bottom:8px">
-        點右上角太陽／月亮圖示亦可快速切換，選擇會存在這台瀏覽器。
+        選擇會存在這台瀏覽器。「跟隨系統」會隨手機／電腦的深淺色設定即時切換。
       </div>
-      <div class="quick" style="margin:0">
-        <button onclick="setTheme('light')">☀️ 白天模式</button>
-        <button onclick="setTheme('dark')">🌙 黑夜模式</button>
-        <button onclick="followSystemTheme()">🖥️ 跟隨系統</button>
+      <div class="quick" style="margin:0" id="themebtns">
+        <button data-mode="light" class="${curThemeMode()==='light'?'on':''}" aria-pressed="${curThemeMode()==='light'?'true':'false'}" onclick="setTheme('light')">☀️ 白天模式</button>
+        <button data-mode="dark" class="${curThemeMode()==='dark'?'on':''}" aria-pressed="${curThemeMode()==='dark'?'true':'false'}" onclick="setTheme('dark')">🌙 黑夜模式</button>
+        <button data-mode="auto" class="${curThemeMode()==='auto'?'on':''}" aria-pressed="${curThemeMode()==='auto'?'true':'false'}" onclick="followSystemTheme()">🖥️ 跟隨系統</button>
       </div>
+      <div class="tmeta" id="thememode-tip" style="margin-top:8px"></div>
     </div>
     <div class="databox">
       <div style="font-weight:700;margin-bottom:4px">ℹ️ 關於</div>
@@ -2261,6 +2297,7 @@ function viewSettings(){
   </div>`;
   const n=document.getElementById('bkn'); if(n) n.textContent=siteDataKeys().length;
   syncAnimUI();
+  syncThemeBtns();
 }
 
 /* ===== 修改位置：跟隨系統主題 =====
@@ -2276,6 +2313,7 @@ function followSystemTheme(){
   if(mt) mt.setAttribute('content', m==='dark' ? '#12141a' : '#0f766e');
   var sw=document.getElementById('themetoggle');
   if(sw) sw.setAttribute('aria-checked', m==='dark' ? 'true' : 'false');
+  syncThemeBtns();
 }
 /* 若使用者尚未手動選擇，系統切換時即時跟隨 */
 (function(){
@@ -2292,6 +2330,7 @@ function followSystemTheme(){
       if(mt) mt.setAttribute('content', m==='dark' ? '#12141a' : '#0f766e');
       var sw=document.getElementById('themetoggle');
       if(sw) sw.setAttribute('aria-checked', m==='dark' ? 'true' : 'false');
+      syncThemeBtns();   // 讓設定頁的說明文字跟著更新（例如「目前跟隨系統：黑夜」）
     };
     if(mql.addEventListener) mql.addEventListener('change', handler);
     else if(mql.addListener) mql.addListener(handler);
