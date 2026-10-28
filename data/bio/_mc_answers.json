@@ -1,0 +1,2367 @@
+{
+ "source": "extracted from 生物DSE_卷一MC_答案與得分率.html (2026-10-29)",
+ "note": "每題 answer 與 pct；PP/SP 無官方得分率，pct=0；2013 年第 9 題當年被刪除",
+ "years": {
+  "2012": [
+   {
+    "qnum": 1,
+    "answer": "D",
+    "pct": 73
+   },
+   {
+    "qnum": 2,
+    "answer": "D",
+    "pct": 33
+   },
+   {
+    "qnum": 3,
+    "answer": "A",
+    "pct": 68
+   },
+   {
+    "qnum": 4,
+    "answer": "B",
+    "pct": 63
+   },
+   {
+    "qnum": 5,
+    "answer": "D",
+    "pct": 61
+   },
+   {
+    "qnum": 6,
+    "answer": "A",
+    "pct": 79
+   },
+   {
+    "qnum": 7,
+    "answer": "A",
+    "pct": 76
+   },
+   {
+    "qnum": 8,
+    "answer": "A",
+    "pct": 81
+   },
+   {
+    "qnum": 9,
+    "answer": "D",
+    "pct": 87
+   },
+   {
+    "qnum": 10,
+    "answer": "C",
+    "pct": 69
+   },
+   {
+    "qnum": 11,
+    "answer": "A",
+    "pct": 64
+   },
+   {
+    "qnum": 12,
+    "answer": "D",
+    "pct": 48
+   },
+   {
+    "qnum": 13,
+    "answer": "B",
+    "pct": 54
+   },
+   {
+    "qnum": 14,
+    "answer": "A",
+    "pct": 61
+   },
+   {
+    "qnum": 15,
+    "answer": "B",
+    "pct": 63
+   },
+   {
+    "qnum": 16,
+    "answer": "C",
+    "pct": 78
+   },
+   {
+    "qnum": 17,
+    "answer": "C",
+    "pct": 80
+   },
+   {
+    "qnum": 18,
+    "answer": "D",
+    "pct": 78
+   },
+   {
+    "qnum": 19,
+    "answer": "A",
+    "pct": 31
+   },
+   {
+    "qnum": 20,
+    "answer": "B",
+    "pct": 64
+   },
+   {
+    "qnum": 21,
+    "answer": "D",
+    "pct": 83
+   },
+   {
+    "qnum": 22,
+    "answer": "C",
+    "pct": 82
+   },
+   {
+    "qnum": 23,
+    "answer": "B",
+    "pct": 68
+   },
+   {
+    "qnum": 24,
+    "answer": "C",
+    "pct": 37
+   },
+   {
+    "qnum": 25,
+    "answer": "C",
+    "pct": 93
+   },
+   {
+    "qnum": 26,
+    "answer": "B",
+    "pct": 82
+   },
+   {
+    "qnum": 27,
+    "answer": "C",
+    "pct": 79
+   },
+   {
+    "qnum": 28,
+    "answer": "B",
+    "pct": 58
+   },
+   {
+    "qnum": 29,
+    "answer": "B",
+    "pct": 46
+   },
+   {
+    "qnum": 30,
+    "answer": "C",
+    "pct": 35
+   },
+   {
+    "qnum": 31,
+    "answer": "A",
+    "pct": 90
+   },
+   {
+    "qnum": 32,
+    "answer": "D",
+    "pct": 75
+   },
+   {
+    "qnum": 33,
+    "answer": "C",
+    "pct": 76
+   },
+   {
+    "qnum": 34,
+    "answer": "C",
+    "pct": 74
+   },
+   {
+    "qnum": 35,
+    "answer": "B",
+    "pct": 71
+   },
+   {
+    "qnum": 36,
+    "answer": "B",
+    "pct": 70
+   }
+  ],
+  "2013": [
+   {
+    "qnum": 1,
+    "answer": "D",
+    "pct": 54
+   },
+   {
+    "qnum": 2,
+    "answer": "C",
+    "pct": 76
+   },
+   {
+    "qnum": 3,
+    "answer": "C",
+    "pct": 72
+   },
+   {
+    "qnum": 4,
+    "answer": "A",
+    "pct": 81
+   },
+   {
+    "qnum": 5,
+    "answer": "C",
+    "pct": 41
+   },
+   {
+    "qnum": 6,
+    "answer": "A",
+    "pct": 47
+   },
+   {
+    "qnum": 7,
+    "answer": "B",
+    "pct": 44
+   },
+   {
+    "qnum": 8,
+    "answer": "C",
+    "pct": 42
+   },
+   {
+    "qnum": 10,
+    "answer": "D",
+    "pct": 67
+   },
+   {
+    "qnum": 11,
+    "answer": "C",
+    "pct": 35
+   },
+   {
+    "qnum": 12,
+    "answer": "C",
+    "pct": 80
+   },
+   {
+    "qnum": 13,
+    "answer": "B",
+    "pct": 84
+   },
+   {
+    "qnum": 14,
+    "answer": "A",
+    "pct": 80
+   },
+   {
+    "qnum": 15,
+    "answer": "B",
+    "pct": 47
+   },
+   {
+    "qnum": 16,
+    "answer": "D",
+    "pct": 55
+   },
+   {
+    "qnum": 17,
+    "answer": "B",
+    "pct": 71
+   },
+   {
+    "qnum": 18,
+    "answer": "D",
+    "pct": 32
+   },
+   {
+    "qnum": 19,
+    "answer": "B",
+    "pct": 59
+   },
+   {
+    "qnum": 20,
+    "answer": "A",
+    "pct": 78
+   },
+   {
+    "qnum": 21,
+    "answer": "D",
+    "pct": 54
+   },
+   {
+    "qnum": 22,
+    "answer": "A",
+    "pct": 60
+   },
+   {
+    "qnum": 23,
+    "answer": "D",
+    "pct": 48
+   },
+   {
+    "qnum": 24,
+    "answer": "A",
+    "pct": 65
+   },
+   {
+    "qnum": 25,
+    "answer": "B",
+    "pct": 24
+   },
+   {
+    "qnum": 26,
+    "answer": "B",
+    "pct": 33
+   },
+   {
+    "qnum": 27,
+    "answer": "B",
+    "pct": 64
+   },
+   {
+    "qnum": 28,
+    "answer": "A",
+    "pct": 55
+   },
+   {
+    "qnum": 29,
+    "answer": "C",
+    "pct": 62
+   },
+   {
+    "qnum": 30,
+    "answer": "C",
+    "pct": 7
+   },
+   {
+    "qnum": 31,
+    "answer": "B",
+    "pct": 64
+   },
+   {
+    "qnum": 32,
+    "answer": "B",
+    "pct": 47
+   },
+   {
+    "qnum": 33,
+    "answer": "A",
+    "pct": 79
+   },
+   {
+    "qnum": 34,
+    "answer": "C",
+    "pct": 81
+   },
+   {
+    "qnum": 35,
+    "answer": "D",
+    "pct": 90
+   },
+   {
+    "qnum": 36,
+    "answer": "D",
+    "pct": 55
+   }
+  ],
+  "2014": [
+   {
+    "qnum": 1,
+    "answer": "D",
+    "pct": 64
+   },
+   {
+    "qnum": 2,
+    "answer": "C",
+    "pct": 32
+   },
+   {
+    "qnum": 3,
+    "answer": "D",
+    "pct": 59
+   },
+   {
+    "qnum": 4,
+    "answer": "D",
+    "pct": 41
+   },
+   {
+    "qnum": 5,
+    "answer": "B",
+    "pct": 41
+   },
+   {
+    "qnum": 6,
+    "answer": "A",
+    "pct": 70
+   },
+   {
+    "qnum": 7,
+    "answer": "A",
+    "pct": 74
+   },
+   {
+    "qnum": 8,
+    "answer": "B",
+    "pct": 47
+   },
+   {
+    "qnum": 9,
+    "answer": "B",
+    "pct": 70
+   },
+   {
+    "qnum": 10,
+    "answer": "A",
+    "pct": 50
+   },
+   {
+    "qnum": 11,
+    "answer": "A",
+    "pct": 31
+   },
+   {
+    "qnum": 12,
+    "answer": "B",
+    "pct": 80
+   },
+   {
+    "qnum": 13,
+    "answer": "C",
+    "pct": 83
+   },
+   {
+    "qnum": 14,
+    "answer": "A",
+    "pct": 45
+   },
+   {
+    "qnum": 15,
+    "answer": "D",
+    "pct": 35
+   },
+   {
+    "qnum": 16,
+    "answer": "A",
+    "pct": 71
+   },
+   {
+    "qnum": 17,
+    "answer": "B",
+    "pct": 81
+   },
+   {
+    "qnum": 18,
+    "answer": "A",
+    "pct": 31
+   },
+   {
+    "qnum": 19,
+    "answer": "C",
+    "pct": 14
+   },
+   {
+    "qnum": 20,
+    "answer": "D",
+    "pct": 78
+   },
+   {
+    "qnum": 21,
+    "answer": "D",
+    "pct": 65
+   },
+   {
+    "qnum": 22,
+    "answer": "C",
+    "pct": 73
+   },
+   {
+    "qnum": 23,
+    "answer": "A",
+    "pct": 61
+   },
+   {
+    "qnum": 24,
+    "answer": "A",
+    "pct": 63
+   },
+   {
+    "qnum": 25,
+    "answer": "B",
+    "pct": 47
+   },
+   {
+    "qnum": 26,
+    "answer": "A",
+    "pct": 62
+   },
+   {
+    "qnum": 27,
+    "answer": "B",
+    "pct": 62
+   },
+   {
+    "qnum": 28,
+    "answer": "C",
+    "pct": 53
+   },
+   {
+    "qnum": 29,
+    "answer": "C",
+    "pct": 78
+   },
+   {
+    "qnum": 30,
+    "answer": "D",
+    "pct": 69
+   },
+   {
+    "qnum": 31,
+    "answer": "D",
+    "pct": 51
+   },
+   {
+    "qnum": 32,
+    "answer": "C",
+    "pct": 61
+   },
+   {
+    "qnum": 33,
+    "answer": "B",
+    "pct": 45
+   },
+   {
+    "qnum": 34,
+    "answer": "D",
+    "pct": 54
+   },
+   {
+    "qnum": 35,
+    "answer": "B",
+    "pct": 58
+   },
+   {
+    "qnum": 36,
+    "answer": "C",
+    "pct": 77
+   }
+  ],
+  "2015": [
+   {
+    "qnum": 1,
+    "answer": "D",
+    "pct": 49
+   },
+   {
+    "qnum": 2,
+    "answer": "A",
+    "pct": 78
+   },
+   {
+    "qnum": 3,
+    "answer": "B",
+    "pct": 60
+   },
+   {
+    "qnum": 4,
+    "answer": "D",
+    "pct": 57
+   },
+   {
+    "qnum": 5,
+    "answer": "C",
+    "pct": 74
+   },
+   {
+    "qnum": 6,
+    "answer": "B",
+    "pct": 53
+   },
+   {
+    "qnum": 7,
+    "answer": "D",
+    "pct": 47
+   },
+   {
+    "qnum": 8,
+    "answer": "A",
+    "pct": 76
+   },
+   {
+    "qnum": 9,
+    "answer": "B",
+    "pct": 36
+   },
+   {
+    "qnum": 10,
+    "answer": "C",
+    "pct": 43
+   },
+   {
+    "qnum": 11,
+    "answer": "B",
+    "pct": 96
+   },
+   {
+    "qnum": 12,
+    "answer": "D",
+    "pct": 60
+   },
+   {
+    "qnum": 13,
+    "answer": "B",
+    "pct": 73
+   },
+   {
+    "qnum": 14,
+    "answer": "A",
+    "pct": 67
+   },
+   {
+    "qnum": 15,
+    "answer": "A",
+    "pct": 76
+   },
+   {
+    "qnum": 16,
+    "answer": "C",
+    "pct": 88
+   },
+   {
+    "qnum": 17,
+    "answer": "B",
+    "pct": 75
+   },
+   {
+    "qnum": 18,
+    "answer": "A",
+    "pct": 78
+   },
+   {
+    "qnum": 19,
+    "answer": "D",
+    "pct": 40
+   },
+   {
+    "qnum": 20,
+    "answer": "C",
+    "pct": 67
+   },
+   {
+    "qnum": 21,
+    "answer": "D",
+    "pct": 39
+   },
+   {
+    "qnum": 22,
+    "answer": "A",
+    "pct": 86
+   },
+   {
+    "qnum": 23,
+    "answer": "C",
+    "pct": 84
+   },
+   {
+    "qnum": 24,
+    "answer": "D",
+    "pct": 78
+   },
+   {
+    "qnum": 25,
+    "answer": "C",
+    "pct": 64
+   },
+   {
+    "qnum": 26,
+    "answer": "A",
+    "pct": 42
+   },
+   {
+    "qnum": 27,
+    "answer": "C",
+    "pct": 72
+   },
+   {
+    "qnum": 28,
+    "answer": "A",
+    "pct": 59
+   },
+   {
+    "qnum": 29,
+    "answer": "D",
+    "pct": 91
+   },
+   {
+    "qnum": 30,
+    "answer": "C",
+    "pct": 79
+   },
+   {
+    "qnum": 31,
+    "answer": "B",
+    "pct": 58
+   },
+   {
+    "qnum": 32,
+    "answer": "A",
+    "pct": 38
+   },
+   {
+    "qnum": 33,
+    "answer": "C",
+    "pct": 80
+   },
+   {
+    "qnum": 34,
+    "answer": "D",
+    "pct": 47
+   },
+   {
+    "qnum": 35,
+    "answer": "B",
+    "pct": 81
+   },
+   {
+    "qnum": 36,
+    "answer": "D",
+    "pct": 34
+   }
+  ],
+  "2016": [
+   {
+    "qnum": 1,
+    "answer": "C",
+    "pct": 85
+   },
+   {
+    "qnum": 2,
+    "answer": "B",
+    "pct": 69
+   },
+   {
+    "qnum": 3,
+    "answer": "D",
+    "pct": 43
+   },
+   {
+    "qnum": 4,
+    "answer": "B",
+    "pct": 33
+   },
+   {
+    "qnum": 5,
+    "answer": "A",
+    "pct": 52
+   },
+   {
+    "qnum": 6,
+    "answer": "A",
+    "pct": 68
+   },
+   {
+    "qnum": 7,
+    "answer": "A",
+    "pct": 80
+   },
+   {
+    "qnum": 8,
+    "answer": "C",
+    "pct": 64
+   },
+   {
+    "qnum": 9,
+    "answer": "A",
+    "pct": 79
+   },
+   {
+    "qnum": 10,
+    "answer": "C",
+    "pct": 67
+   },
+   {
+    "qnum": 11,
+    "answer": "D",
+    "pct": 73
+   },
+   {
+    "qnum": 12,
+    "answer": "A",
+    "pct": 69
+   },
+   {
+    "qnum": 13,
+    "answer": "B",
+    "pct": 47
+   },
+   {
+    "qnum": 14,
+    "answer": "B",
+    "pct": 68
+   },
+   {
+    "qnum": 15,
+    "answer": "B",
+    "pct": 51
+   },
+   {
+    "qnum": 16,
+    "answer": "C",
+    "pct": 76
+   },
+   {
+    "qnum": 17,
+    "answer": "C",
+    "pct": 40
+   },
+   {
+    "qnum": 18,
+    "answer": "D",
+    "pct": 67
+   },
+   {
+    "qnum": 19,
+    "answer": "C",
+    "pct": 34
+   },
+   {
+    "qnum": 20,
+    "answer": "D",
+    "pct": 59
+   },
+   {
+    "qnum": 21,
+    "answer": "D",
+    "pct": 71
+   },
+   {
+    "qnum": 22,
+    "answer": "C",
+    "pct": 85
+   },
+   {
+    "qnum": 23,
+    "answer": "A",
+    "pct": 73
+   },
+   {
+    "qnum": 24,
+    "answer": "C",
+    "pct": 36
+   },
+   {
+    "qnum": 25,
+    "answer": "D",
+    "pct": 58
+   },
+   {
+    "qnum": 26,
+    "answer": "A",
+    "pct": 65
+   },
+   {
+    "qnum": 27,
+    "answer": "B",
+    "pct": 18
+   },
+   {
+    "qnum": 28,
+    "answer": "C",
+    "pct": 18
+   },
+   {
+    "qnum": 29,
+    "answer": "B",
+    "pct": 73
+   },
+   {
+    "qnum": 30,
+    "answer": "A",
+    "pct": 61
+   },
+   {
+    "qnum": 31,
+    "answer": "D",
+    "pct": 70
+   },
+   {
+    "qnum": 32,
+    "answer": "B",
+    "pct": 30
+   },
+   {
+    "qnum": 33,
+    "answer": "B",
+    "pct": 46
+   },
+   {
+    "qnum": 34,
+    "answer": "D",
+    "pct": 47
+   },
+   {
+    "qnum": 35,
+    "answer": "A",
+    "pct": 42
+   },
+   {
+    "qnum": 36,
+    "answer": "D",
+    "pct": 64
+   }
+  ],
+  "2017": [
+   {
+    "qnum": 1,
+    "answer": "C",
+    "pct": 67
+   },
+   {
+    "qnum": 2,
+    "answer": "B",
+    "pct": 67
+   },
+   {
+    "qnum": 3,
+    "answer": "A",
+    "pct": 34
+   },
+   {
+    "qnum": 4,
+    "answer": "C",
+    "pct": 23
+   },
+   {
+    "qnum": 5,
+    "answer": "A",
+    "pct": 60
+   },
+   {
+    "qnum": 6,
+    "answer": "C",
+    "pct": 73
+   },
+   {
+    "qnum": 7,
+    "answer": "C",
+    "pct": 58
+   },
+   {
+    "qnum": 8,
+    "answer": "B",
+    "pct": 79
+   },
+   {
+    "qnum": 9,
+    "answer": "A",
+    "pct": 53
+   },
+   {
+    "qnum": 10,
+    "answer": "D",
+    "pct": 58
+   },
+   {
+    "qnum": 11,
+    "answer": "D",
+    "pct": 81
+   },
+   {
+    "qnum": 12,
+    "answer": "B",
+    "pct": 71
+   },
+   {
+    "qnum": 13,
+    "answer": "A",
+    "pct": 57
+   },
+   {
+    "qnum": 14,
+    "answer": "B",
+    "pct": 53
+   },
+   {
+    "qnum": 15,
+    "answer": "A",
+    "pct": 76
+   },
+   {
+    "qnum": 16,
+    "answer": "D",
+    "pct": 61
+   },
+   {
+    "qnum": 17,
+    "answer": "C",
+    "pct": 51
+   },
+   {
+    "qnum": 18,
+    "answer": "D",
+    "pct": 49
+   },
+   {
+    "qnum": 19,
+    "answer": "B",
+    "pct": 78
+   },
+   {
+    "qnum": 20,
+    "answer": "B",
+    "pct": 76
+   },
+   {
+    "qnum": 21,
+    "answer": "B",
+    "pct": 53
+   },
+   {
+    "qnum": 22,
+    "answer": "C",
+    "pct": 63
+   },
+   {
+    "qnum": 23,
+    "answer": "D",
+    "pct": 49
+   },
+   {
+    "qnum": 24,
+    "answer": "C",
+    "pct": 87
+   },
+   {
+    "qnum": 25,
+    "answer": "A",
+    "pct": 79
+   },
+   {
+    "qnum": 26,
+    "answer": "D",
+    "pct": 73
+   },
+   {
+    "qnum": 27,
+    "answer": "C",
+    "pct": 71
+   },
+   {
+    "qnum": 28,
+    "answer": "A",
+    "pct": 66
+   },
+   {
+    "qnum": 29,
+    "answer": "C",
+    "pct": 53
+   },
+   {
+    "qnum": 30,
+    "answer": "D",
+    "pct": 87
+   },
+   {
+    "qnum": 31,
+    "answer": "D",
+    "pct": 65
+   },
+   {
+    "qnum": 32,
+    "answer": "D",
+    "pct": 56
+   },
+   {
+    "qnum": 33,
+    "answer": "C",
+    "pct": 62
+   },
+   {
+    "qnum": 34,
+    "answer": "B",
+    "pct": 62
+   },
+   {
+    "qnum": 35,
+    "answer": "A",
+    "pct": 56
+   },
+   {
+    "qnum": 36,
+    "answer": "A",
+    "pct": 78
+   }
+  ],
+  "2018": [
+   {
+    "qnum": 1,
+    "answer": "D",
+    "pct": 71
+   },
+   {
+    "qnum": 2,
+    "answer": "C",
+    "pct": 54
+   },
+   {
+    "qnum": 3,
+    "answer": "B",
+    "pct": 76
+   },
+   {
+    "qnum": 4,
+    "answer": "A",
+    "pct": 69
+   },
+   {
+    "qnum": 5,
+    "answer": "D",
+    "pct": 37
+   },
+   {
+    "qnum": 6,
+    "answer": "D",
+    "pct": 89
+   },
+   {
+    "qnum": 7,
+    "answer": "A",
+    "pct": 74
+   },
+   {
+    "qnum": 8,
+    "answer": "C",
+    "pct": 63
+   },
+   {
+    "qnum": 9,
+    "answer": "C",
+    "pct": 41
+   },
+   {
+    "qnum": 10,
+    "answer": "A",
+    "pct": 78
+   },
+   {
+    "qnum": 11,
+    "answer": "D",
+    "pct": 69
+   },
+   {
+    "qnum": 12,
+    "answer": "A",
+    "pct": 39
+   },
+   {
+    "qnum": 13,
+    "answer": "C",
+    "pct": 77
+   },
+   {
+    "qnum": 14,
+    "answer": "A",
+    "pct": 91
+   },
+   {
+    "qnum": 15,
+    "answer": "D",
+    "pct": 61
+   },
+   {
+    "qnum": 16,
+    "answer": "D",
+    "pct": 51
+   },
+   {
+    "qnum": 17,
+    "answer": "C",
+    "pct": 59
+   },
+   {
+    "qnum": 18,
+    "answer": "C",
+    "pct": 63
+   },
+   {
+    "qnum": 19,
+    "answer": "B",
+    "pct": 73
+   },
+   {
+    "qnum": 20,
+    "answer": "D",
+    "pct": 50
+   },
+   {
+    "qnum": 21,
+    "answer": "C",
+    "pct": 58
+   },
+   {
+    "qnum": 22,
+    "answer": "A",
+    "pct": 76
+   },
+   {
+    "qnum": 23,
+    "answer": "B",
+    "pct": 74
+   },
+   {
+    "qnum": 24,
+    "answer": "B",
+    "pct": 51
+   },
+   {
+    "qnum": 25,
+    "answer": "D",
+    "pct": 36
+   },
+   {
+    "qnum": 26,
+    "answer": "A",
+    "pct": 50
+   },
+   {
+    "qnum": 27,
+    "answer": "B",
+    "pct": 96
+   },
+   {
+    "qnum": 28,
+    "answer": "A",
+    "pct": 63
+   },
+   {
+    "qnum": 29,
+    "answer": "D",
+    "pct": 28
+   },
+   {
+    "qnum": 30,
+    "answer": "B",
+    "pct": 76
+   },
+   {
+    "qnum": 31,
+    "answer": "B",
+    "pct": 81
+   },
+   {
+    "qnum": 32,
+    "answer": "C",
+    "pct": 64
+   },
+   {
+    "qnum": 33,
+    "answer": "B",
+    "pct": 77
+   },
+   {
+    "qnum": 34,
+    "answer": "A",
+    "pct": 38
+   },
+   {
+    "qnum": 35,
+    "answer": "D",
+    "pct": 20
+   },
+   {
+    "qnum": 36,
+    "answer": "C",
+    "pct": 66
+   }
+  ],
+  "2019": [
+   {
+    "qnum": 1,
+    "answer": "B",
+    "pct": 83
+   },
+   {
+    "qnum": 2,
+    "answer": "D",
+    "pct": 44
+   },
+   {
+    "qnum": 3,
+    "answer": "B",
+    "pct": 61
+   },
+   {
+    "qnum": 4,
+    "answer": "B",
+    "pct": 49
+   },
+   {
+    "qnum": 5,
+    "answer": "D",
+    "pct": 45
+   },
+   {
+    "qnum": 6,
+    "answer": "A",
+    "pct": 77
+   },
+   {
+    "qnum": 7,
+    "answer": "C",
+    "pct": 31
+   },
+   {
+    "qnum": 8,
+    "answer": "A",
+    "pct": 73
+   },
+   {
+    "qnum": 9,
+    "answer": "B",
+    "pct": 72
+   },
+   {
+    "qnum": 10,
+    "answer": "A",
+    "pct": 22
+   },
+   {
+    "qnum": 11,
+    "answer": "B",
+    "pct": 23
+   },
+   {
+    "qnum": 12,
+    "answer": "D",
+    "pct": 87
+   },
+   {
+    "qnum": 13,
+    "answer": "D",
+    "pct": 45
+   },
+   {
+    "qnum": 14,
+    "answer": "D",
+    "pct": 63
+   },
+   {
+    "qnum": 15,
+    "answer": "A",
+    "pct": 35
+   },
+   {
+    "qnum": 16,
+    "answer": "D",
+    "pct": 56
+   },
+   {
+    "qnum": 17,
+    "answer": "C",
+    "pct": 59
+   },
+   {
+    "qnum": 18,
+    "answer": "A",
+    "pct": 61
+   },
+   {
+    "qnum": 19,
+    "answer": "D",
+    "pct": 84
+   },
+   {
+    "qnum": 20,
+    "answer": "B",
+    "pct": 65
+   },
+   {
+    "qnum": 21,
+    "answer": "D",
+    "pct": 54
+   },
+   {
+    "qnum": 22,
+    "answer": "D",
+    "pct": 39
+   },
+   {
+    "qnum": 23,
+    "answer": "C",
+    "pct": 45
+   },
+   {
+    "qnum": 24,
+    "answer": "C",
+    "pct": 41
+   },
+   {
+    "qnum": 25,
+    "answer": "C",
+    "pct": 68
+   },
+   {
+    "qnum": 26,
+    "answer": "A",
+    "pct": 80
+   },
+   {
+    "qnum": 27,
+    "answer": "C",
+    "pct": 50
+   },
+   {
+    "qnum": 28,
+    "answer": "B",
+    "pct": 45
+   },
+   {
+    "qnum": 29,
+    "answer": "A",
+    "pct": 68
+   },
+   {
+    "qnum": 30,
+    "answer": "C",
+    "pct": 18
+   },
+   {
+    "qnum": 31,
+    "answer": "C",
+    "pct": 45
+   },
+   {
+    "qnum": 32,
+    "answer": "D",
+    "pct": 50
+   },
+   {
+    "qnum": 33,
+    "answer": "B",
+    "pct": 70
+   },
+   {
+    "qnum": 34,
+    "answer": "C",
+    "pct": 81
+   },
+   {
+    "qnum": 35,
+    "answer": "A",
+    "pct": 48
+   },
+   {
+    "qnum": 36,
+    "answer": "C",
+    "pct": 66
+   }
+  ],
+  "2020": [
+   {
+    "qnum": 1,
+    "answer": "A",
+    "pct": 63
+   },
+   {
+    "qnum": 2,
+    "answer": "C",
+    "pct": 85
+   },
+   {
+    "qnum": 3,
+    "answer": "C",
+    "pct": 71
+   },
+   {
+    "qnum": 4,
+    "answer": "A",
+    "pct": 64
+   },
+   {
+    "qnum": 5,
+    "answer": "B",
+    "pct": 73
+   },
+   {
+    "qnum": 6,
+    "answer": "B",
+    "pct": 70
+   },
+   {
+    "qnum": 7,
+    "answer": "D",
+    "pct": 41
+   },
+   {
+    "qnum": 8,
+    "answer": "D",
+    "pct": 78
+   },
+   {
+    "qnum": 9,
+    "answer": "D",
+    "pct": 45
+   },
+   {
+    "qnum": 10,
+    "answer": "B",
+    "pct": 86
+   },
+   {
+    "qnum": 11,
+    "answer": "C",
+    "pct": 80
+   },
+   {
+    "qnum": 12,
+    "answer": "D",
+    "pct": 59
+   },
+   {
+    "qnum": 13,
+    "answer": "A",
+    "pct": 82
+   },
+   {
+    "qnum": 14,
+    "answer": "B",
+    "pct": 53
+   },
+   {
+    "qnum": 15,
+    "answer": "B",
+    "pct": 91
+   },
+   {
+    "qnum": 16,
+    "answer": "A",
+    "pct": 56
+   },
+   {
+    "qnum": 17,
+    "answer": "D",
+    "pct": 58
+   },
+   {
+    "qnum": 18,
+    "answer": "C",
+    "pct": 74
+   },
+   {
+    "qnum": 19,
+    "answer": "A",
+    "pct": 52
+   },
+   {
+    "qnum": 20,
+    "answer": "A",
+    "pct": 34
+   },
+   {
+    "qnum": 21,
+    "answer": "A",
+    "pct": 66
+   },
+   {
+    "qnum": 22,
+    "answer": "C",
+    "pct": 28
+   },
+   {
+    "qnum": 23,
+    "answer": "B",
+    "pct": 64
+   },
+   {
+    "qnum": 24,
+    "answer": "B",
+    "pct": 63
+   },
+   {
+    "qnum": 25,
+    "answer": "A",
+    "pct": 57
+   },
+   {
+    "qnum": 26,
+    "answer": "D",
+    "pct": 49
+   },
+   {
+    "qnum": 27,
+    "answer": "C",
+    "pct": 61
+   },
+   {
+    "qnum": 28,
+    "answer": "B",
+    "pct": 84
+   },
+   {
+    "qnum": 29,
+    "answer": "C",
+    "pct": 70
+   },
+   {
+    "qnum": 30,
+    "answer": "C",
+    "pct": 65
+   },
+   {
+    "qnum": 31,
+    "answer": "D",
+    "pct": 81
+   },
+   {
+    "qnum": 32,
+    "answer": "B",
+    "pct": 92
+   },
+   {
+    "qnum": 33,
+    "answer": "D",
+    "pct": 43
+   },
+   {
+    "qnum": 34,
+    "answer": "D",
+    "pct": 57
+   },
+   {
+    "qnum": 35,
+    "answer": "A",
+    "pct": 38
+   },
+   {
+    "qnum": 36,
+    "answer": "C",
+    "pct": 41
+   }
+  ],
+  "2021": [
+   {
+    "qnum": 1,
+    "answer": "D",
+    "pct": 60
+   },
+   {
+    "qnum": 2,
+    "answer": "D",
+    "pct": 63
+   },
+   {
+    "qnum": 3,
+    "answer": "C",
+    "pct": 57
+   },
+   {
+    "qnum": 4,
+    "answer": "D",
+    "pct": 85
+   },
+   {
+    "qnum": 5,
+    "answer": "B",
+    "pct": 42
+   },
+   {
+    "qnum": 6,
+    "answer": "A",
+    "pct": 62
+   },
+   {
+    "qnum": 7,
+    "answer": "C",
+    "pct": 65
+   },
+   {
+    "qnum": 8,
+    "answer": "B",
+    "pct": 38
+   },
+   {
+    "qnum": 9,
+    "answer": "A",
+    "pct": 57
+   },
+   {
+    "qnum": 10,
+    "answer": "B",
+    "pct": 52
+   },
+   {
+    "qnum": 11,
+    "answer": "C",
+    "pct": 63
+   },
+   {
+    "qnum": 12,
+    "answer": "C",
+    "pct": 58
+   },
+   {
+    "qnum": 13,
+    "answer": "A",
+    "pct": 53
+   },
+   {
+    "qnum": 14,
+    "answer": "A",
+    "pct": 73
+   },
+   {
+    "qnum": 15,
+    "answer": "D",
+    "pct": 75
+   },
+   {
+    "qnum": 16,
+    "answer": "D",
+    "pct": 40
+   },
+   {
+    "qnum": 17,
+    "answer": "C",
+    "pct": 38
+   },
+   {
+    "qnum": 18,
+    "answer": "A",
+    "pct": 68
+   },
+   {
+    "qnum": 19,
+    "answer": "C",
+    "pct": 73
+   },
+   {
+    "qnum": 20,
+    "answer": "D",
+    "pct": 70
+   },
+   {
+    "qnum": 21,
+    "answer": "C",
+    "pct": 71
+   },
+   {
+    "qnum": 22,
+    "answer": "D",
+    "pct": 67
+   },
+   {
+    "qnum": 23,
+    "answer": "B",
+    "pct": 48
+   },
+   {
+    "qnum": 24,
+    "answer": "D",
+    "pct": 66
+   },
+   {
+    "qnum": 25,
+    "answer": "D",
+    "pct": 65
+   },
+   {
+    "qnum": 26,
+    "answer": "B",
+    "pct": 35
+   },
+   {
+    "qnum": 27,
+    "answer": "B",
+    "pct": 75
+   },
+   {
+    "qnum": 28,
+    "answer": "A",
+    "pct": 12
+   },
+   {
+    "qnum": 29,
+    "answer": "C",
+    "pct": 60
+   },
+   {
+    "qnum": 30,
+    "answer": "B",
+    "pct": 44
+   },
+   {
+    "qnum": 31,
+    "answer": "B",
+    "pct": 30
+   },
+   {
+    "qnum": 32,
+    "answer": "A",
+    "pct": 54
+   },
+   {
+    "qnum": 33,
+    "answer": "B",
+    "pct": 80
+   },
+   {
+    "qnum": 34,
+    "answer": "C",
+    "pct": 61
+   },
+   {
+    "qnum": 35,
+    "answer": "A",
+    "pct": 47
+   },
+   {
+    "qnum": 36,
+    "answer": "C",
+    "pct": 54
+   }
+  ],
+  "2022": [
+   {
+    "qnum": 1,
+    "answer": "A",
+    "pct": 56
+   },
+   {
+    "qnum": 2,
+    "answer": "C",
+    "pct": 60
+   },
+   {
+    "qnum": 3,
+    "answer": "A",
+    "pct": 35
+   },
+   {
+    "qnum": 4,
+    "answer": "B",
+    "pct": 66
+   },
+   {
+    "qnum": 5,
+    "answer": "B",
+    "pct": 44
+   },
+   {
+    "qnum": 6,
+    "answer": "D",
+    "pct": 51
+   },
+   {
+    "qnum": 7,
+    "answer": "C",
+    "pct": 64
+   },
+   {
+    "qnum": 8,
+    "answer": "D",
+    "pct": 62
+   },
+   {
+    "qnum": 9,
+    "answer": "C",
+    "pct": 73
+   },
+   {
+    "qnum": 10,
+    "answer": "D",
+    "pct": 80
+   },
+   {
+    "qnum": 11,
+    "answer": "B",
+    "pct": 51
+   },
+   {
+    "qnum": 12,
+    "answer": "B",
+    "pct": 74
+   },
+   {
+    "qnum": 13,
+    "answer": "B",
+    "pct": 69
+   },
+   {
+    "qnum": 14,
+    "answer": "A",
+    "pct": 55
+   },
+   {
+    "qnum": 15,
+    "answer": "D",
+    "pct": 70
+   },
+   {
+    "qnum": 16,
+    "answer": "B",
+    "pct": 48
+   },
+   {
+    "qnum": 17,
+    "answer": "C",
+    "pct": 69
+   },
+   {
+    "qnum": 18,
+    "answer": "A",
+    "pct": 61
+   },
+   {
+    "qnum": 19,
+    "answer": "D",
+    "pct": 51
+   },
+   {
+    "qnum": 20,
+    "answer": "B",
+    "pct": 46
+   },
+   {
+    "qnum": 21,
+    "answer": "D",
+    "pct": 47
+   },
+   {
+    "qnum": 22,
+    "answer": "D",
+    "pct": 27
+   },
+   {
+    "qnum": 23,
+    "answer": "B",
+    "pct": 51
+   },
+   {
+    "qnum": 24,
+    "answer": "A",
+    "pct": 52
+   },
+   {
+    "qnum": 25,
+    "answer": "C",
+    "pct": 56
+   },
+   {
+    "qnum": 26,
+    "answer": "C",
+    "pct": 44
+   },
+   {
+    "qnum": 27,
+    "answer": "D",
+    "pct": 62
+   },
+   {
+    "qnum": 28,
+    "answer": "A",
+    "pct": 85
+   },
+   {
+    "qnum": 29,
+    "answer": "A",
+    "pct": 61
+   },
+   {
+    "qnum": 30,
+    "answer": "C",
+    "pct": 91
+   },
+   {
+    "qnum": 31,
+    "answer": "D",
+    "pct": 33
+   },
+   {
+    "qnum": 32,
+    "answer": "D",
+    "pct": 64
+   },
+   {
+    "qnum": 33,
+    "answer": "C",
+    "pct": 33
+   },
+   {
+    "qnum": 34,
+    "answer": "C",
+    "pct": 63
+   },
+   {
+    "qnum": 35,
+    "answer": "B",
+    "pct": 59
+   },
+   {
+    "qnum": 36,
+    "answer": "A",
+    "pct": 63
+   }
+  ],
+  "PP": [
+   {
+    "qnum": 1,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 2,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 3,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 4,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 5,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 6,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 7,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 8,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 9,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 10,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 11,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 12,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 13,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 14,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 15,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 16,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 17,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 18,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 19,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 20,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 21,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 22,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 23,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 24,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 25,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 26,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 27,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 28,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 29,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 30,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 31,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 32,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 33,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 34,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 35,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 36,
+    "answer": "D",
+    "pct": 0
+   }
+  ],
+  "SP": [
+   {
+    "qnum": 1,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 2,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 3,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 4,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 5,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 6,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 7,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 8,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 9,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 10,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 11,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 12,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 13,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 14,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 15,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 16,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 17,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 18,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 19,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 20,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 21,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 22,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 23,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 24,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 25,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 26,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 27,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 28,
+    "answer": "D",
+    "pct": 0
+   },
+   {
+    "qnum": 29,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 30,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 31,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 32,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 33,
+    "answer": "C",
+    "pct": 0
+   },
+   {
+    "qnum": 34,
+    "answer": "B",
+    "pct": 0
+   },
+   {
+    "qnum": 35,
+    "answer": "A",
+    "pct": 0
+   },
+   {
+    "qnum": 36,
+    "answer": "D",
+    "pct": 0
+   }
+  ]
+ }
+}
