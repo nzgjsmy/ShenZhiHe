@@ -119,3 +119,8 @@ site/Python/
 # ---------- 建置產物與部署目錄（可由原始碼重建）----------
 site/gh-pages/
 site/神智核-V*.html
+
+# 原卷 OCR 中间产物（页图 + OCR JSON，约 150MB）
+scratch/_pp_pages/
+scratch/_pp_ocr/
+scratch/_pp_build.log
