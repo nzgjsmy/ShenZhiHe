@@ -51,7 +51,8 @@
 | 数据主档 | `f6chem/data/bio/_pastpaper.json`（481 KB） |
 | 线上体积 | index.html 3.89 MB（图片外置） |
 | 原卷工具 | `scripts/pastpaper/`（PDF→頁圖→OCR→題號定位→墨跡包絡裁圖→拼圖目檢，見該目錄 README） |
-| 协作文档 | `docs/贡献指南.md`（给人看）、`AGENTS.md`（给 AI 看）、`docs/journal/`（各自的日志） |
+| 协作文档 | `docs/贡献指南.md`（给人看）、`AGENTS.md`（给 AI 看）、`docs/journal/`（各自的日志）、`docs/团队工作空间接入指南.md`（团队协作怎么接） |
+| 项目级 AI 配置 | `.codebuddy/`（随 git 走，clone 即生效）：`CODEBUDDY.md` 记忆、`rules/` 规则、`skills/` 技能、`commands/`（`/verify` `/deploy` `/write-explanation`） |
 | 检查工具 | `scripts/verify_build.py`（构建自检）、`scripts/guard_data.py`（题库守门员）、`scripts/check_quiz.py`（测验题自检） |
 | 部署包 | `default-workspace/神智核-GitHub部署包`（独立 git 仓库，remote `nzgjsmy/ShenZhiHe`） |
 
@@ -219,6 +220,17 @@ grep -nE "color:#[0-9a-f]{6}" site/template.html | grep -v "^[0-9]*:  --"
 > 只在这里留**一行摘要 + 文件名**。单人时可直接写在这里。
 
 
+### [2026-10-29 13:40] WorkBuddy · 团队协作基建：`.codebuddy/` 项目级配置 + 接入指南
+- **新增 `.codebuddy/`**（随 git 走，队友 clone 即生效，无需任何云端操作）：
+  `CODEBUDDY.md` 项目级记忆、`rules/team-workflow.md`（alwaysApply 每次自动加载）、
+  `skills/shenzhihe-core/SKILL.md`（构建/部署/数据守门）、
+  `commands/`（`/verify` `/deploy` `/write-explanation` 一键命令）。
+- **新增 `.gitattributes`**：统一 LF 入库、Windows 检出转 CRLF，避免跨平台 diff 噪音。
+- **新增 `docs/团队工作空间接入指南.md`**：讲清「本地工作空间 ≠ 云端团队空间」，
+  给出三条路径（git / 资料库团队空间 / 项目）与队友加入标准流程。
+- **不改任何既有源码与数据**，未 bump 版本号（纯协作基建，不影响站点产物）。
+- 验证：`build.py` → 4,434,100 bytes / V0.24.1；`verify_build.py` **11/11 全绿**；`guard_data.py` 通过。
+- 详见 `docs/journal/2026-10-29-workbuddy.md`。
 
 ### [2026-10-25 22:30] WorkBuddy · 建立共享记忆文件
 - 新建本文件，整合双方各自的导出文档（`神智核-工作记忆-20261025.md` / `...-DSH.md`）。
