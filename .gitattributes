@@ -3,25 +3,31 @@
 # 目的：团队成员可能用 Windows / macOS / Linux 混合作业，
 # 若不统一，git 会把「仅换行符不同」当成真实改动，污染 diff、引发误冲突。
 #
-# 规则：
-#   * 文本文件统一用 LF 入库（跨平台最稳）
-#   * Windows 检出时自动转成 CRLF（Windows 工具链兼容）
-#   * 图片/二进制不做任何转换
-#   * 批处理脚本保留 CRLF（cmd.exe 需要）
+# 关键概念（容易搞混）：
+#   text=auto  → 入库时统一规范化为 LF（真正解决「伪 diff」的就是它）
+#   eol=lf     → 检出到工作区时用 LF
+#   两者区别：eol=lf 会强制工作区也是 LF，与 Windows 工具链（cmd/PowerShell 脚本、
+#   某些编辑器）的 CRLF 预期冲突；eol=crlf 只影响检出，不影响入库规范化。
+#
+# 本仓库的取舍：
+#   * 入库统一 LF —— 跨平台最稳，伪 diff 一劳永逸
+#   * 检出保持平台原生（Windows → CRLF，其他 → LF）—— 不打扰本地工具链
+#   * 例外：.bat/.cmd/.ps1 检出必须 CRLF（cmd.exe 不认 LF 批处理）
 
-* text=auto eol=lf
+* text=auto
 
-*.md   text eol=lf
-*.py   text eol=lf
-*.js   text eol=lf
-*.json text eol=lf
-*.html text eol=lf
-*.css  text eol=lf
-*.yml  text eol=lf
-*.yaml text eol=lf
-*.txt  text eol=lf
-*.sh   text eol=lf
+*.md   text
+*.py   text
+*.js   text
+*.json text
+*.html text
+*.css  text
+*.yml  text
+*.yaml text
+*.txt  text
+*.sh   text
 
+# Windows 批处理/PowerShell：入库仍为 LF，但检出必须 CRLF
 *.bat  text eol=crlf
 *.cmd  text eol=crlf
 *.ps1  text eol=crlf
