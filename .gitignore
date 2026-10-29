@@ -125,6 +125,11 @@ scratch/_pp_pages/
 scratch/_pp_ocr/
 scratch/_pp_build.log
 
+# LQ（卷二）原卷 OCR 中间产物（页图 + OCR JSON，可由 lq_build.py 重建）
+scratch/_lq_pages/
+scratch/_lq_raw/
+scratch/_lq_all*.txt
+
 # 题解扩写中间产物（纯文本题解稿）
 scratch/_ex_*.txt
 
