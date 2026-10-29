@@ -54,6 +54,7 @@
 | 协作文档 | `docs/贡献指南.md`（给人看）、`AGENTS.md`（给 AI 看）、`docs/journal/`（各自的日志）、`docs/团队工作空间接入指南.md`（团队协作怎么接） |
 | 项目级 AI 配置 | `.codebuddy/`（随 git 走，clone 即生效）：`CODEBUDDY.md` 记忆、`rules/` 规则、`skills/` 技能、`commands/`（`/verify` `/deploy` `/write-explanation`） |
 | 检查工具 | `scripts/verify_build.py`（构建自检）、`scripts/guard_data.py`（题库守门员）、`scripts/check_quiz.py`（测验题自检） |
+| CI | `verify.yml`（提交守门，11 项）、`daily-audit.yml`（**云端定时巡检**，每天 UTC 03:17，开 Issue 不改代码，零 token 消耗；⚠️ 因 `schedule` 要求 workflow 在默认分支，此文件在 `main` 与 `source` **两分支各存一份且须保持一致**） |
 | 部署包 | `default-workspace/神智核-GitHub部署包`（独立 git 仓库，remote `nzgjsmy/ShenZhiHe`） |
 
 ---
@@ -219,6 +220,25 @@ grep -nE "color:#[0-9a-f]{6}" site/template.html | grep -v "^[0-9]*:  --"
 > 每人/每个 AI 在 `docs/journal/<日期>-<名字>.md` 写自己的详细日志，
 > 只在这里留**一行摘要 + 文件名**。单人时可直接写在这里。
 
+
+### [2026-10-29 18:50] WorkBuddy · 云端定时巡检（Actions）+ 修正 .gitattributes 换行规则
+- **新增 `.github/workflows/daily-audit.yml`**：每天定时在 GitHub 云端跑 `audit_questions.py --quiet`，
+  发现问题开 Issue（**不改代码**）。**零 token 消耗**（纯标准库脚本，不调 AI）。
+  电脑关机照样跑 —— runner 在 GitHub 服务器上。
+- ⚠️ **重要 GitHub 规则**：`schedule` 事件要求 workflow 文件存在于**默认分支**（本仓库 = `main`），
+  否则 Cron 永不触发；`push` 事件则读推送 ref 里的 workflow。
+  故此文件在 `main` 与 `source` **各存一份且内容须一致**（用 git 对象哈希核对）。
+  `main` 是产物分支没有 `data/`，job 内显式 `git checkout FETCH_HEAD -- data scripts` 取源码。
+- **修正 `.gitattributes`**：上一版 `eol=lf` 会强制工作区为 LF，
+  导致已入库的 CRLF 文件在下次修改时**整片伪 diff**（实测指南文档被改出满屏 diff）。
+  真正解决伪 diff 的是 `text=auto`（入库时统一 LF），检出应保持平台原生。
+  验证法：`git add --renormalize .` 后既有文件**零误改**才算修对。
+- **体检输出用 `--quiet` 而非 `--json`**：后者含「题型分布/题量」等统计类信息，
+  照单全收会每天误报。脚本内置 `QUIET_SKIP`，与 `verify_build.py` 门禁口径一致，别造第二套标准。
+- 验证：YAML 经 js-yaml 解析通过；6 个 bash 块 `bash -n` 逐个通过；
+  GitHub API 确认 workflow `state: active`。
+- **未 bump 版本号**（纯 CI 基建，不影响站点产物）；未部署。
+- 详见 `docs/journal/2026-10-29-workbuddy-cloud.md`。
 
 ### [2026-10-29 13:40] WorkBuddy · 团队协作基建：`.codebuddy/` 项目级配置 + 接入指南
 - **新增 `.codebuddy/`**（随 git 走，队友 clone 即生效，无需任何云端操作）：
