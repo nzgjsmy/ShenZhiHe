@@ -2307,6 +2307,79 @@ html[data-theme="dark"] .hn-daily{
 @media (max-width:860px){
   .hn-stat{padding-top:0;font-size:11.5px}
 }
+
+/* ---------- ⑭ 科研時事（三科總覽頁，2026-10-30） ----------
+   站點級資料 data/_news.json，跨科目。沒有資料整塊不渲染。
+   刻意做成「剪報」的感覺：虛線分隔 + 小紙片 + 科目標籤色。
+   外部連結一律 target=_blank + rel=noopener。 */
+.hn-news{
+  margin:32px 0 0;padding-top:24px;
+  border-top:1px dashed var(--hn-edge);
+}
+.hn-news-head{
+  display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+  margin-bottom:16px;
+}
+/* 区块标题用正文色，别用 --hn-muted —— 实测那个灰蓝当标题太弱，几乎看不见 */
+.hn-news-head .hn-lbl{color:var(--hn-title);font-size:12.5px;letter-spacing:.26em;font-weight:700}
+.hn-news-sub{font-size:11.5px;color:var(--hn-muted);letter-spacing:.04em}
+.hn-news-list{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:18px;
+}
+.hn-news-item{
+  position:relative;
+  background:var(--hn-paper);
+  border-radius:4px;padding:16px 18px 14px;
+  box-shadow:0 1px 2px rgba(70,60,40,.08),0 6px 16px rgba(70,60,40,.07);
+  transition:transform .3s var(--ease-ios),box-shadow .3s var(--ease-ios);
+}
+.hn-news-item:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 10px rgba(70,60,40,.11),0 16px 32px rgba(70,60,40,.11);
+}
+.hn-news-meta{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.hn-news-cat{
+  font-size:10px;padding:1px 8px;border-radius:999px;
+  letter-spacing:.08em;font-weight:600;
+  background:var(--accent-soft);color:var(--accent);
+  border:1px solid color-mix(in srgb,var(--accent) 26%,transparent);
+}
+.hn-news-cat.cat-bio{background:var(--green-tint);color:var(--green);
+  border-color:color-mix(in srgb,var(--green) 26%,transparent)}
+.hn-news-cat.cat-chem{background:var(--amber-soft);color:var(--amber);
+  border-color:color-mix(in srgb,var(--amber) 26%,transparent)}
+.hn-news-cat.cat-phys{background:var(--accent-soft);color:var(--accent);
+  border-color:color-mix(in srgb,var(--accent) 26%,transparent)}
+.hn-news-date{
+  font-size:10.5px;color:var(--hn-muted);letter-spacing:.04em;
+  font-variant-numeric:tabular-nums;
+}
+.hn-news-t{
+  font-family:var(--hn-serif);font-size:16px;font-weight:500;
+  color:var(--hn-title);line-height:1.5;letter-spacing:-.1px;
+  margin-bottom:7px;
+}
+.hn-news-x{
+  font-size:13px;line-height:1.85;color:var(--text-soft);
+  display:-webkit-box;-webkit-box-orient:vertical;
+  -webkit-line-clamp:5;line-clamp:5;overflow:hidden;
+}
+.hn-news-src{
+  display:inline-block;margin-top:10px;font-size:11.5px;
+  color:var(--accent);text-decoration:none;letter-spacing:.02em;
+  border-bottom:1px dashed color-mix(in srgb,var(--accent) 45%,transparent);
+}
+.hn-news-src:hover{color:var(--hn-accent);border-bottom-style:solid}
+html[data-theme="dark"] .hn-news-item{
+  box-shadow:0 1px 2px rgba(0,0,0,.32),0 6px 16px rgba(0,0,0,.28);
+}
+@media (max-width:860px){
+  .hn-news{margin-top:24px;padding-top:20px}
+  .hn-news-list{grid-template-columns:1fr;gap:14px}
+  .hn-news-t{font-size:15px}
+  .hn-news-x{font-size:12.5px;line-height:1.8;-webkit-line-clamp:4}
+}
 </style>
 <script>
 /* iOS 舊版 Safari 的 vh 問題補償：真實可視高度寫進 CSS 變數 */
@@ -2505,6 +2578,7 @@ setTimeout(function(){
 const DATA = JSON.parse(document.getElementById('payload').textContent);
 const SUBJECTS = DATA.subjects || [];
 const SITE = DATA.site || {name:'神智核', version:'V0.1.0'};
+const NEWS = DATA.news || [];   /* 科研時事（站點級，三科總覽頁） */
 const SITE_NAME = SITE.name || '神智核';
 const SITE_VER = SITE.version || 'V0.1.0';
 const SITE_TITLE = SITE_NAME + ' ' + SITE_VER;
@@ -3296,6 +3370,7 @@ function viewSubjects(){
   const _wd=['日','一','二','三','四','五','六'][_d.getDay()];
   const hnDate=_d.getFullYear()+' · '+String(_d.getMonth()+1).padStart(2,'0')+' · '+String(_d.getDate()).padStart(2,'0')+'　星期'+_wd;
   // 三科總覽頁頂右側的總量提示（沒有「當前科目」時代替按鈕，避免按鈕跳回自己）
+  const _CAT={bio:'生物',chem:'化學',phys:'物理',math:'數學'};
   const _totPts=SUBJECTS.reduce((a,s)=>a+((s.stats||{}).points||0),0);
   const _totQ=SUBJECTS.reduce((a,s)=>a+((s.stats||{}).questions||0),0);
   const cards=SUBJECTS.map(s=>{
@@ -3338,11 +3413,28 @@ function viewSubjects(){
       </div>
     </div>
     <div class="subgrid">${cards}</div>
+    ${NEWS.length?`
+    <div class="hn-news">
+      <div class="hn-news-head">
+        <span class="hn-lbl" style="margin:0">科 研 時 事</span>
+        <span class="hn-news-sub">${NEWS.length} 則 · 皆附原始連結</span>
+      </div>
+      <div class="hn-news-list">
+        ${NEWS.slice(0,6).map(nw=>`
+        <div class="hn-news-item">
+          <div class="hn-news-meta">
+            <span class="hn-news-cat cat-${esc(nw.cat||'')}">${esc(_CAT[nw.cat]||nw.cat||'')}</span>
+            <span class="hn-news-date">${esc(nw.date||'')}</span>
+          </div>
+          <div class="hn-news-t">${esc(nw.t||'')}</div>
+          <div class="hn-news-x">${esc(nw.x||'')}</div>
+          ${nw.url?`<a class="hn-news-src" href="${esc(nw.url)}" target="_blank" rel="noopener">${esc(nw.src||'來源')} ↗</a>`:''}
+        </div>`).join('')}
+      </div>
+    </div>`:''}
     <div class="note" style="margin-top:20px">
-      🧪 化學區目前 ${chem?((chem.stats||{}).points||0):0} 個知識點，已整理完成；
-      物理與生物兩區先把結構搭好了，內容可以之後慢慢補進去，補的方式寫在
-      <code>f6chem/data/&lt;科目&gt;/README.md</code>。
-      <br>⚙️ 備份與資料管理在右上角的<b>設定</b>裡。
+      📚 四個分區彼此獨立：筆記、進度、錯題本、複習排程都分開存放，切科目不會互相干擾。
+      <br>⚙️ 備份與資料管理在右側的<b>設定</b>裡。
     </div>
   </div>`;
   tiltCards();
@@ -3660,7 +3752,6 @@ function viewHome(){
     </div>
     ${/* 原本 6 個統計卡（連續/待複習/已熟練/掌握度/錯題/題目）已併入上方 .dash 儀表盤，
          避免同一組數字在首屏出現兩次。2026-10-30 */''}
-    ${SUB&&SUB.id==='bio'?`
     ${dailyItem?`
     <div class="hn-daily">
       <div class="hn-daily-head">
@@ -3670,6 +3761,7 @@ function viewHome(){
       <div class="hn-daily-t">${esc(dailyItem.t||'')}</div>
       <div class="hn-daily-x">${esc(dailyItem.x||'')}</div>
     </div>`:''}
+    ${SUB&&SUB.id==='bio'?`
     ${/* DSE 真題分兩張卡：卷一（MC 選擇題）與卷二（LQ 長題目）**完全分開**。
          兩者題型、題號體系、答題方式都不同，混在一張卡裡用戶會以為是同一套。
          2026-10-30 */''}

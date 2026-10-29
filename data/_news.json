@@ -1,0 +1,29 @@
+{
+  "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。",
+  "items": [
+    {
+      "date": "2026-10-07",
+      "cat": "chem",
+      "t": "2026 諾貝爾化學獎：分子為什麼只挑一隻手",
+      "x": "頒給 Henri B. Kagan 與曾我憲三（Kenso Soai），表彰他們發現「不對稱有機合成中的非線性效應與自催化」。天然的胺基酸幾乎只以單一手性存在，這種偏好在化學上本來難以解釋——他們找到的機制讓少許過量的某一手性產物能自我放大，被稱為「手性的自我複製」。",
+      "src": "NobelPrize.org",
+      "url": "https://www.nobelprize.org/all-nobel-prizes-2026/"
+    },
+    {
+      "date": "2026-10-06",
+      "cat": "phys",
+      "t": "2026 諾貝爾物理獎：用南極的冰抓宇宙來的微中子",
+      "x": "頒給 Francis Halzen，表彰他主導「冰立方微中子天文台」並發現來自天體物理源的高能微中子。他在 1988 年提出大膽構想：把南極一立方公里的冰當探測介質，埋入上千個光感測器，捕捉微中子撞擊冰原子時發出的微弱閃光。微中子幾乎不被物質阻擋，能直接從黑洞噴流這類極端天體的核心逃出來，帶來光學望遠鏡永遠看不到的資訊。",
+      "src": "NobelPrize.org",
+      "url": "https://www.nobelprize.org/all-nobel-prizes-2026/"
+    },
+    {
+      "date": "2026-10-05",
+      "cat": "bio",
+      "t": "2026 諾貝爾生醫獎：用光開關神經細胞",
+      "x": "頒給 Karl Deisseroth、Peter Hegemann、Georg Nagel，表彰「光門控離子通道與光遺傳學」。起點是一種不起眼的單細胞綠藻——Hegemann 與 Nagel 發現它的 channelrhodopsin 蛋白受藍光照射時會打開離子通道；Deisseroth 把這個基因導入大鼠神經元，成功用光觸發神經訊號。如今全球實驗室用它開關特定神經細胞，找出哪些回路掌管記憶、情緒與行為。",
+      "src": "NobelPrize.org",
+      "url": "https://www.nobelprize.org/prizes/medicine/2026/press-release/"
+    }
+  ]
+}

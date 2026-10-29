@@ -389,7 +389,21 @@ def main():
     subjects = [load_subject(sid) for sid in discover_subjects()]
     subjects.sort(key=lambda s: (s.get("order", 99), s.get("id", "")))
 
-    payload = {"site": site, "subjects": subjects}
+    # 科研時事（data/_news.json，站點級，跨科目）：顯示在三科總覽頁。
+    # 內容必須來自可靠來源並附連結 —— 時事不是常識，寧可少寫也不要編。
+    news = []
+    news_path = os.path.join(DATA, "_news.json")
+    if os.path.exists(news_path):
+        d = load(news_path, None)
+        if isinstance(d, dict) and isinstance(d.get("items"), list):
+            news = d["items"]
+            print("  note: 載入科研時事 %d 條" % len(news))
+        else:
+            print("  warning: data/_news.json 格式不對（需為 {items:[...]}），已跳過")
+    else:
+        print("  note: 沒有 data/_news.json，三科總覽頁不顯示科研時事")
+
+    payload = {"site": site, "subjects": subjects, "news": news}
 
     tpl_path = os.path.join(BASE, "template.html")
     with io.open(tpl_path, encoding="utf-8") as f:
