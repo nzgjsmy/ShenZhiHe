@@ -120,8 +120,9 @@ def check_schema(doc, topics):
             seen[qid] = year
 
     for year, lst in years.items():
-        if not re.fullmatch(r"\d{4}", str(year)):
-            err("年份键 `%s` 不是四位数字" % year)
+        # 年份键应为四位数字；樣本卷／練習卷用 PP、SP 这类短代码（无官方得分率）
+        if not (re.fullmatch(r"\d{4}", str(year)) or str(year) in ("PP", "SP")):
+            err("年份键 `%s` 不是四位数字（也不是 PP/SP）" % year)
         for q in lst or []:
             qid = q.get("id", "<无 id>")
             # 必填
