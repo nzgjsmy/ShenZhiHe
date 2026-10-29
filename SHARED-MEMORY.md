@@ -222,6 +222,29 @@ grep -nE "color:#[0-9a-f]{6}" site/template.html | grep -v "^[0-9]*:  --"
 > 只在这里留**一行摘要 + 文件名**。单人时可直接写在这里。
 
 
+### [2026-10-30 02:45] WorkBuddy · 科普扩到 60 条 + 科研時事自動抓取
+- **A：每日小知識 3→20 條/科**（bio/chem/phys 各 20，合計 60）。各 **20 天**一循環。
+  全部學科共識，有爭議的（姆潘巴效應等）一律不收。
+- **B：自動抓取**（`scripts/fetch_news.py` + `.github/workflows/daily-news.yml`）
+  - **實測 7 個源**：可用＝泛科學（繁中、有摘要、科普向）；英文可用＝ScienceDaily/Nature/Phys.org；
+    不可用＝科學網（回 HTML）/果殼/環球科學/中科院（RSS 已失效）；
+    Google News 中文（60–100 條但充斥募資、簽約、股價，且**無摘要**）→ 捨棄。
+  - 腳本原則：**寧缺勿濫**。抓不到就保持原檔，不硬湊；必留原文連結；按連結去重；
+    產業/投資類標題直接丟棄。
+  - **已知局限**：泛科學偏醫療健康，所以時事以 bio 為主，**物理化學很少**（目前 7 條裡 phys 僅 1 條）。
+    要覆蓋齊全就得加英文源，但會破壞語言一致性 → 交由用戶決定。
+  - workflow：每天抓 → **有變化才** build + 部署 → 無變化直接跳過。
+    部署用 `git worktree` + `rsync --delete`，**必須 `--exclude=.github`**，
+    否則會把 workflow 自己刪掉。
+  - ⚠️ **schedule 暫時註解，只開 workflow_dispatch**：自動部署第一次要人工盯，
+    本項目踩過 `cp -rn` no-clobber 導致 39 張圖 404。
+  - ⚠️ **不 bump 版本號**：實測 service-worker 是「緩存優先＋後台更新」，
+    不換緩存鍵用戶下次訪問也能拿到新內容，不必天天改版號（也符合用戶「版號別跳太快」的偏好）。
+- workflow 需在**預設分支 main** 才看得到，已在 main 同步一份（git 對象哈希核對一致，
+  id 400929868，state active）。
+- 詳細過程見 `docs/journal/2026-10-30-workbuddy-fetch.md`。
+- **未 bump 版本、未部署**（部署要等用戶手動觸發驗證）。
+
 ### [2026-10-30 02:25] WorkBuddy · 科研時事 + 三科每日小知識補全
 - **科研時事**（三科總覽頁）：`data/_news.json`（站點級，跨科目）→ `build.py` 注入 `payload.news`
   → 渲染成「剪報」樣式（虛線分隔 + 小紙片 + 科目色標籤 + 原始連結）。
