@@ -124,3 +124,6 @@ site/神智核-V*.html
 scratch/_pp_pages/
 scratch/_pp_ocr/
 scratch/_pp_build.log
+
+# 题解扩写中间产物（纯文本题解稿）
+scratch/_ex_*.txt
