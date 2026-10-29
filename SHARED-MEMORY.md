@@ -58,7 +58,7 @@
 | 协作文档 | `docs/贡献指南.md`（给人看）、`AGENTS.md`（给 AI 看）、`docs/journal/`（各自的日志）、`docs/团队工作空间接入指南.md`（团队协作怎么接） |
 | 项目级 AI 配置 | `.codebuddy/`（随 git 走，clone 即生效）：`CODEBUDDY.md` 记忆、`rules/` 规则、`skills/` 技能、`commands/`（`/verify` `/deploy` `/write-explanation`） |
 | 检查工具 | `scripts/verify_build.py`（构建自检）、`scripts/guard_data.py`（题库守门员）、`scripts/check_quiz.py`（测验题自检） |
-| CI | `verify.yml`（提交守门，13 项）、`daily-audit.yml`（**云端定时巡检**，每天 UTC 03:17，开 Issue 不改代码，零 token）、`daily-news.yml`（**科研時事自動抓取→構建→部署**，⚠️ `schedule` 目前**註解中**，僅開 `workflow_dispatch` 待人工驗證）。⚠️ 因 `schedule` 要求 workflow 在默认分支，上述文件在 `main` 与 `source` **两分支各存一份且须保持一致** |
+| CI | `verify.yml`（提交守门，13 项）、`daily-audit.yml`（**云端定时巡检**，每天 UTC 03:17，开 Issue 不改代码，零 token）、`daily-news.yml`（**科研時事自動抓取→構建→部署**，**每天 UTC 22:17＝港時 06:17 自動執行**，2026-10-30 手動驗證通過後開啟）。⚠️ 因 `schedule` 要求 workflow 在默认分支，上述文件在 `main` 与 `source` **两分支各存一份且须保持一致** |
 | 部署包 | `default-workspace/神智核-GitHub部署包`（独立 git 仓库，remote `nzgjsmy/ShenZhiHe`） |
 
 ---
@@ -224,6 +224,18 @@ grep -nE "color:#[0-9a-f]{6}" site/template.html | grep -v "^[0-9]*:  --"
 > 每人/每个 AI 在 `docs/journal/<日期>-<名字>.md` 写自己的详细日志，
 > 只在这里留**一行摘要 + 文件名**。单人时可直接写在这里。
 
+
+### [2026-10-30 03:20] WorkBuddy · 科研時事定時部署正式開啟
+- 用戶手動觸發驗證通過（「分類對、沒有 404」），打開 `schedule`：`cron: '17 22 * * *'`
+  ＝ UTC 22:17＝**香港時間 06:17**，早上打開就是新的。
+- **雙分支同步**（schedule 只認默認分支）：`origin/main` 與 `origin/source` 的
+  `daily-news.yml` 對象哈希一致 `8ef0362`，workflow `state: active`。
+- **又踩到 non-fast-forward**：本地 main 落後 1 個 commit（部署包推的 V0.25.0 部署提交），
+  `git push` 被拒 → `git pull --rebase` 接上再推。**部署包與主倉庫共用同一個 remote 的 main，
+  所以每次推 main 前都要先 fetch。**
+- ⚠️ **Git Bash 陷阱**：`git rev-parse "origin/main:path"` 會被 MSYS 的路径转换搞成
+  `origin\main;path`（冒號被當成路徑分隔符）→ 加 `MSYS_NO_PATHCONV=1` 才正常。
+- GitHub 的 schedule 在倉庫 60 天無活動後會自動停用；本 workflow 每天都跑，不會觸發。
 
 ### [2026-10-30 03:15] WorkBuddy · 部署 V0.25.0（手帳風全套 + 科普 + 時事）
 - **已上線**：<https://nzgjsmy.github.io/ShenZhiHe/>，`SW_VERSION = V0.25.0`。
