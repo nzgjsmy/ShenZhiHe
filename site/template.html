@@ -201,6 +201,169 @@ nav button.on{background:var(--accent);color:#fff}
 .gearbtn.on{background:var(--accent);border-color:var(--accent)}
 /* ---------- layout ---------- */
 main{max-width:1120px;margin:0 auto;padding:26px 20px 80px}
+
+/* ============================================================
+   手帳紙張（桌面端 >860px） 2026-10-30
+   ------------------------------------------------------------
+   設計來源：scratch/_proto/handbook_pc.html
+   核心意象：整站是「一張攤在深色桌上的方格紙」，四邊貼膠帶，
+   導航做成紙緣露出的書籤。手機不套紙（會擠），維持整屏 + 底部 Tab。
+
+   导航复用现有 nav#nav —— 只是换了形态（横条 → 纸边书签）。
+   data-r 属性不变，navOn() 高亮逻辑零改动。
+   ============================================================ */
+@media (min-width:861px){
+  :root{--desk:#2e2b26;--grid:rgba(110,140,160,.09)}
+
+  /* ---------- 深色桌面 ---------- */
+  body{
+    background:
+      radial-gradient(ellipse 900px 620px at 50% 0%,rgba(255,240,210,.055),transparent 70%),
+      radial-gradient(circle at 18% 82%,rgba(0,0,0,.30),transparent 62%),
+      radial-gradient(circle at 84% 18%,rgba(0,0,0,.22),transparent 58%),
+      var(--desk);
+    padding:30px 46px 70px;
+    min-height:100vh;
+  }
+
+  /* ---------- 紙張 ---------- */
+  .sheet{
+    position:relative;max-width:1180px;margin:0 auto;
+    background:var(--paper);
+    background-image:
+      repeating-linear-gradient(to right,var(--grid) 0 1px,transparent 1px 24px),
+      repeating-linear-gradient(to bottom,var(--grid) 0 1px,transparent 1px 24px);
+    border-radius:3px;
+    padding:10px 46px 34px;
+    box-shadow:0 20px 54px rgba(0,0,0,.44),0 3px 10px rgba(0,0,0,.30);
+  }
+  /* 右下角微微卷起 */
+  .sheet::after{
+    content:"";position:absolute;right:0;bottom:0;width:54px;height:54px;
+    background:linear-gradient(135deg,transparent 48%,rgba(0,0,0,.07) 50%,
+      rgba(255,255,255,.38) 52%,#f0ebdd 72%);
+    border-radius:0 0 3px 0;pointer-events:none;z-index:3;
+  }
+
+  /* ---------- 膠帶 ---------- */
+  .tape{
+    position:absolute;z-index:9;pointer-events:none;
+    background:rgba(226,206,150,.62);
+    box-shadow:0 1px 3px rgba(90,80,50,.22);
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 5px,#000 calc(100% - 5px),transparent 100%);
+            mask-image:linear-gradient(90deg,transparent 0,#000 5px,#000 calc(100% - 5px),transparent 100%);
+  }
+  .tape.t1{width:96px;height:26px;left:-16px;top:30px;transform:rotate(-38deg)}
+  .tape.t2{width:86px;height:24px;right:-12px;top:22px;transform:rotate(41deg)}
+  .tape.t3{width:112px;height:26px;left:47%;top:-13px;transform:rotate(-1.5deg)}
+
+  /* ---------- header 融入紙面 ---------- */
+  /* 必須 static：nav 是 absolute，要靠 .sheet 當包含塊才貼得住紙緣 */
+  header{
+    position:static;background:transparent;
+    -webkit-backdrop-filter:none;backdrop-filter:none;
+    border-bottom:none;
+  }
+  header .hwrap{max-width:none;padding:16px 0 6px;gap:14px}
+  .subbar{max-width:none;padding:0 0 12px}
+
+  main{max-width:none;padding:10px 0 44px}
+  footer{max-width:none;padding:16px 0 0;border-top:1px solid var(--line)}
+
+  /* ---------- 導航 → 紙緣書籤 ---------- */
+  /* ⚠️ absolute 的包含块是 .sheet 的 **padding box**，不是 border box。
+     .sheet 有 padding-right:46px，所以 right:-27px 只会让书签停在纸内。
+     要让书签「露出纸缘」，得补偿 padding：right = -(46 + 27) = -73px。 */
+  nav#nav{
+    position:absolute;right:-73px;top:104px;
+    flex-direction:column;flex-wrap:nowrap;
+    gap:9px;margin:0;padding:0;width:27px;
+    background:transparent;border:none;z-index:10;
+  }
+  nav#nav button{
+    width:27px;height:68px;flex:0 0 auto;
+    border-radius:0 4px 4px 0;border:none;
+    background:#d8cfb9;color:#6b6455;
+    writing-mode:vertical-rl;text-orientation:mixed;
+    font-size:11px;letter-spacing:.06em;
+    display:flex;align-items:center;justify-content:center;
+    padding:0;line-height:1.35;white-space:nowrap;
+    box-shadow:1px 1px 4px rgba(0,0,0,.16);
+    transition:background var(--dur-base),color var(--dur-base),width var(--dur-base);
+  }
+  nav#nav button::before{content:none}   /* 不要先前那套 emoji 图标 */
+  nav#nav button:hover{background:#e6dfcb;color:#4a4438}
+  nav#nav button.on{
+    background:var(--accent);color:#f7f3ea;font-weight:400;width:31px;
+  }
+  /* 複習的紅點在豎排書籤裡要擠在角上，否則會把字擠歪 */
+  nav#nav .navdot{
+    position:absolute;top:5px;right:5px;margin:0;
+    width:5px;height:5px;
+  }
+  nav#nav button{position:relative}
+}
+
+/* ---------- 手帳頁頭裝飾（桌面紙張內）----------
+   仿手寫筆記的開頭：一行小字日期 + 一行手寫體碎念。
+   字體沿用專案既有的龍藏體（site/fonts/LongCang-Title.woff2），
+   ⚠️ 龍藏體只在 ≥24px 才清晰（實測 14px 以下發虛），所以碎念用 20px。 */
+.hn-date{
+  font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--hn-muted);margin-bottom:6px;font-weight:600;
+}
+.hn-date .hn-sub{letter-spacing:.24em;opacity:.85}
+.hn-hand{
+  display:block;margin-top:10px;
+  font-family:"Long Cang","Noto Serif TC",serif;
+  font-size:20px;line-height:1.6;
+  /* ⚠️ 原本是 rgba(255,255,255,.82) —— 那是給深綠 hero 的白字，
+     頁頭改成紙面後就成了「白字寫在米黃紙上」，肉眼幾乎看不見。改走語意變數。 */
+  color:var(--hn-hand);
+  transform:rotate(-1.2deg);transform-origin:left center;
+}
+@media (max-width:860px){
+  .hn-hand{font-size:18px}
+  .hn-date{font-size:11px;letter-spacing:.12em}
+}
+
+/* ---------- 深色模式下的纸张 ----------
+   ⚠️ 必须单独覆盖：.sheet 用的是 var(--paper)，深色下是 #1c1e25，
+   而桌面 --desk 若仍用浅色模式的 #2e2b26，桌面反而比纸亮，对比就反了。
+   深色下正确关系是「桌面更暗、纸稍亮」，像夜里开一盏台灯看本子。 */
+@media (min-width:861px){
+  html[data-theme="dark"]{--desk:#131110;--grid:rgba(150,185,205,.10)}
+  html[data-theme="dark"] body{
+    background:
+      radial-gradient(ellipse 900px 620px at 50% 0%,rgba(255,236,200,.045),transparent 70%),
+      radial-gradient(circle at 18% 82%,rgba(0,0,0,.42),transparent 62%),
+      radial-gradient(circle at 84% 18%,rgba(0,0,0,.32),transparent 58%),
+      var(--desk);
+  }
+  html[data-theme="dark"] .sheet{
+    background-color:#1c1e25;
+    box-shadow:0 20px 54px rgba(0,0,0,.62),0 3px 10px rgba(0,0,0,.45);
+  }
+  /* 深色下胶带要压暗，否则会像贴了两块发光条 */
+  html[data-theme="dark"] .tape{
+    background:rgba(168,152,110,.34);
+    box-shadow:0 1px 3px rgba(0,0,0,.5);
+  }
+  /* 纸签在深色下用深木色，选中的用亮青 */
+  html[data-theme="dark"] nav#nav button{
+    background:#3a3730;color:#b8b1a2;
+    box-shadow:1px 1px 4px rgba(0,0,0,.5);
+  }
+  html[data-theme="dark"] nav#nav button:hover{background:#46423a;color:#e0d9c8}
+  html[data-theme="dark"] nav#nav button.on{
+    background:var(--accent);color:var(--on-accent);font-weight:400;
+  }
+  /* 右下角卷起在深色下会显得发白，压一压 */
+  html[data-theme="dark"] .sheet::after{
+    background:linear-gradient(135deg,transparent 48%,rgba(0,0,0,.35) 50%,
+      rgba(255,255,255,.10) 52%,#23262d 72%);
+  }
+}
 .view{animation:fade var(--dur-slow) ease}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
@@ -1735,6 +1898,290 @@ html[data-theme="dark"] .lq-mk{background:var(--paper-alt);border-color:var(--li
 .dash-metrics span{font-size:9.5px;color:var(--muted);letter-spacing:.05em}
 html[data-theme="dark"] .dash-cta{background:#3d6b62}
 html[data-theme="dark"] .dash-cta:hover{background:#47796f}
+
+/* ============================================================
+   手帳全套（2026-10-30 第二階段）
+   ------------------------------------------------------------
+   設計來源：scratch/_proto/handbook_pc.html
+   把「紙面頁頭 / 便利貼 / 手帳卡 / 圖釘 / 膠帶 / 貼紙」全部落地。
+   配色走語意變數，深色模式整套反向覆蓋（見檔尾 dark 段）。
+   ============================================================ */
+:root{
+  --hn-paper:#fffdf4;          /* 卡片紙（比 paper 更暖更亮） */
+  --hn-note-y:#f8f0dd;         /* 黃便利貼 */
+  --hn-note-p:#e8f2ef;         /* 青便利貼（卷一） */
+  --hn-edge:#d8cfb9;           /* 虛線、膠帶邊 */
+  --hn-tape:rgba(226,206,150,.62);
+  --hn-red:#c25b3f;            /* 朱紅數字 */
+  --hn-hand:#b08a5a;           /* 手寫字色 */
+  --hn-muted:#8a9aa8;
+  --hn-accent:#3d6b62;
+  --hn-title:#2f2a22;
+  --hn-serif:"Noto Serif TC","Songti TC","Long Cang",serif;
+  --hn-track:#e6dfcb;
+}
+
+/* ---------- ① 頁頭：從深綠大卡改成紙面印刷 ---------- */
+.hero.hn-head{
+  background:none;border:none;border-radius:0;box-shadow:none;
+  padding:0 0 24px;margin:0 0 28px;
+  color:var(--ink);
+  border-bottom:1px dashed var(--hn-edge);
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:32px;overflow:visible;
+}
+.hero.hn-head:after{content:none}       /* 撤掉原本右下角那個大水印 emoji */
+html[data-theme="dark"] .hero.hn-head{background:none}
+
+.hn-l{position:relative;flex:1;min-width:0}
+.hero.hn-head .hn-date{
+  font-size:10.5px;color:var(--hn-muted);letter-spacing:.24em;
+  text-transform:uppercase;margin-bottom:9px;font-weight:600;
+  opacity:1;
+}
+.hero.hn-head h1{
+  margin:0;font-family:var(--hn-serif);
+  font-size:46px;font-weight:400;letter-spacing:-1.4px;line-height:1.1;
+  color:var(--hn-title);
+}
+.hero.hn-head .hn-desc{
+  margin:10px 0 0;font-size:13.5px;line-height:1.85;
+  color:var(--text-soft);max-width:620px;opacity:1;
+}
+.hero.hn-head .hn-hand{
+  display:block;margin-top:11px;font-family:var(--hn-serif);
+  font-size:20px;line-height:1.5;color:var(--hn-hand);
+  transform:rotate(-.8deg);transform-origin:left center;
+}
+/* 掌握度進度：紙面上用細槽，不用半透明白 */
+.hn-prog{margin-top:20px;max-width:520px}
+.hn-prog .pbar{height:7px;border-radius:999px;background:var(--hn-track);overflow:hidden}
+.hn-prog .pbar i{display:block;height:100%;border-radius:999px}
+.hn-prog .pmeta{
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-size:11px;color:var(--hn-muted);margin-top:8px;letter-spacing:.04em;
+}
+
+/* 右側按鈕：原型是描邊圓角膠囊 */
+.hn-r{display:flex;gap:10px;align-items:center;flex:0 0 auto;padding-top:8px}
+.hn-btn{
+  background:var(--hn-accent);border:1.5px solid var(--hn-accent);
+  color:#f7f3ea;border-radius:999px;padding:11px 22px;
+  font-size:13px;font-weight:600;cursor:pointer;letter-spacing:.03em;
+  font-family:inherit;
+  transition:transform var(--dur-base) var(--ease-ios),box-shadow var(--dur-base) var(--ease-ios);
+}
+.hn-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(61,107,98,.24)}
+.hn-btn:active{transform:scale(.985)}
+.hn-btn.ghost{background:transparent;border-color:var(--hn-edge);color:var(--text-soft);font-weight:500}
+.hn-btn.ghost:hover{border-color:var(--hn-accent);color:var(--hn-accent);box-shadow:none}
+/* ⚠️ 只給「實心」按鈕配深字（深色主題的 --hn-accent 是亮青，白字對比不足）。
+   不能無差別寫 .hn-btn —— 幽靈按鈕是透明底，染成 #0d1a18 就等於深底黑字，幾乎隱形。 */
+html[data-theme="dark"] .hn-btn:not(.ghost){color:#0d1a18}
+html[data-theme="dark"] .hn-btn.ghost{color:var(--text-soft);border-color:var(--hn-edge)}
+html[data-theme="dark"] .hn-btn.ghost:hover{color:var(--hn-accent);border-color:var(--hn-accent)}
+
+/* ---------- ② 圖釘 / 貼紙 / 膠帶（通用裝飾） ---------- */
+.hn-pin{
+  position:absolute;width:17px;height:17px;z-index:8;pointer-events:none;
+  border-radius:50%;
+  background:radial-gradient(circle at 32% 28%,#f07167,#c0392b 62%,#8e2820);
+  box-shadow:0 3px 5px rgba(60,20,15,.42),inset -1px -1px 2px rgba(0,0,0,.25);
+}
+.hn-pin.blue{background:radial-gradient(circle at 32% 28%,#7fb3d5,#2e6da4 62%,#1c4468);
+  box-shadow:0 3px 5px rgba(15,35,60,.42),inset -1px -1px 2px rgba(0,0,0,.25)}
+.hn-pin.green{background:radial-gradient(circle at 32% 28%,#8fd6a8,#3d9970 62%,#276749);
+  box-shadow:0 3px 5px rgba(15,50,30,.36),inset -1px -1px 2px rgba(0,0,0,.22)}
+.hn-sticker{
+  position:absolute;z-index:7;line-height:1;pointer-events:none;
+  filter:drop-shadow(0 3px 4px rgba(70,60,40,.24));
+}
+
+/* ---------- ③ 儀表盤 → 黃色便利貼 ---------- */
+.dash{
+  background:var(--hn-note-y);border:none;border-radius:3px;
+  padding:24px 26px;margin:0 0 30px;
+  box-shadow:0 2px 5px rgba(70,60,40,.13),0 10px 26px rgba(70,60,40,.10);
+  transform:rotate(var(--tilt,-.9deg));position:relative;
+}
+.dash::before{
+  content:"";position:absolute;left:30px;top:-9px;width:17px;height:17px;
+  border-radius:50%;z-index:8;pointer-events:none;
+  background:radial-gradient(circle at 32% 28%,#f07167,#c0392b 62%,#8e2820);
+  box-shadow:0 3px 5px rgba(60,20,15,.42),inset -1px -1px 2px rgba(0,0,0,.25);
+}
+.dash-top .kick{letter-spacing:.2em;color:var(--hn-muted)}
+.dash-num b{color:var(--hn-red);font-family:var(--hn-serif)}
+.dash-metrics{border-top:1px dashed var(--hn-edge)}
+.dash-metrics div{border-left:2px solid rgba(120,110,90,.22)}
+.dash-metrics div:first-child{border-left-color:var(--hn-accent)}
+.dash-metrics b{color:var(--hn-accent)}
+
+/* ---------- ④ DSE 兩張卡 → 便利貼 ---------- */
+.dse-duo{gap:22px;margin:0 0 30px}
+.dse-duo .dse-hero{
+  border:none;border-radius:3px;margin:0;position:relative;
+  padding:22px 24px;
+  box-shadow:0 2px 5px rgba(70,60,40,.13),0 10px 26px rgba(70,60,40,.10);
+}
+.dse-mc{background:var(--hn-note-p);transform:rotate(var(--tilt,-.7deg))}
+.dse-lq{background:var(--hn-note-y);transform:rotate(var(--tilt,.8deg))}
+.dse-duo .dse-hero:hover{transform:translateY(-3px) rotate(0deg) !important;
+  box-shadow:0 6px 12px rgba(70,60,40,.14),0 20px 42px rgba(70,60,40,.14)}
+.dse-duo .dse-hero::before{
+  content:"";position:absolute;left:26px;top:-8px;width:16px;height:16px;
+  border-radius:50%;z-index:8;pointer-events:none;
+  background:radial-gradient(circle at 32% 28%,#8fd6a8,#3d9970 62%,#276749);
+  box-shadow:0 3px 5px rgba(15,50,30,.36),inset -1px -1px 2px rgba(0,0,0,.22);
+}
+.dse-lq::before{
+  background:radial-gradient(circle at 32% 28%,#7fb3d5,#2e6da4 62%,#1c4468) !important;
+  box-shadow:0 3px 5px rgba(15,35,60,.42),inset -1px -1px 2px rgba(0,0,0,.25) !important;
+}
+html[data-theme="dark"] .dse-mc{background:#1f2b28}
+html[data-theme="dark"] .dse-lq{background:#2e2a1f}
+
+/* ---------- ⑤ 課題卡 → 手帳卡（膠帶 + 固定傾斜） ---------- */
+.grid{gap:20px}
+.tcard{
+  background:var(--hn-paper);border:none;border-radius:4px;
+  padding:20px 20px 16px;overflow:visible;
+  box-shadow:0 2px 4px rgba(70,60,40,.10),0 12px 28px rgba(70,60,40,.08);
+  transition:transform .32s var(--ease-ios),box-shadow .32s var(--ease-ios);
+}
+.tcard:hover{
+  transform:translateY(-4px) rotate(0deg);
+  box-shadow:0 6px 12px rgba(70,60,40,.13),0 22px 46px rgba(70,60,40,.13);
+}
+/* 頂部膠帶 */
+.tcard::before{
+  content:"";position:absolute;left:50%;top:-9px;
+  width:58px;height:16px;transform:translateX(-50%) rotate(-2deg);
+  background:var(--hn-tape);pointer-events:none;z-index:5;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 3px,#000 calc(100% - 3px),transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 3px,#000 calc(100% - 3px),transparent);
+}
+.tcard .bar{width:5px;border-radius:4px 0 0 4px}
+.tcard h3{font-family:var(--hn-serif);font-size:18.5px;font-weight:500;
+  letter-spacing:-.2px;color:var(--hn-title)}
+.tcard .foot{border-top:1px dashed var(--hn-edge)}
+
+/* 傾斜走隨機：由 tiltCards() 每次渲染時用 Math.random() 注入 --tilt，
+   刷新一次就重新搖一次，像真的手貼上去的。
+   用 CSS 變數而不是直接寫 transform，才不會把 :hover 的位移蓋掉。
+   範圍 ±2.2°：再大就會妨礙閱讀，再小看不出手貼感。 */
+
+/* ---------- ⑥ 深色模式：整套反向覆蓋 ---------- */
+html[data-theme="dark"]{
+  --hn-paper:#22252b;
+  --hn-note-y:#2e2a1f;
+  --hn-note-p:#1f2b28;
+  --hn-edge:#3a3d45;
+  --hn-tape:rgba(180,160,110,.34);
+  --hn-red:#e0896e;
+  --hn-hand:#c8a878;
+  --hn-muted:#8b95a3;
+  --hn-accent:#4d8a7f;
+  --hn-title:#e8e5de;
+  --hn-track:#343842;
+}
+html[data-theme="dark"] .tcard,
+html[data-theme="dark"] .dash,
+html[data-theme="dark"] .dse-duo .dse-hero{
+  box-shadow:0 2px 4px rgba(0,0,0,.34),0 12px 28px rgba(0,0,0,.30);
+}
+
+/* ---------- ⑦ 響應式 ---------- */
+@media (max-width:860px){
+  .hero.hn-head{flex-direction:column;gap:14px;padding-bottom:20px}
+  .hero.hn-head h1{font-size:30px;letter-spacing:-.8px}
+  .hero.hn-head .hn-hand{font-size:18px}
+  .hn-r{width:100%;padding-top:0}
+  .hn-btn{flex:1;text-align:center;padding:10px 16px}
+  .dash{transform:none;padding:20px 20px}
+  .dse-mc,.dse-lq{transform:none}
+  .dse-duo{gap:12px}
+  .tcard:nth-child(n){--tilt:0deg}   /* 手機不傾斜：卡片窄，一傾斜就參差 */
+}
+
+/* ---------- ⑧ 底部「手記 + 今日待辦」兩欄（原型 .bottom） ---------- */
+.hn-bottom{
+  display:grid;grid-template-columns:1.55fr 1fr;gap:34px;
+  padding-top:26px;margin:0 0 32px;
+  border-top:1px dashed var(--hn-edge);
+}
+.hn-lbl{
+  font-size:9.5px;color:var(--hn-muted);letter-spacing:.2em;
+  margin-bottom:12px;font-weight:600;
+}
+.hn-mtxt{
+  font-family:var(--hn-serif);font-size:14.5px;line-height:1.95;
+  color:var(--text-soft);
+}
+.hn-mtxt b{color:var(--hn-title);font-weight:600;background:linear-gradient(transparent 62%,rgba(240,214,120,.55) 62%)}
+.hn-mtxt .hl{background:linear-gradient(transparent 62%,rgba(240,214,120,.55) 62%)}
+.hn-bottom .hn-hand{margin-top:14px;font-size:17px}
+.hn-todo{
+  background:var(--hn-paper);border-radius:4px;padding:6px 18px;
+  box-shadow:0 2px 4px rgba(70,60,40,.09),0 10px 24px rgba(70,60,40,.07);
+}
+.hn-tline{
+  display:flex;align-items:center;gap:11px;padding:12px 0;
+  font-size:12.5px;color:var(--text-soft);
+  border-bottom:1px dashed var(--hn-edge);
+}
+.hn-tline:last-child{border-bottom:none}
+.hn-cb{
+  width:14px;height:14px;border:1.4px solid var(--hn-edge);border-radius:2px;
+  flex:0 0 auto;position:relative;
+}
+.hn-cb.on{background:var(--hn-accent);border-color:var(--hn-accent)}
+.hn-cb.on::after{
+  content:"✓";color:#fff;font-size:9.5px;position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.hn-tline .n{
+  margin-left:auto;font-size:11.5px;color:var(--hn-muted);
+  font-variant-numeric:tabular-nums;
+}
+html[data-theme="dark"] .hn-todo{
+  box-shadow:0 2px 4px rgba(0,0,0,.30),0 10px 24px rgba(0,0,0,.26);
+}
+@media (max-width:860px){
+  .hn-bottom{grid-template-columns:1fr;gap:22px;padding-top:20px}
+}
+/* 描述只留一行：本科描述往往把 10 個分區全列出來，兩行會把頁頭撐得很重 */
+.hero.hn-head .hn-desc{
+  display:-webkit-box;-webkit-box-orient:vertical;
+  -webkit-line-clamp:1;line-clamp:1;overflow:hidden;
+}
+
+/* ---------- ⑨ 三科選擇頁的科目卡 → 手帳卡 ---------- */
+.subgrid{gap:22px}
+.subcard{
+  background:var(--hn-paper);border:none;border-radius:4px;
+  padding:24px 20px 16px;overflow:visible;
+  box-shadow:0 2px 4px rgba(70,60,40,.10),0 12px 28px rgba(70,60,40,.08);
+  transform:rotate(var(--tilt,0deg));
+  transition:transform .32s var(--ease-ios),box-shadow .32s var(--ease-ios);
+}
+.subcard:hover{
+  transform:translateY(-4px) rotate(0deg);
+  box-shadow:0 6px 12px rgba(70,60,40,.13),0 22px 46px rgba(70,60,40,.13);
+}
+.subcard::before{
+  content:"";position:absolute;left:50%;top:-9px;
+  width:58px;height:16px;transform:translateX(-50%) rotate(-2deg);
+  background:var(--hn-tape);pointer-events:none;z-index:5;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 3px,#000 calc(100% - 3px),transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 3px,#000 calc(100% - 3px),transparent);
+}
+.subcard .stripe{width:5px;border-radius:4px 0 0 4px}
+.subcard h3{font-family:var(--hn-serif);font-weight:500;color:var(--hn-title)}
+.subcard .sfoot{border-top:1px dashed var(--hn-edge)}
+html[data-theme="dark"] .subcard{
+  box-shadow:0 2px 4px rgba(0,0,0,.34),0 12px 28px rgba(0,0,0,.30);
+}
 </style>
 <script>
 /* iOS 舊版 Safari 的 vh 問題補償：真實可視高度寫進 CSS 變數 */
@@ -1886,6 +2333,15 @@ setTimeout(function(){
   if(b)b.classList.add('done');
 },5000);
 </script>
+<!-- ===== 手账纸张容器（2026-10-30）=====
+     设计来源：scratch/_proto/handbook_pc.html
+     把 header / subbar / main / footer 全部装进一张「摊在桌上的方格纸」，
+     桌面端套用；移动端靠 @media 撤掉纸张改成整屏（手机上套纸会挤）。
+     胶带与书签是纯装饰/导航，不参与内容流。 -->
+<div class="sheet">
+  <div class="tape t1"></div>
+  <div class="tape t2"></div>
+  <div class="tape t3"></div>
 <header>
   <div class="hwrap">
     <div class="brand" onclick="go('#/subjects')"><span class="flask" id="brandemoji">🧪</span><span id="brandname">/*__SITE_NAME__*/</span><span class="verbadge" id="brandver">/*__SITE_VERSION__*/</span></div>
@@ -1915,6 +2371,7 @@ setTimeout(function(){
     <ul>/*__SITE_DISCLAIMER__*/</ul>
   </details>
 </footer>
+</div><!-- /.sheet -->
 
 <div class="pip" id="pip" role="dialog" aria-label="知識點畫中畫"></div>
 <script id="payload" type="application/json">/*__DATA__*/</script>
@@ -2710,6 +3167,9 @@ function switchSubject(sid){
 }
 function viewSubjects(){
   navOn('subjects');
+  const _d=new Date();
+  const _wd=['日','一','二','三','四','五','六'][_d.getDay()];
+  const hnDate=_d.getFullYear()+' · '+String(_d.getMonth()+1).padStart(2,'0')+' · '+String(_d.getDate()).padStart(2,'0')+'　星期'+_wd;
   const cards=SUBJECTS.map(s=>{
     const st=s.stats||{};
     const on=SUB&&s.id===SUB.id;
@@ -2736,9 +3196,16 @@ function viewSubjects(){
   const chem=SUBJECTS.find(s=>s.id==='chem');
   app.innerHTML=`
   <div class="view">
-    <div class="hero">
-      <h1>📚 ${esc(SITE_NAME)} <span style="font-size:17px;font-weight:600;opacity:.75">${esc(SITE_VER)}</span></h1>
-      <p>化學、物理、生物三科各有自己的分區，資料、進度、錯題本全部獨立，不會互相混在一起。</p>
+    <div class="hero hn-head">
+      <div class="hn-l">
+        <div class="hn-date">${hnDate}　<span class="hn-sub">ALL SUBJECTS</span></div>
+        <h1>${esc(SITE_NAME)}</h1>
+        <p class="hn-desc">化學、物理、生物三科各有自己的分區，資料、進度、錯題本全部獨立，不會互相混在一起。</p>
+        <span class="hn-hand">↳ 挑一科進去，今天的份就開始了。</span>
+      </div>
+      <div class="hn-r">
+        <button class="hn-btn" onclick="go('${SUB?'#/home':'#/subjects'}')">${SUB?'繼續 '+esc(SUB.title):'開始學習'} →</button>
+      </div>
     </div>
     <div class="subgrid">${cards}</div>
     <div class="note" style="margin-top:20px">
@@ -2748,6 +3215,7 @@ function viewSubjects(){
       <br>⚙️ 備份與資料管理在右上角的<b>設定</b>裡。
     </div>
   </div>`;
+  tiltCards();
 }
 
 /* ---------------- 設定頁（右上角齒輪進入） ---------------- */
@@ -2940,6 +3408,7 @@ function viewEmptySubject(s){
       </div>
     </div>
   </div>`;
+  tiltCards();
 }
 /* 進入任何需要內容的頁面前先擋一下：空科目直接顯示說明頁 */
 function needsContent(){
@@ -3009,6 +3478,11 @@ function viewHome(){
     : TOPICS.map(topicCardHTML).join('');
   const due=dueList().length, fresh=newPointCount(), sc=streak(), mc=masteredCount();
   const om=Math.round(overallMastery()*100);
+  // 手記區用：科目描述的首句。
+  // ⚠️ 不能只按句號切 —— 生物科的描述是「細胞與生命基礎、人體營養與運輸、…」
+  // 這種頓號串起來的長列表，整份都沒有句號，切完還是全列出來。所以要限字數。
+  const _desc=((SUB.description||'').split(/[。；]/)[0]||'').trim();
+  const shortDesc=_desc.length>46?_desc.slice(0,46)+'…':_desc;
   // 卷二（LQ）統計：與卷一 MC 完全分開，首頁卡片各自顯示自己的数量
   const _LQ=(SUB&&SUB._lq&&SUB._lq.years)||{};
   const LQYRS=Object.keys(_LQ).length;
@@ -3017,8 +3491,27 @@ function viewHome(){
   const _d=new Date();
   const _wd=['日','一','二','三','四','五','六'][_d.getDay()];
   const dateStr=(_d.getMonth()+1)+'月'+_d.getDate()+'日 · 星期'+_wd;
+  // 手账页头日期：仿手写笔记的「2026 · 10 · 30　星期五」格式
+  const hnDate=_d.getFullYear()+' · '+String(_d.getMonth()+1).padStart(2,'0')+' · '+String(_d.getDate()).padStart(2,'0')+'　星期'+_wd;
   app.innerHTML=`
   <div class="view">
+    <div class="hero hn-head">
+      <div class="hn-l">
+        <div class="hn-date">${hnDate}　<span class="hn-sub">${esc((SUB.id||'').toUpperCase())}</span></div>
+        <h1>${esc(SUB.full||SITE_NAME)}</h1>
+        <p class="hn-desc">${esc(SUB.description||'')}</p>
+        <span class="hn-hand">↳ 今天也要加油哦！</span>
+        <div class="hn-prog">
+          <div class="pbar"><i style="width:${om}%;background:${masteryColor(overallMastery())}"></i></div>
+          <div class="pmeta"><span>本科掌握度 ${om}%</span><span>已熟練 ${mc} / ${nPts} 個知識點</span></div>
+        </div>
+        <span class="hn-sticker" style="right:10px;top:-6px;font-size:28px">${SUB.emoji||'🌿'}</span>
+      </div>
+      <div class="hn-r">
+        <button class="hn-btn" onclick="go('${due?'#/review':'#/quiz'}')">${due?'開始今日複習':'開始測驗'} →</button>
+        <button class="hn-btn ghost" onclick="go('#/graph')">關聯地圖</button>
+      </div>
+    </div>
     <div class="dash">
       <div class="dash-top"><span class="kick">今日任務</span><span class="dt">${dateStr}</span></div>
       <div class="dash-main">
@@ -3031,13 +3524,6 @@ function viewHome(){
         <div><b>${sc}</b><span>連續天數</span></div>
         <div><b>${mc}</b><span>已熟練</span></div>
       </div>
-    </div>
-    <div class="hero">
-      <div style="font-size:13px;opacity:.8;margin-bottom:4px">${esc(SITE_TITLE)}</div>
-      <h1>${esc(SUB.full||SITE_NAME)}</h1>
-      <p>${esc(SUB.description||'')}</p>
-      <div class="pbar" style="background:rgba(255,255,255,.25);margin-top:14px"><i style="width:${om}%;background:#fff"></i></div>
-      <div class="pmeta" style="color:rgba(255,255,255,.85)"><span>本科掌握度 ${om}%</span><span>已熟練 ${mc} / ${nPts} 個知識點</span></div>
     </div>
     ${/* 原本 6 個統計卡（連續/待複習/已熟練/掌握度/錯題/題目）已併入上方 .dash 儀表盤，
          避免同一組數字在首屏出現兩次。2026-10-30 */''}
@@ -3067,6 +3553,27 @@ function viewHome(){
       <button onclick="go('#/wrong')">📕 重練錯題（${w}）</button>
       ${extrasOf().length?'<button onclick="go(\'#/extras\')">⚛️ 額外資訊</button>':''}
     </div>
+    <div class="hn-bottom">
+      <div class="hn-notearea">
+        <div class="hn-lbl">手 記</div>
+        <div class="hn-mtxt">
+          本科共 <b>${TOPICS.length}</b> 個課題、<b>${nPts}</b> 個知識點。
+          ${mc>0
+            ? `已經熟練 <span class="hl">${mc}</span> 個，還有 ${nPts-mc} 個等你翻牌。`
+            : `還沒開始，先從下面挑一個分區進去看看。`}
+          ${shortDesc?`<br>${esc(shortDesc)}。`:''}
+        </div>
+        <span class="hn-hand">↳ 別貪多，一天一個知識點就很好了。</span>
+      </div>
+      <div class="hn-side">
+        <div class="hn-lbl">今 日 待 辦</div>
+        <div class="hn-todo">
+          <div class="hn-tline"><span class="hn-cb${due?'':' on'}"></span>複習到期題目<span class="n">${due}</span></div>
+          <div class="hn-tline"><span class="hn-cb${w?'':' on'}"></span>重練錯題<span class="n">${w}</span></div>
+          <div class="hn-tline"><span class="hn-cb${mc>=nPts&&nPts>0?' on':''}"></span>熟練知識點<span class="n">${mc}/${nPts}</span></div>
+        </div>
+      </div>
+    </div>
     ${freshCards?`<div style="margin-bottom:24px"><div style="font-weight:700;margin:0 0 4px">📌 先從這裡開始</div><div class="tmeta" style="margin-bottom:6px">依你的學習記錄排出來的優先複習項目</div>${freshCards}</div>`:''}
     ${hasUnits()?`<div class="tmeta" style="margin:0 0 10px">${UNITS.length} 個分區 · 共 ${TOPICS.length} 個課題，點分區進入</div>`:''}
     <div class="grid">${cards}</div>
@@ -3075,10 +3582,30 @@ function viewHome(){
 }
 /* 手账感：给首页/单元页的课题卡随机倾斜 −1.6° ~ +1.6°。
    每次渲染重新随机；通过 CSS 变量 --tilt 注入，不会覆盖 :hover 的位移。
-   回退：删除本函数与两处 tiltCards() 调用即可（CSS 里的 var(--tilt,0deg) 有兜底）。 */
+   回退：删除本函数与各处 tiltCards() 调用即可（CSS 里的 var(--tilt,0deg) 有兜底）。 */
 function tiltCards(){
-  document.querySelectorAll('#app .grid .tcard').forEach(function(c){
-    c.style.setProperty('--tilt',(Math.random()*3.2-1.6).toFixed(2)+'deg');
+  /* 手账随机倾斜：每次渲染（含刷新、切页）重新掷一次骰子。
+     三层的幅度不同——大卡片可以晃，便利贴和页头要收着点，
+     否则阅读区整片歪斜会晕。手机端在 CSS 里被压回 0deg。 */
+  var R=function(a){return ((Math.random()*2-1)*a).toFixed(2)+'deg';};
+  /* 手機不傾斜：卡片本來就窄，一歪就参差；且 CSS 那條 :nth-child(n){--tilt:0deg}
+     會被這裡的「內聯樣式」蓋掉（內聯優先級最高），所以必須在 JS 裡就否掉。 */
+  if(window.matchMedia('(max-width:860px)').matches){
+    document.querySelectorAll('#app .tcard,#app .dash,#app .dse-duo .dse-hero')
+      .forEach(function(c){c.style.removeProperty('--tilt');});
+    return;
+  }
+  document.querySelectorAll('#app .tcard').forEach(function(c){
+    c.style.setProperty('--tilt',R(2.2));
+  });
+  document.querySelectorAll('#app .subcard').forEach(function(c){
+    c.style.setProperty('--tilt',R(2.0));
+  });
+  document.querySelectorAll('#app .dash').forEach(function(c){
+    c.style.setProperty('--tilt',R(1.1));
+  });
+  document.querySelectorAll('#app .dse-duo .dse-hero').forEach(function(c){
+    c.style.setProperty('--tilt',R(1.4));
   });
 }
 /* 單元頁：列出該單元底下的課題 */
@@ -3107,6 +3634,7 @@ function viewUnit(uid){
     <div class="pmeta" style="margin-bottom:18px"><span>本分區掌握度 ${mp}%</span><span>已熟練 ${unitMasteredCount(u)} / ${nPts} 個知識點</span></div>
     <div class="grid">${ts.map(topicCardHTML).join('')}</div>
   </div>`;
+  tiltCards();
 }
 
 /* ---------- 虚拟滚动实现（可变高度 + 占位块）----------
