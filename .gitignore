@@ -134,3 +134,7 @@ scratch/_shot_*.js
 scratch/_browser_check.js
 scratch/shot_*.png
 scratch/_bak_pp_v024.json
+
+# WorkBuddy 本地運行時資料（工作區記憶會話日誌等，不進倉庫；
+# 協作者共享的記憶請寫 SHARED-MEMORY.md + docs/journal/）
+.workbuddy/
