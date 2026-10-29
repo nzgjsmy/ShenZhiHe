@@ -44,7 +44,7 @@
   font-weight:400;font-style:normal;font-display:swap;
 }
 :root{
-  --bg:#faf7f2; --paper:#ffffff; --ink:#2b2a26; --muted:#7a756a;
+  --bg:#efe9da; --paper:#ffffff; --ink:#2b2a26; --muted:#6e6960;
   --line:#e8e2d6; --accent:#0f766e; --accent-soft:#e6f3f1;
   --amber:#b45309; --amber-soft:#fdf1e3; --red:#b91c1c; --red-soft:#fdecec;
   --green:#15803d; --green-soft:#e9f7ee; --shadow:0 1px 3px rgba(43,42,38,.08),0 6px 20px rgba(43,42,38,.06);
@@ -67,7 +67,7 @@
   --hover:#f3efe6;             /* 側欄小徽章 hover */
   --hover2:#f3efe7;            /* 按鈕 hover */
   --text-soft:#57534a;         /* 次級正文 */
-  --header-bg:rgba(250,247,242,.92);
+  --header-bg:rgba(246,242,228,.92);   /* 跟纸张同步；原来是不透明感很强的亮白 */
   --tip-bg:#2a2d36;            /* 提示浮條底（.memwarn / .gtip）*/
   --tip-fg:#e8e5de;            /* 提示浮條文字 */
   --scroll-thumb:#d8d2c5;      /* 虛擬滾動條 thumb */
@@ -1695,11 +1695,11 @@ html[data-theme="dark"] .stat b{color:var(--accent)}
    只覆盖视觉变量与少量组件，不改任何结构/交互。
    回退：cp scratch/_bak/template-before-handbook-20261030.html site/template.html */
 :root{
-  --paper:#fffdf4;      /* 暖白纸（原 #ffffff） */
-  --paper-soft:#fbf9f2;
-  --paper-mute:#f6f1e6;
-  --paper-alt:#f2ecdf;
-  --line:#ece6d6;       /* 浅米边框（原 #e8e2d6） */
+  --paper:#f6f2e4;      /* 暖白纸（原 #ffffff） */
+  --paper-soft:#f1ebdb;
+  --paper-mute:#ebe3d1;
+  --paper-alt:#e4dbc6;
+  --line:#dbd1bb;       /* 浅米边框（原 #e8e2d6） */
   --radius:3px;         /* 纸片直角感（原 14px） */
   --shadow:0 1px 2px rgba(70,60,40,.07),0 6px 18px rgba(70,60,40,.06);
 }
@@ -1911,10 +1911,10 @@ html[data-theme="dark"] .dash-cta:hover{background:#47796f}
    配色走語意變數，深色模式整套反向覆蓋（見檔尾 dark 段）。
    ============================================================ */
 :root{
-  --hn-paper:#fffdf4;          /* 卡片紙（比 paper 更暖更亮） */
-  --hn-note-y:#f8f0dd;         /* 黃便利貼 */
-  --hn-note-p:#e8f2ef;         /* 青便利貼（卷一） */
-  --hn-edge:#d8cfb9;           /* 虛線、膠帶邊 */
+  --hn-paper:#fbf8ee;          /* 卡片紙（比 paper 更暖更亮） */
+  --hn-note-y:#f4ead0;         /* 黃便利貼 */
+  --hn-note-p:#e0ece8;         /* 青便利貼（卷一） */
+  --hn-edge:#d3c8b0;           /* 虛線、膠帶邊 */
   --hn-tape:rgba(226,206,150,.62);
   --hn-red:#c25b3f;            /* 朱紅數字 */
   --hn-hand:#b08a5a;           /* 手寫字色 */
@@ -1922,7 +1922,7 @@ html[data-theme="dark"] .dash-cta:hover{background:#47796f}
   --hn-accent:#3d6b62;
   --hn-title:#2f2a22;
   --hn-serif:"Noto Serif TC","Songti TC","Long Cang",serif;
-  --hn-track:#e6dfcb;
+  --hn-track:#ddd3bd;
 }
 
 /* ---------- ① 頁頭：從深綠大卡改成紙面印刷 ---------- */
