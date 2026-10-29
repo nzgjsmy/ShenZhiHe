@@ -342,7 +342,8 @@ NO_WIPE=1 python prep_ghpages.py
 cd /d/deepseek-harness/default-workspace
 cp f6chem/gh-pages/index.html        "神智核-GitHub部署包/index.html"
 cp f6chem/gh-pages/service-worker.js "神智核-GitHub部署包/service-worker.js"
-cp -rn f6chem/gh-pages/img/.         "神智核-GitHub部署包/img/"
+rm -rf "神智核-GitHub部署包/img"    # ⚠️ 先清：cp -rn 的 no-clobber 會漏掉改過的圖
+cp -r  f6chem/gh-pages/img         "神智核-GitHub部署包/img"
 
 # 5) 推送
 cd "神智核-GitHub部署包"

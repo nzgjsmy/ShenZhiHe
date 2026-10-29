@@ -336,7 +336,10 @@ def copy_note_images():
     refs_gen = sorted(set(re.findall(r"img/(gen/[A-Za-z0-9_\-]+\.(?:svg|png))", html)))
     # 真題配圖放在 img/pp/<年份>/f<NN>.webp，引用來自 payload JSON（不是 markdown），
     # 舊版正則抓不到 → 線上 404。這裡一併收進來。
-    refs_pp = sorted(set(re.findall(r"img/(pp/[0-9]{4}/[A-Za-z0-9_]+\.webp)", html)))
+    # ⚠️ 年份段必須同時容納「四位數年份」與「PP／SP」兩個短代碼 —— 
+    #    只寫 [0-9]{4} 會漏掉 PP（練習卷）與 SP（樣本試卷）的全部配圖（39 張），
+    #    這正是 V0.20.0～V0.24.0 期間線上 PP／SP 題目配圖全 404 的原因。
+    refs_pp = sorted(set(re.findall(r"img/(pp/(?:[0-9]{4}|PP|SP)/[A-Za-z0-9_]+\.webp)", html)))
     all_refs = refs + refs_gen + refs_pp
     if not all_refs:
         print("  note: index.html 未引用任何 img/*.webp（圖片外置未啟用？）")

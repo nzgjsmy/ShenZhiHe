@@ -57,8 +57,19 @@ f6chem/
 3. **不要设 `EMBED_IMG=1`**
    那会把图片转成 base64 内嵌，HTML 从 3.8 MB 涨到 63 MB，线上加载会崩。
 
-4. **部署必须带图片**
+4. **部署必须带图片，而且要「先清后拷」**
    只复制 `index.html` + `service-worker.js` 会漏图 → 新增图片全部 404（已发生两次）。
+
+   ⚠️ **不要用 `cp -rn`**：`-n` 是 no-clobber，**目标已存在的同名文件不会被覆盖**。
+   改过图的题（改过内容的 webp）会静默保留旧版 → 线上显示的还是旧图，
+   但本地构建是对的，非常难查。正确做法是**先删目标目录再整份拷贝**：
+
+   ```bash
+   rm -rf "神智核-GitHub部署包/img"
+   cp -r  f6chem/gh-pages/img "神智核-GitHub部署包/img"
+   ```
+
+   这样既覆盖了改过的图，又清掉了源目录已不存在的孤儿图。
 
 5. **改版必须 bump `site/version.json` 的 version**
    `service-worker.js` 的缓存键是 `shenzhine-<version>`，不 bump 客户端会一直用旧缓存。
