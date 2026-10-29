@@ -1996,10 +1996,6 @@ html[data-theme="dark"] .hn-btn.ghost:hover{color:var(--hn-accent);border-color:
   box-shadow:0 3px 5px rgba(15,35,60,.42),inset -1px -1px 2px rgba(0,0,0,.25)}
 .hn-pin.green{background:radial-gradient(circle at 32% 28%,#8fd6a8,#3d9970 62%,#276749);
   box-shadow:0 3px 5px rgba(15,50,30,.36),inset -1px -1px 2px rgba(0,0,0,.22)}
-.hn-sticker{
-  position:absolute;z-index:7;line-height:1;pointer-events:none;
-  filter:drop-shadow(0 3px 4px rgba(70,60,40,.24));
-}
 
 /* ---------- ③ 儀表盤 → 黃色便利貼 ---------- */
 .dash{
@@ -2228,6 +2224,36 @@ html[data-theme="dark"] .subcard{
 }
 @media (max-width:860px){
   .deco-sticker{display:none}   /* 手机上卡片窄，贴纸会压到文字 */
+}
+
+/* ---------- ⑪ 标题旁的科目 emoji ----------
+   原来用 absolute 定位到 .hn-l 的 right:10px —— 但 .hn-l 是 flex:1 的整行宽块，
+   科目名只有三四个字，贴纸就被甩到半空，跟标题毫无关系（实测像掉在那儿）。
+   改成跟着标题文字走：h1 收成 inline-block，贴纸作为行内元素紧跟其后。 */
+.hero.hn-head h1.hn-title{
+  display:inline-block;      /* 宽度贴合文字，贴纸才会紧跟着 */
+  max-width:100%;
+}
+.hn-title-sticker{
+  display:inline-block;margin-left:12px;
+  font-size:26px;line-height:1;
+  vertical-align:6px;        /* 手写体基线偏低，往上抬一点才不会吊着 */
+  transform:rotate(-8deg);
+  filter:drop-shadow(0 3px 4px rgba(70,60,40,.22));
+}
+@media (max-width:860px){
+  .hn-title-sticker{font-size:20px;margin-left:8px;vertical-align:4px}
+}
+
+/* ---------- ⑫ 课题标题前的色标（2026-10-30） ----------
+   原先是 30px 的「●」字符 + 高饱和课题色（如 #2563eb 纯蓝），
+   在米黄纸上既大又跳，像一颗孤零零的圆点掉在标题左边。
+   改成 11px 圆角小色块：用 font-size:0 把字符收掉，background 取 currentColor。 */
+.thead h2 .tdot{
+  display:inline-block;width:11px;height:11px;border-radius:3px;
+  background:currentColor;font-size:0;line-height:0;
+  vertical-align:middle;margin-right:9px;
+  transform:translateY(-1px);
 }
 </style>
 <script>
@@ -3545,14 +3571,13 @@ function viewHome(){
     <div class="hero hn-head">
       <div class="hn-l">
         <div class="hn-date">${hnDate}　<span class="hn-sub">${esc((SUB.id||'').toUpperCase())}</span></div>
-        <h1>${esc(SUB.full||SITE_NAME)}</h1>
+        <h1 class="hn-title">${esc(SUB.full||SITE_NAME)}<span class="hn-title-sticker">${SUB.emoji||'🌿'}</span></h1>
         <p class="hn-desc">${esc(SUB.description||'')}</p>
         <span class="hn-hand">↳ 今天也要加油哦！</span>
         <div class="hn-prog">
           <div class="pbar"><i style="width:${om}%;background:${masteryColor(overallMastery())}"></i></div>
           <div class="pmeta"><span>本科掌握度 ${om}%</span><span>已熟練 ${mc} / ${nPts} 個知識點</span></div>
         </div>
-        <span class="hn-sticker" style="right:10px;top:-6px;font-size:28px">${SUB.emoji||'🌿'}</span>
       </div>
       <div class="hn-r">
         <button class="hn-btn" onclick="go('${due?'#/review':'#/quiz'}')">${due?'開始今日複習':'開始測驗'} →</button>
@@ -3917,7 +3942,7 @@ function viewTopic(tid,anchor){
       <div class="thead">
         <button class="back" onclick="goBack()">← 上一步</button>
         <button class="back" onclick="go('#/home')">← 返回首頁</button>
-        <h2><span style="color:${colorOf(t.id)}">●</span> ${esc(t.title)}${t.tags&&t.tags.length?' <span class="tags">'+t.tags.map(g=>'<span class="tag">'+tsub(g)+'</span>').join('')+'</span>':''}</h2>
+        <h2><span class="tdot" style="color:${colorOf(t.id)}">●</span>${esc(t.title)}${t.tags&&t.tags.length?' <span class="tags">'+t.tags.map(g=>'<span class="tag">'+tsub(g)+'</span>').join('')+'</span>':''}</h2>
         <button class="qbtn" style="margin-left:0" onclick="startQuiz({mode:'topic',id:'${t.id}'})">測驗本課題</button>
       </div>
       <div class="tmeta">來源：${esc(t.pdf||'')} ｜ ${(t.sections||[]).length} 章 · ${totalPts} 個知識點 <span style="color:var(--amber)">(虛擬滾動模式)</span></div>
@@ -3943,7 +3968,7 @@ function viewTopic(tid,anchor){
       <div class="thead">
         <button class="back" onclick="goBack()">← 上一步</button>
         <button class="back" onclick="go('#/home')">← 返回首頁</button>
-        <h2><span style="color:${colorOf(t.id)}">●</span> ${esc(t.title)}${t.tags&&t.tags.length?' <span class="tags">'+t.tags.map(g=>'<span class="tag">'+tsub(g)+'</span>').join('')+'</span>':''}</h2>
+        <h2><span class="tdot" style="color:${colorOf(t.id)}">●</span>${esc(t.title)}${t.tags&&t.tags.length?' <span class="tags">'+t.tags.map(g=>'<span class="tag">'+tsub(g)+'</span>').join('')+'</span>':''}</h2>
         <button class="qbtn" style="margin-left:0" onclick="startQuiz({mode:'topic',id:'${t.id}'})">測驗本課題</button>
       </div>
       <div class="tmeta">來源：${esc(t.pdf||'')} ｜ ${(t.sections||[]).length} 章 · ${totalPts} 個知識點</div>
