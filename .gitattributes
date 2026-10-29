@@ -1,0 +1,40 @@
+# 神智核 · 换行符与 diff 规范
+#
+# 目的：团队成员可能用 Windows / macOS / Linux 混合作业，
+# 若不统一，git 会把「仅换行符不同」当成真实改动，污染 diff、引发误冲突。
+#
+# 规则：
+#   * 文本文件统一用 LF 入库（跨平台最稳）
+#   * Windows 检出时自动转成 CRLF（Windows 工具链兼容）
+#   * 图片/二进制不做任何转换
+#   * 批处理脚本保留 CRLF（cmd.exe 需要）
+
+* text=auto eol=lf
+
+*.md   text eol=lf
+*.py   text eol=lf
+*.js   text eol=lf
+*.json text eol=lf
+*.html text eol=lf
+*.css  text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.txt  text eol=lf
+*.sh   text eol=lf
+
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+*.ps1  text eol=crlf
+
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.woff binary
+*.woff2 binary
+*.mp3  binary
+*.mp4  binary
+*.zip  binary
