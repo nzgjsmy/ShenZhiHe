@@ -222,6 +222,23 @@ grep -nE "color:#[0-9a-f]{6}" site/template.html | grep -v "^[0-9]*:  --"
 > 只在这里留**一行摘要 + 文件名**。单人时可直接写在这里。
 
 
+### [2026-10-30 01:35] WorkBuddy · 深色主题浅底漏转根治（35 处硬编码 → 语义变量）
+- **用户报的症状**：「有些区域在深色主题仍然会呈现浅色」，截图是真题页的分组容器（`.pcard`）。
+- **根因不是深色覆盖写少了，而是第一轮手账化时写死了颜色**：
+  `.pcard/.expl/.qtype/.opt{background:#fffdf4}`、`.qtext{color:#2f2a22}`。
+  深色主题覆盖的是 `--paper` / `--ink`，硬编码根本转不到。同类共 **23 行**。
+- **改法**：硬编码 → 语义变量（`#fffdf4→--paper`、`#efe9dd→--panel`、`#f3efe6→--hover`、
+  `#f5f1e8→--paper-alt`、`#e6dfcd→--line`、`#2f2a22→--ink` 等 35 处）。浅色视觉不变，深色自动跟随。
+- **唯一例外**：`mark` 搜索高亮原为亮黄 `#fff3bf`，套 `--amber-soft` 会退化成淡橙、
+  高亮失效 → 新增 `--mark-bg`（浅 `#fff3bf` / 深 `#6b5312`）。
+- **新增 `scripts/audit_dark_theme.py`**：深色下扫 A 类浅底漏转（背景亮度 >0.42）
+  与 B 类文字对比度（<3.0），覆盖 9 条路由。**必须排除主色系**
+  （`--accent` 亮青 / `--amber` / `--hn-accent`），否则被几百个按钮刷屏；
+  且 `parse()` 要同时认 `#hex` 与 `rgb()`，否则排除逻辑静默失效（踩过）。
+  不接入 `verify_build.py`——依赖 Playwright + Chrome，CI runner 没浏览器。
+- 详细过程见 `docs/journal/2026-10-30-workbuddy-dark.md`。
+- **未 bump 版本、未部署**。
+
 ### [2026-10-30 01:40] WorkBuddy · 手账全套落地（页头纸面化 / 便利贴 / 随机倾斜）
 - **设计源**：`scratch/_proto/handbook_pc.html`（用户指定「以那个原型为基础全改」）。
   核心意象＝整站是「一张摊在深色桌上的方格纸」：纸面页头、便利贴、胶带、图钉、纸缘书签。
