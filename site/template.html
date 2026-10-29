@@ -2186,6 +2186,49 @@ html[data-theme="dark"] .hn-todo{
 html[data-theme="dark"] .subcard{
   box-shadow:0 2px 4px rgba(0,0,0,.34),0 12px 28px rgba(0,0,0,.30);
 }
+
+/* ---------- ⑩ 卡片装饰：图钉 / 贴纸（2026-10-30） ----------
+   默认是顶部胶带（.tcard::before / .subcard::before）。
+   轮到图钉时把胶带关掉（display:none），改用 ::after 画一颗钉头；
+   贴纸是真实元素 .deco-sticker，位置在右下角外侧。
+   三者由 tiltCards() 按卡片索引轮换分配，每张卡长得都不一样。 */
+.tcard[data-deco="pin"]::before,
+.subcard[data-deco="pin"]::before{display:none}
+
+.tcard[data-deco="pin"]::after,
+.subcard[data-deco="pin"]::after{
+  content:"";position:absolute;z-index:8;pointer-events:none;
+  width:18px;height:18px;border-radius:50%;left:18px;top:-9px;
+  background:radial-gradient(circle at 32% 28%,#f07167,#c0392b 62%,#8e2820);
+  box-shadow:0 3px 5px rgba(60,20,15,.42),inset -1px -1px 2px rgba(0,0,0,.25);
+}
+/* 蓝图钉：钉在右上角 */
+.tcard[data-pin="b"]::after,
+.subcard[data-pin="b"]::after{
+  left:auto;right:18px;
+  background:radial-gradient(circle at 32% 28%,#7fb3d5,#2e6da4 62%,#1c4468);
+  box-shadow:0 3px 5px rgba(15,35,60,.42),inset -1px -1px 2px rgba(0,0,0,.25);
+}
+/* 绿图钉：钉在左上角偏中 */
+.tcard[data-pin="g"]::after,
+.subcard[data-pin="g"]::after{
+  left:26px;
+  background:radial-gradient(circle at 32% 28%,#8fd6a8,#3d9970 62%,#276749);
+  box-shadow:0 3px 5px rgba(15,50,30,.36),inset -1px -1px 2px rgba(0,0,0,.22);
+}
+/* 角落 emoji 贴纸 */
+.deco-sticker{
+  /* ⚠️ 必须放在卡片「内」的右下角，不能外溢：
+     卡片之间按 DOM 顺序堆叠，贴纸的 z-index 只在本卡片内有效，
+     一旦溢出到 gap 里就会被后一张卡盖掉半颗（实测过一次）。 */
+  position:absolute;right:9px;bottom:7px;z-index:7;
+  font-size:23px;line-height:1;pointer-events:none;
+  transform:rotate(-9deg);
+  filter:drop-shadow(0 2px 3px rgba(70,60,40,.26));
+}
+@media (max-width:860px){
+  .deco-sticker{display:none}   /* 手机上卡片窄，贴纸会压到文字 */
+}
 </style>
 <script>
 /* iOS 舊版 Safari 的 vh 問題補償：真實可視高度寫進 CSS 變數 */
@@ -3599,11 +3642,28 @@ function tiltCards(){
       .forEach(function(c){c.style.removeProperty('--tilt');});
     return;
   }
-  document.querySelectorAll('#app .tcard').forEach(function(c){
+  /* 装饰轮换：一张胶带、一张图钉交替，每第 3 张再在右下角贴个 emoji，
+     像真的一张张随手贴上去，不会整页卡片长得一模一样。 */
+  var PINS=['r','b','g','r','g','b'];
+  var STICK=['📌','✏️','💡','🔥','🌿','⭐','📎','🍀','🧪','🌱'];
+  var i=0;
+  document.querySelectorAll('#app .tcard, #app .subcard').forEach(function(c){
     c.style.setProperty('--tilt',R(2.2));
-  });
-  document.querySelectorAll('#app .subcard').forEach(function(c){
-    c.style.setProperty('--tilt',R(2.0));
+    if(i%2===0){
+      delete c.dataset.deco; delete c.dataset.pin;      // 回到默认胶带
+    }else{
+      c.dataset.deco='pin';
+      c.dataset.pin=PINS[(i>>1)%PINS.length];   // 只有奇数位是图钉，用半索引才轮得到绿
+    }
+    var old=c.querySelector('.deco-sticker');
+    if(old) old.remove();
+    if(i%3===2){
+      var sp=document.createElement('span');
+      sp.className='deco-sticker';
+      sp.textContent=STICK[i%STICK.length];
+      c.appendChild(sp);
+    }
+    i++;
   });
   document.querySelectorAll('#app .dash').forEach(function(c){
     c.style.setProperty('--tilt',R(1.1));
