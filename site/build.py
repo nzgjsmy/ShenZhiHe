@@ -217,6 +217,22 @@ def load_subject(sid):
         else:
             print("  warning: %s/_pastpaper.json 格式不是物件，已跳過" % sid)
 
+    # DSE 卷二長題目（_lq.json）：與卷一選擇題**完全分開**存放。
+    # 用戶明確要求「MC 和 LQ 要分開存放，不然用戶會很亂」：
+    # 兩者題型、題號體系、答題方式、統計口徑都不同，混在一份檔案會讓
+    # 「446 道選擇題」這類數字失真，也讓人誤以為答對選擇題就學會了。
+    lq = None
+    lq_path = os.path.join(sdir, "_lq.json")
+    if os.path.exists(lq_path):
+        d = load(lq_path, None)
+        if isinstance(d, dict):
+            lq = d
+            n_lq = sum(len(v) for v in (d.get("years") or {}).values())
+            print("  note: %s 載入卷二長題 %d 個年份 · %d 道大題" % (
+                sid, len(d.get("years") or {}), n_lq))
+        else:
+            print("  warning: %s/_lq.json 格式不是物件，已跳過" % sid)
+
     # 額外資訊：extras/<科目>/*.json（元素週期表、速查表…），依 order 排序
     extras = []
     edir = os.path.join(EXTRAS, sid)
@@ -305,6 +321,7 @@ def load_subject(sid):
         "quiz": quiz,
         "extras": extras,
         "_pastpaper": pastpaper,
+        "_lq": lq,
         "stats": {
             "topics": len(topics),
             "sections": sum(len(t.get("sections", [])) for t in topics),

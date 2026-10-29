@@ -621,3 +621,78 @@ python _expl_coverage.py --check      # 校驗：過短、缺 explSource、整�
   + 部署層：⑧ prep_ghpages.py 圖片收集正則只認四位數年份 → **PP／SP 的 39 張配圖從 V0.20.0 起全部 404**
   ⑨ 部署流程 `cp -rn` 是 no-clobber → 改過的同名圖會被靜默保留舊版，改為「先 rm -rf 再 cp -r」
   新增 scripts/audit_questions.py（已接進 verify_build 當門禁）與 scripts/audit_images.py（配圖 OCR 查錯位）→ 詳見 journal
+
+- 2026-10-29 19:37 WorkBuddy：**LQ（卷二）OCR 工具链**（补记，此前漏写）—— 新增 `scripts/pastpaper/lq_build.py`（PDF→页图→OCR）+ `lq_parse.py`（多信号融合切大题）+ `docs/LQ人工補號清單.md`。13 个年份已解析，**39 道大題號需人工核对**。卷一 MC 与卷二是两条独立线，不影响站点产物
+
+- 2026-10-29 21:55 WorkBuddy：**LQ OCR 引擎调研：PP-OCRv6 更准但下游会崩，暂不切换** ——
+  更正旧结论「大題號是加粗块被漏读」：实为 `1(a)` 紧贴正文的行内前缀，根因是 **PP-OCRv4 简体字库对繁体识别差**（甲部→聪由、圖1→圃1）
+  实测 PP-OCRv6：2019 p1 文字几乎全对、`1(a)` 单独检出，全年大題號 0/9→4/9
+  **但全量重跑后 lq_parse 分组 11 年退化**（2013 从 6→14 道、2021 从 12→4 道）——
+  parse 的「有锚点只信锚点」策略与旧引擎锚点分布强耦合，换引擎必须同步重写分组
+  已做：`lq_build.py` 加 `LQ_OCR_ENGINE` 开关（默认 v4）；两版 OCR 分别存 `scratch/_lq_ocr_v4|v6/`；**站点产物未动、未 bump 版本**
+  排除：提 DPI（源图仅 1410×2048）、调 Det 参数（文字质量无改善）→ 详见 `docs/LQ人工補號清單.md`
+
+- 2026-10-29 22:20 WorkBuddy：**新增 LQ 人工核对工具 + 更正「39 道待补号」的含义** ——
+  新增 `scripts/pastpaper/lq_review.py`：单文件 HTML 核对页（页图叠 OCR 框 + 右侧块列表），
+  支持双击标记、手动补漏检、导出 JSON；14 个年份已全量生成到 `scratch/_lq_review/`（23MB，不入库）
+  **重要更正**：`lq_parse.py` 会把小题当大题（2019 p4 只有 1 道 `2(a)`，parse 切出 3 道），
+  且 OCR 成片漏检（同一页 `2(a)` 题干首行两版引擎都没识别）→
+  所谓「39 道待补号」实为 **39 个错误分组**，核对必须以页图为准
+  装 `playwright`（pip 40MB，`channel="chrome"` 复用系统 Chrome，**不下载浏览器**）用于自动化验证
+  → 站点产物未动、未 bump 版本 → 详见 journal
+
+- 2026-10-29 23:10 WorkBuddy：**移动端顶栏收敛（5 行 → 2 行 + 底部 Tab Bar）** ——
+  用户拿来一份外部 UI 建议，逐条核对后：第一段 11 项技术规范**全部已实现**（不是新需求，是现有设计系统的总结）；
+  第二段 5 条里 4 条已实现（护眼背景/卡片分层/数据模块化/整卡可点），**唯一真问题是顶栏**
+  实测 390×844 顶栏占约 400px → 改后 96px，省 304px；主導航移到底部 Tab Bar（7 项，`navOn()` 高亮现成）
+  **踩坑**：`header{backdrop-filter:blur(8px)}` 会创建包含块，使子元素 `position:fixed` 相对 header 而非视口
+  → 移动端必须关掉 backdrop-filter（顺带省 iOS 合成开销）
+  **假警报**：Playwright 全页截图有淡淡重影，经 clip 截图 + Chrome CLI 交叉验证确认为截图 artifact，非 CSS 问题
+  只改 `site/template.html` 的 860px 媒体查询，桌面端 header/nav 完全未变；verify 11 项全绿
+  **未 bump 版本**（等用户说要部署时与部署同批）→ 详见 `docs/journal/2026-10-29-workbuddy-ui.md`
+
+- 2026-10-29 23:15 WorkBuddy：**全局统一 `--ease-ios`（所有过渡走 iOS 弹性曲线）** ——
+  排查：39 个 transition 里 26 个已用，14 个显式 `ease`（3 进度条 + 主题开关），
+  **23 个隐性默认 ease**（简写里没写缓动 = 用了浏览器默认）
+  做法：4 行显式 ease 换掉 + 全局 `*,*::before,*::after{transition-timing-function:var(--ease-ios)!important}`
+  **必须 !important**：`*` 优先级 (0,0,0) 压不过类选择器里的 transition 简写，不加等于没用
+  不破坏降级：`data-anim="off"` 靠 duration:0s!important 归零，与 timing-function 无关（实测三档正常）
+  验证：5 个代表元素 computed timingFunction 全为 `cubic-bezier(0.32,0.72,0,1)`，verify 11 项全绿
+
+- 2026-10-29 23:30 WorkBuddy：**卡片数据去重 + 统一「图标+文字」（第 4 条）+ 验证第 5 条** ——
+  **真问题**：每张卡片同一份数据出现两次（`pmeta` 有「38 知識點 · 49 題」，`foot` 又有「38 知識點」「📝 49 題」），12 张全部如此，且 foot 左 pill 右裸文字格式不统一
+  改法：`pmeta` 只留「掌握度 X%」；`foot` 统一为 `📖 章 / 🎯 知識點 / 📝 題` 三个 pill；`.foot` 改 `flex-start`+`gap`
+  顺手删掉单元卡右下角冗余的「進入 →」（整卡本来就可点）
+  WCAG 实测：浅色 标题 14.36 / 简介 7.66 / 次要 4.59 / pill 5.47；深色 6.09–13.23 → 全部 ≥4.5
+  **第 5 条本就已实现**：cursor:pointer + hover translateY(-3px) + 点描述区直接跳 `#/chem/t/1a`
+  → verify 11 项全绿，详见 `docs/journal/2026-10-29-workbuddy-ui.md`
+
+- 2026-10-29 23:50 WorkBuddy：**分页切换转场（View Transitions API，iOS 手感）** ——
+  原来 `.view{animation:none}` 是**瞬切无动画**；改用 `document.startViewTransition(()=>route())`，
+  `route()` 零改动，浏览器自动快照新旧页
+  动画：旧页 `translateY(-26px) scale(.955)` 淡出、新页从下方升起淡入，0.32s + `--ease-ios`
+  **坑 1**：`::view-transition-group(root)` 是浏览器内置动画默认 250ms，不拉齐到 320ms 会截断进出场
+  **坑 2**：导航栏跟着淡入淡出会叠成两层重影 → 给 `header`/`nav#nav` 独立 `view-transition-name`（appheader/apptabbar）并 `animation:none`，iOS 做法是导航常驻
+  **坑 3**：位移仅 12px 时新旧页几乎重叠仍有重影 → 加大到 26px + scale(.955)
+  **易误判**：`getAnimations()` 的 `effect.getTiming().easing` 显示 `linear` 是规范行为（timing-function 在 keyframe 层），
+  要用 `getComputedStyle(el,'::view-transition-old(root)')` 才读到真实值
+  降级：`data-anim=off` 或减少动态 → **不触发 VT** 直接跳转；simple 档位移归零只淡入
+  → verify 11 项全绿，未 bump 版本
+
+- 2026-10-30 00:35 WorkBuddy：**手写字体落地（龙藏体 Long Cang）** ——
+  用户选定「龙藏体」做标题字体。**系统实测限制**（见 `scratch/_proto/font_longcang.html`）：
+  48px 大标题可用 / 34px 勉强 / 15px 正文偏潦草 / **14px 明显发虚** / 12px 糊成一团 / **数字笔画太细没分量**
+  → 所以**只给 `.hero h1`（32px）和 `.thead h2`（30px）用**，正文与数字保持系统字体
+  子集化：原版 **4.91MB → 316KB**（woff2，只保留 1266 个标题用字，压缩 93.6%）
+  部署文件 `site/fonts/LongCang-Title.woff2`（入库）；原始 TTF 与全量 698KB 子集在 `scratch/_fonts/`（已 gitignore）
+  **新增标题文字后需重新子集化**：`scratch/_charset_title.txt` 是字符集，用 fontTools 重跑
+  验证：字体请求 200、`document.fonts.check` 通过、h1 用上龙藏体、正文仍 Microsoft JhengHei、verify 11 项全绿
+  **注意**：这是字体基础设施，手账风（方格纸/图钉/胶带/便利贴）的页面改造**尚未开始**，原型在 `scratch/_proto/handbook*.html`
+
+- 2026-10-30 00:45 WorkBuddy：**导出完整工作总览** → `docs/2026-10-30-设计与改造总览.md`
+  10 章：时间线 / 设计探索 6 阶段 / **9 项已落地改动** / **18 个原型文件清单** / 未落地方案 / 工具与脚本 / LQ OCR / 备份回退 / 版本状态 / 下次入口
+  **导航相关原型**：`scratch/_proto/sidebar.html`（侧边栏：桌面常驻可折叠 + 移动抽屉，**未落地**）、
+  `three_directions.html`（三个信息架构方向，A 已简化落地）、`dir_a_full.html`（三页联动原型）
+  已落地：顶栏收敛 / 全局 ease-ios / 卡片去重 / 分页转场 / 龙藏体字体 / 全站手账化 / DSE 大卡 / 随机倾斜 / 首页仪表盘
+  **未落地**：侧边栏、导航 7→4、编辑式列表、答题页装饰、桌面书签索引
+  备份 `scratch/_bak/template-before-handbook-20261030.html`（回退：cp 回去 + build）

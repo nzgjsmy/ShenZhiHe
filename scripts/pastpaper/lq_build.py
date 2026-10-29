@@ -15,10 +15,35 @@
   2023 完全没有文本层（纯图像）。
 → 结论：卷二一律走 OCR，文本层不可用。
 
+引擎选型（2026-10-29 实测换过）
+------------------------------
+  通过环境变量 LQ_OCR_ENGINE 切换，**默认 v4**：
+
+  v4（默认）= rapidocr-onnxruntime 1.4.4（PP-OCRv4）
+      ⚠️ 文字识别对繁体很差（「甲部」→「聪由」），但 lq_parse.py 的
+         分组逻辑是针对它调优的，跑出来 39 道待补号，结果可用。
+
+  v6（实验）= rapidocr 3.10.0（PP-OCRv6 small）
+      ⚠️ 文字质量质变（同一页几乎全对，`1(a)` 能单独检出），
+         **但会让 lq_parse.py 的分组崩掉**：14 年里 11 年退化
+         （2013 从 6 道炸成 14 道；2021 从 12 道掉成 4 道）。
+         原因：parse 的策略是「有锚点只信锚点、无锚点才用 x 切分」，
+         与旧引擎「锚点全有或全无」的分布强耦合；新引擎锚点
+         时有时无，两种路径混杂 → 过切或漏切。
+      → **要用 v6 必须先重写 lq_parse.py 的分组逻辑**，否则别开。
+        实测数据存在 scratch/_lq_ocr_v6/，可直接拿来验证新 parse。
+
+  已排除的两条路（别再试）：
+    · 提 DPI：PDF 内嵌原图只有 1410×2048，页图 1700×2200 已超采样上限
+    · 调 Det 参数：limit_side_len / box_thresh 只影响检出块数（22→25），
+      文字质量毫无改善；新版 Global.max_side_len=2000 已够用
+
 依赖（Python 3.12；3.15 无 onnxruntime 轮子）
 ----------------------------------------------
   C:\\Users\\guomi\\AppData\\Local\\Python\\pythoncore-3.12-64\\python.exe -m pip install \\
       rapidocr-onnxruntime opencv-python numpy pymupdf pillow
+  # 只有要用 v6 时才需要：
+  #   ... -m pip install rapidocr
 
 用法
 ----
@@ -29,7 +54,8 @@
 产出
 ----
   scratch/_lq_pages/<key>/p001.jpg … pNNN.jpg   (200dpi)
-  scratch/_lq_pages/<key>/ocr.json               [{page,W,H,blocks:[{x,y,x2,y2,txt}]}]
+  scratch/_lq_pages/<key>/ocr.json
+      [{page, W, H, blocks:[{x,y,x2,y2,txt,score}]}]
 
 可中断续跑：已存在 ocr.json 的年份自动跳过。
 """
@@ -39,7 +65,9 @@ import sys
 import time
 
 import pymupdf
-from rapidocr_onnxruntime import RapidOCR
+
+# v4 = PP-OCRv4（默认，lq_parse 已适配）；v6 = PP-OCRv6（更准但下游会崩）
+ENGINE = os.environ.get("LQ_OCR_ENGINE", "v4").strip().lower()
 
 SRC = "D:/生物DSE Past Paper"
 _ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -68,10 +96,54 @@ _eng = None
 
 
 def eng():
+    """回傳 (tag, engine)。兩個引擎 API 不同，由 ocr_page() 抹平。"""
     global _eng
     if _eng is None:
-        _eng = RapidOCR()
+        import logging
+
+        logging.disable(logging.INFO)   # 新版每次加载都会刷 INFO，静音
+        if ENGINE == "v6":
+            from rapidocr import RapidOCR
+
+            _eng = ("v6", RapidOCR())
+        else:
+            from rapidocr_onnxruntime import RapidOCR
+
+            _eng = ("v4", RapidOCR())
     return _eng
+
+
+def ocr_page(png):
+    """對單頁做 OCR，回傳統一格式的 blocks（屏蔽 v4/v6 的 API 差異）。"""
+    tag, e = eng()
+    raw = []
+    if tag == "v6":
+        out = e(png)
+        boxes = getattr(out, "boxes", None)
+        txts = list(getattr(out, "txts", None) or [])
+        scores = list(getattr(out, "scores", None) or [])
+        for k, box in enumerate(boxes if boxes is not None else []):
+            xs = [p[0] for p in box]
+            ys = [p[1] for p in box]
+            raw.append({
+                "x": int(min(xs)), "y": int(min(ys)),
+                "x2": int(max(xs)), "y2": int(max(ys)),
+                "txt": txts[k] if k < len(txts) else "",
+                "score": round(float(scores[k]), 4) if k < len(scores) else None,
+            })
+    else:
+        res, _ = e(png)
+        for item in res or []:
+            box, txt = item[0], item[1]
+            xs = [p[0] for p in box]
+            ys = [p[1] for p in box]
+            raw.append({
+                "x": int(min(xs)), "y": int(min(ys)),
+                "x2": int(max(xs)), "y2": int(max(ys)),
+                "txt": txt,
+                "score": None,
+            })
+    return [b for b in raw if b["txt"].strip()]
 
 
 def run(key):
@@ -96,19 +168,7 @@ def run(key):
                 pix.save(png)
         with Image.open(png) as im:
             W, H = im.size
-        res, _ = eng()(png)
-        blocks = []
-        for item in res or []:
-            box, txt = item[0], item[1]
-            xs = [p[0] for p in box]
-            ys = [p[1] for p in box]
-            blocks.append({
-                "x": int(min(xs)),
-                "y": int(min(ys)),
-                "x2": int(max(xs)),
-                "y2": int(max(ys)),
-                "txt": txt,
-            })
+        blocks = ocr_page(png)
         blocks.sort(key=lambda b: (b["y"], b["x"]))
         pages.append({"page": i + 1, "W": W, "H": H, "blocks": blocks})
         print("  %s p%02d  %d blocks  %.1fs" % (key, i + 1, len(blocks), time.time() - t0), flush=True)

@@ -73,6 +73,32 @@ def main():
               "%d 题（%d 个年份）%s" % (n_q, len(years),
                                       "  ← 是否用了 build.mjs？" if n_q == 0 else ""))
 
+        # 卷二長題（_lq）：与 MC **分开存放**（用户明确要求）。
+        # 这里只检查「若存在则结构必须合法」，不强制必须存在——
+        # 数据是逐年补录的，早期只有个别年份时不应阻断构建。
+        lq = (bio or {}).get("_lq")
+        if lq:
+            lq_years = lq.get("years") or {}
+            lq_qs = [q for v in lq_years.values() for q in (v or [])]
+            bad = []
+            for q in lq_qs:
+                if not q.get("qnum"):
+                    bad.append("%s 无题号" % q.get("id"))
+                elif not (q.get("subqs") or []):
+                    bad.append("%s 无子题" % q.get("qnum"))
+                elif not q.get("marksTotal"):
+                    bad.append("%s 无分值" % q.get("qnum"))
+            check("bio._lq 结构与 MC 分离且合法",
+                  not bad,
+                  "%d 年 · %d 道大题 · %d 子题%s" % (
+                      len(lq_years), len(lq_qs),
+                      sum(len(q.get("subqs") or []) for q in lq_qs),
+                      ("  ← " + "；".join(bad[:3])) if bad else ""))
+            # 两者混装是最容易犯的错：LQ 不该出现在 _pastpaper，MC 不该出现在 _lq
+            mixed = [q for q in lq_qs if q.get("options")]
+            check("MC 与 LQ 未混装", not mixed,
+                  "" if not mixed else "%d 道 LQ 带 options 字段" % len(mixed))
+
         site = payload.get("site") or {}
         check("site.copyright 存在", bool(site.get("copyright")),
               "" if site.get("copyright") else "页脚「版權與免責聲明」会空")

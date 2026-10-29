@@ -27,6 +27,22 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
 <link rel="icon" href="./favicon.ico" sizes="any">
 <style>
+/* ===== 龙藏体（Long Cang）· 只用于大标题 =====
+   来源：Google Fonts，OFL 授权（可免费商用）。
+   子集化：原版 4.91MB → 315KB（只保留 1266 个标题用字）。
+   ⚠️ 实测限制（见 scratch/_proto/font_longcang.html）：
+      · 48px 大标题 → 文艺感强，可用
+      · 34px 卡片标题 → 勉强，笔画开始变细
+      · 15px 正文 → 偏细偏潦草
+      · 14px 正文 → 明显发虚
+      · 12px 小字 → 糊成一团
+      · 数字 → 笔画太细没分量
+   → 所以只给 .hero h1 / .thead h2 用，正文与数字保持系统字体。 */
+@font-face{
+  font-family:"Long Cang";
+  src:url("fonts/LongCang-Title.woff2") format("woff2");
+  font-weight:400;font-style:normal;font-display:swap;
+}
 :root{
   --bg:#faf7f2; --paper:#ffffff; --ink:#2b2a26; --muted:#7a756a;
   --line:#e8e2d6; --accent:#0f766e; --accent-soft:#e6f3f1;
@@ -67,6 +83,17 @@
   --ease-ios:cubic-bezier(.32,.72,0,1);
 }
 *{box-sizing:border-box}
+
+/* ===== 全局過渡緩動：所有互動過渡默認走 iOS 彈性曲線 =====
+   需求：--ease-ios = cubic-bezier(.32,.72,0,1)，起步快、收尾極緩。
+   為何要 * + !important：大量 transition 用了簡寫
+   （如 `transition:opacity var(--dur-base)`），簡寫會把 timing-function
+   重置為瀏覽器默認 ease；普通選擇器優先級壓不住，只能 !important。
+   html[data-anim="off"] 是靠 transition-duration:0s!important 歸零的，
+   與本規則不衝突（時長為 0 時緩動無意義）。
+   若某元素確需 linear（如無限循環動畫），在它自己的規則裡再寫
+   transition-timing-function:linear!important 覆蓋即可。 */
+*,*::before,*::after{transition-timing-function:var(--ease-ios)!important}
 html,body{margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",system-ui,sans-serif;line-height:1.75;font-size:16px}
 a{color:var(--accent);text-decoration:none}
@@ -148,7 +175,7 @@ button:active:not([disabled]),
   transition-timing-function:var(--ease-ios);
 }
 /* 進度條寬度動畫在「完全關閉」時不要殘留 transition */
-.qbar i,.pbar i{transition:width calc(.45s * var(--anim-k)) ease}
+.qbar i,.pbar i{transition:width calc(.45s * var(--anim-k)) var(--ease-ios)}
 /* ---------- header ---------- */
 header{position:-webkit-sticky;position:sticky;top:0;z-index:50;background:rgba(250,247,242,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .hwrap{max-width:1120px;margin:0 auto;padding:10px 60px 10px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;position:relative}
@@ -176,10 +203,33 @@ nav button.on{background:var(--accent);color:#fff}
 main{max-width:1120px;margin:0 auto;padding:26px 20px 80px}
 .view{animation:fade var(--dur-slow) ease}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ===== 分頁切換轉場（View Transitions API，2026-10-29）=====
+   用瀏覽器原生轉場：舊頁淡出上移 + 新頁淡入升起，手感接近 iOS 的層級切換。
+   不用自己保留舊 DOM，瀏覽器會自動快照，所以 route() 完全不用改。
+   不支援的瀏覽器（舊 iOS/Firefox）由 JS 判斷後直接跳轉，無動畫也不報錯。
+   simple 檔用變數把位移/縮放歸零，只留淡入淡出；off 檔由 JS 直接不走轉場。 */
+html{--vt-y:26px;--vt-scale:.955}
+html[data-anim="simple"]{--vt-y:0px;--vt-scale:1}
+::view-transition-old(root){animation:vt-out calc(.32s * var(--anim-k)) var(--ease-ios) both}
+::view-transition-new(root){animation:vt-in calc(.32s * var(--anim-k)) var(--ease-ios) both}
+/* group 是瀏覽器內建的容器動畫，默認 250ms；不把它拉齊到 320ms，
+   320ms 的進出場會被提前截斷（實測組動畫 0.25s）。 */
+::view-transition-group(root){animation-duration:calc(.32s * var(--anim-k));animation-timing-function:var(--ease-ios)}
+/* 頂欄與底部 Tab Bar 固定不動（iOS 的做法：導航常駐，只有內容區轉場）。
+   給它們獨立的 view-transition-name 就會從 root 快照裡「挖掉」單獨處理，
+   否則會跟著內容一起淡入淡出，實測中間幀導航文字會疊成兩層重影。 */
+header{view-transition-name:appheader}
+nav#nav{view-transition-name:apptabbar}
+::view-transition-old(appheader),::view-transition-new(appheader),
+::view-transition-old(apptabbar),::view-transition-new(apptabbar){animation:none}
+@keyframes vt-out{to{opacity:0;transform:translateY(calc(var(--vt-y) * -1)) scale(var(--vt-scale))}}
+@keyframes vt-in{from{opacity:0;transform:translateY(var(--vt-y)) scale(var(--vt-scale))}}
 /* ---------- home ---------- */
 .hero{background:linear-gradient(135deg,#0f766e 0%,#115e59 60%,#134e4a 100%);color:#fff;border-radius:22px;padding:38px 34px;box-shadow:var(--shadow);position:relative;overflow:hidden}
 .hero:after{content:"⚗️";position:absolute;right:26px;bottom:-14px;font-size:120px;opacity:.16;transform:rotate(-12deg)}
-.hero h1{margin:0 0 8px;font-size:30px;letter-spacing:.5px}
+.hero h1{margin:0 0 8px;font-size:32px;letter-spacing:.01em;font-weight:400;
+  font-family:"Long Cang","Noto Serif TC",serif}
 .hero p{margin:0;opacity:.92;max-width:640px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:18px 0 26px}
 .stat{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;text-align:center}
@@ -188,7 +238,10 @@ main{max-width:1120px;margin:0 auto;padding:26px 20px 80px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}
 .tcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 14px;cursor:pointer;box-shadow:var(--shadow);position:relative;overflow:hidden;
   transition:transform var(--dur-base) var(--ease-ios),box-shadow var(--dur-base) var(--ease-ios),border-color var(--dur-base) var(--ease-ios)}
-.tcard:hover{transform:translateY(-3px);box-shadow:0 8px 26px rgba(43,42,38,.13)}
+.tcard:hover{transform:translateY(-3px) rotate(var(--tilt,0deg));box-shadow:0 8px 26px rgba(43,42,38,.13)}
+/* 手账感：卡片轻微随机倾斜（--tilt 由 tiltCards() 注入，刷新一次重新随机）。
+   用 CSS 变量而不是直接写 transform，这样 :hover 的位移不会把倾斜覆盖掉。 */
+.tcard{transform:rotate(var(--tilt,0deg))}
 .tcard .bar{position:absolute;left:0;top:0;bottom:0;width:6px}
 .tcard h3{margin:0 0 4px;font-size:19px}
 .tcard .meta{font-size:13px;color:var(--muted)}
@@ -197,7 +250,8 @@ main{max-width:1120px;margin:0 auto;padding:26px 20px 80px}
    顏色用 --text-soft，讓 light/dark 兩個主題共用同一個語意變數。 */
 .tcard .desc{font-size:13.5px;color:var(--text-soft);margin:6px 0 10px;
   display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
-.tcard .foot{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px}
+.tcard .foot{display:flex;justify-content:flex-start;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px}
+.foot .pill{margin-right:0}
 .pill{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:12px;margin-right:6px}
 .quick{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0 24px}
 .quick button{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:9px 18px;cursor:pointer;font-size:15px;box-shadow:var(--shadow);transition:var(--dur-base)}
@@ -207,7 +261,8 @@ main{max-width:1120px;margin:0 auto;padding:26px 20px 80px}
 html[data-theme="dark"] .quick button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 /* ---------- topic ---------- */
 .thead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
-.thead h2{margin:0;font-size:26px}
+.thead h2{margin:0;font-size:30px;font-weight:400;
+  font-family:"Long Cang","Noto Serif TC",serif}
 .back{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:5px 14px;cursor:pointer;font-size:14px}
 .back:hover{border-color:var(--accent);color:var(--accent)}
 .tmeta{color:var(--muted);font-size:13.5px;margin-bottom:18px}
@@ -406,7 +461,7 @@ pre.mdcodewrap[data-lang]::before{content:attr(data-lang);position:absolute;top:
 .qpick-h .badge{margin-left:6px;font-size:11px;padding:0 8px}
 .qpick-d{font-size:13px;color:var(--text-soft);line-height:1.5;margin:0 0 9px;min-height:39px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:break-word}
 .qpick-pbar{height:6px;background:#efe9dd;border-radius:99px;overflow:hidden;margin:0 0 5px}
-.qpick-pbar i{display:block;height:100%;border-radius:99px;transition:width calc(.45s * var(--anim-k)) ease}
+.qpick-pbar i{display:block;height:100%;border-radius:99px;transition:width calc(.45s * var(--anim-k)) var(--ease-ios)}
 .qpick-meta{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
 .qpick-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px;margin-top:8px;flex-wrap:wrap}
 .qpick-foot .pill{margin-right:4px}
@@ -488,7 +543,7 @@ pre.mdcodewrap[data-lang]::before{content:attr(data-lang);position:absolute;top:
 .navdot{display:none;background:var(--red);color:#fff;border-radius:999px;font-size:11px;padding:0 6px;margin-left:6px;vertical-align:1px}
 .navdot.on{display:inline-block}
 .pbar{height:7px;background:#efe9dd;border-radius:99px;overflow:hidden;margin-top:10px}
-.pbar i{display:block;height:100%;border-radius:99px;transition:width calc(.45s * var(--anim-k)) ease}
+.pbar i{display:block;height:100%;border-radius:99px;transition:width calc(.45s * var(--anim-k)) var(--ease-ios)}
 .pmeta{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted);margin-top:5px;flex-wrap:wrap}
 .badge{display:inline-block;border-radius:999px;padding:1px 9px;font-size:11.5px;margin-left:6px;vertical-align:1px;font-weight:600}
 .badge.ok{background:var(--green-soft);color:var(--green)}
@@ -613,6 +668,48 @@ footer{max-width:1120px;margin:0 auto;padding:18px 20px 40px;color:var(--muted);
   nav button{padding:10px 15px;font-size:16px}
   .gearbtn{width:44px;height:44px;font-size:22px;top:8px;right:10px}
   .opt{padding:13px 16px;font-size:16.5px}
+
+  /* ===== 移動端頂欄收斂（2026-10-29）=====
+     實測 390×844：原本頂欄佔約 400px（5 行），內容要滑半屏才看到。
+     改為「品牌+搜尋一行 → 科目橫向捲動一行 → 主導航移到底部 Tab Bar」，
+     頂欄降到約 100px，省出約 290px。桌面端不受影響（全在 860px 內）。 */
+  .hwrap{flex-wrap:nowrap;padding:8px 54px 8px 14px;gap:8px}
+  .brand{flex:0 0 auto;font-size:16px;gap:6px}
+  .brand .verbadge{display:none}          /* 窄屏隱藏版本號，把寬度讓給搜尋框 */
+  .sbox{flex:1 1 auto;min-width:0;max-width:none;padding:5px 12px}
+  .sbox input{font-size:15px;min-width:0}
+
+  /* 科目膠囊：單行橫向捲動，不再換行成 2 行 */
+  .subbar{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;
+          padding:0 14px 8px;scrollbar-width:none}
+  .subbar::-webkit-scrollbar{display:none}
+  .subbar>*{flex:0 0 auto}
+
+  /* 主導航 → 底部 Tab Bar（拇指可達，符合 iOS 習慣）
+     ⚠️ header 原本有 backdrop-filter:blur(8px)，它會建立包含塊，
+        讓後代的 position:fixed 相對 header 而非視口定位
+        （實測 nav 卡在 header 底部 y=42 而不是視窗底部）。
+        故移動端必須關掉它，同時換成不透明底色避免內容透出。 */
+  header{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--bg)}
+  nav#nav{position:fixed;left:0;right:0;bottom:0;margin:0;z-index:60;
+          display:grid;grid-template-columns:repeat(7,1fr);gap:0;
+          background:var(--header-bg,var(--paper));
+          border-top:1px solid var(--line);
+          padding:4px 2px calc(4px + env(safe-area-inset-bottom));
+          box-shadow:0 -2px 10px rgba(43,42,38,.06)}
+  nav#nav button{padding:7px 1px;font-size:10.5px;min-height:44px;
+                 border:none;background:transparent;border-radius:8px;
+                 line-height:1.25;white-space:nowrap}
+  nav#nav button.on{color:var(--accent);font-weight:700;background:var(--accent-soft)}
+
+  /* 內容與頁尾讓出 Tab Bar 的高度 */
+  main{padding-bottom:calc(96px + 52px + env(safe-area-inset-bottom))}
+  footer{padding-bottom:calc(40px + 52px + env(safe-area-inset-bottom))}
+
+  /* 既有底部浮層往上避讓，否則會被 Tab Bar 蓋住 */
+  .pickbar{bottom:calc(64px + env(safe-area-inset-bottom)) !important}
+  #pwaupd,#pwahint{bottom:calc(64px + env(safe-area-inset-bottom)) !important}
+  .memwarn{bottom:calc(64px + env(safe-area-inset-bottom)) !important}
   .qbtn{padding:9px 16px;font-size:14px;min-height:36px}
   /* 章節側欄是可橫向滑動的卡片，溢出視口屬預期（overflow-x:auto） */
   .rail .rsec{min-height:44px;display:flex;flex-direction:column;justify-content:center}
@@ -1061,8 +1158,8 @@ details.wfixed[open]>summary:before{content:"▾ "}
   cursor:pointer;padding:0;
   display:flex;align-items:center;
   box-shadow:var(--shadow);
-  transition:background calc(.28s * var(--anim-k)) ease,
-             border-color calc(.28s * var(--anim-k)) ease;
+  transition:background calc(.28s * var(--anim-k)) var(--ease-ios),
+             border-color calc(.28s * var(--anim-k)) var(--ease-ios);
   flex:0 0 auto;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
@@ -1386,6 +1483,258 @@ html[data-theme="dark"] .subcard .soon{background:var(--paper-alt);color:var(--m
 html[data-theme="dark"] .tcard .meta{color:var(--muted)}
 html[data-theme="dark"] .stat b{color:var(--accent)}
 /* 關聯地圖的 SVG 文字色直接用 CSS 變數（.lkstar text），不需 JS 讀色 */
+
+/* ===== 手账风：答题页（2026-10-30）=====
+   只覆盖视觉，不动布局与交互逻辑。
+   回退：cp scratch/_bak/template-before-handbook-20261030.html site/template.html */
+.qpanel{
+  background-color:#fbf9f2;
+  background-image:
+    repeating-linear-gradient(to right,rgba(110,140,160,.075) 0 1px,transparent 1px 22px),
+    repeating-linear-gradient(to bottom,rgba(110,140,160,.075) 0 1px,transparent 1px 22px);
+  border:none;border-radius:3px;
+  box-shadow:0 1px 2px rgba(70,60,40,.10),0 10px 28px rgba(70,60,40,.09);
+  padding:26px 28px;
+}
+.qtext{font-family:"Noto Serif TC",serif;font-size:19px;line-height:1.85;
+  letter-spacing:-.2px;color:#2f2a22}
+/* 题型标签 → 手账小纸签 */
+.qtype{background:#fffdf4;border:1px solid #e6dfcd;border-radius:2px;
+  box-shadow:0 1px 2px rgba(70,60,40,.08);color:#8a9aa8;
+  padding:2px 9px;font-size:10.5px;letter-spacing:.06em}
+/* 选项 → 手写方框感 */
+.opt{
+  border:1px solid #e6dfcd;background:#fffdf4;border-radius:3px;
+  box-shadow:0 1px 2px rgba(70,60,40,.07);
+  transition:transform .22s var(--ease-ios),border-color .22s var(--ease-ios),
+             background .22s var(--ease-ios),box-shadow .22s var(--ease-ios);
+}
+.opt:hover{border-color:#cfc4aa;transform:translateX(2px);
+  box-shadow:0 2px 5px rgba(70,60,40,.10)}
+.opt.right{border-color:#8fb8a8;background:#eef6f0}
+.opt.wrong{border-color:#e3b5ac;background:#fdf0ee}
+/* 解析 → 红笔批改的边注感 */
+.expl{
+  background:#fffdf4;border-left:3px solid var(--accent);
+  border-radius:0 3px 3px 0;box-shadow:0 1px 2px rgba(70,60,40,.06);
+}
+/* 题目卡：去掉硬阴影，改成纸片感 */
+.pcard{
+  background:#fffdf4;border:1px solid #ece6d6;border-radius:3px;
+  box-shadow:0 1px 2px rgba(70,60,40,.08),0 6px 18px rgba(70,60,40,.06);
+}
+
+/* ===== 手账风 · 全站视觉（2026-10-30）=====
+   只覆盖视觉变量与少量组件，不改任何结构/交互。
+   回退：cp scratch/_bak/template-before-handbook-20261030.html site/template.html */
+:root{
+  --paper:#fffdf4;      /* 暖白纸（原 #ffffff） */
+  --paper-soft:#fbf9f2;
+  --paper-mute:#f6f1e6;
+  --paper-alt:#f2ecdf;
+  --line:#ece6d6;       /* 浅米边框（原 #e8e2d6） */
+  --radius:3px;         /* 纸片直角感（原 14px） */
+  --shadow:0 1px 2px rgba(70,60,40,.07),0 6px 18px rgba(70,60,40,.06);
+}
+/* 方格纸底 */
+body{
+  background-color:#fbf9f2;
+  background-image:
+    repeating-linear-gradient(to right,rgba(110,140,160,.05) 0 1px,transparent 1px 24px),
+    repeating-linear-gradient(to bottom,rgba(110,140,160,.05) 0 1px,transparent 1px 24px);
+}
+/* 深色模式：暖深色 + 极淡方格 */
+html[data-theme="dark"]{
+  --paper:#22201c;
+  --paper-soft:#262420;
+  --paper-mute:#2a2823;
+  --paper-alt:#2e2b26;
+  --line:#3a3730;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 6px 18px rgba(0,0,0,.25);
+}
+html[data-theme="dark"] body{
+  background-color:#1c1a17;
+  background-image:
+    repeating-linear-gradient(to right,rgba(255,255,255,.022) 0 1px,transparent 1px 24px),
+    repeating-linear-gradient(to bottom,rgba(255,255,255,.022) 0 1px,transparent 1px 24px);
+}
+/* 卡片统一纸片感 */
+.tcard,.subcard,.extracard,.sres,.pcard,.gwrap,.qpanel,.stats,.databox,.emptybox{
+  border-radius:3px;
+}
+/* 标签 → 手账小标签（白底细框，保留语义色文字） */
+.pill,.badge{
+  border-radius:2px;
+  border:1px solid var(--line);
+  background:var(--paper);
+  letter-spacing:.04em;
+}
+/* 主按钮 → 略方的纸标签感 */
+.qbtn,.nextbtn,.back,.randgo,.qpick-go{
+  border-radius:3px;
+}
+/* Hero 渐变 → 哑光深青 */
+.hero{
+  background:linear-gradient(135deg,#35635b 0%,#2d554e 60%,#274a44 100%);
+  border-radius:3px;
+}
+/* DSE 真题大卡（生物科目页顶部）——把原来混在按钮排里的「DSE 真題」提出来，
+   解决「朋友一直没发现有这个部分」的问题 */
+.dse-hero{
+  display:flex;align-items:center;gap:16px;
+  background:#eaf3ef;border:1px solid rgba(61,107,98,.18);
+  border-radius:3px;padding:20px 22px;margin:14px 0;cursor:pointer;
+  transition:transform .25s var(--ease-ios),box-shadow .25s var(--ease-ios);
+}
+.dse-hero:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(53,99,91,.14)}
+.dse-hero:active{transform:scale(.99)}
+.dse-hero .ic{font-size:26px;flex:0 0 auto}
+.dse-hero .tx{flex:1;min-width:0}
+/* ⚠️ 手写体（Long Cang）的 ascent/descent 比常规字体大，line-height:1.3 会让
+   标题溢出并与下方副标题重叠（实测）。这里必须给足 1.55 + 下边距。 */
+.dse-hero .tx b{display:block;font-family:"Long Cang","Noto Serif TC",serif;
+  font-size:24px;color:#2d554e;letter-spacing:.01em;
+  line-height:1.55;margin-bottom:2px}
+.dse-hero .tx span{display:block;font-size:12px;color:#3d6b62;opacity:.82;
+  letter-spacing:.02em;line-height:1.6}
+.dse-hero .go{font-size:12px;color:#3d6b62;font-weight:700;flex:0 0 auto;
+  background:none;border:none;padding:0}
+html[data-theme="dark"] .dse-hero{background:#25332f;border-color:#33473f}
+html[data-theme="dark"] .dse-hero .tx b{color:#a8d5c8}
+html[data-theme="dark"] .dse-hero .tx span,
+html[data-theme="dark"] .dse-hero .go{color:#8fb8a8}
+
+/* ---- DSE 卷一 / 卷二 並列卡 ----
+   用戶要求 MC 與 LQ「分開存放、不然會很亂」，所以首頁就分成兩張卡，
+   用色相區分：卷一青綠（現有），卷二暖褐（新增），一眼可辨不是同一套。 */
+.dse-duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.dse-duo .dse-hero{margin:0}
+@media (max-width:760px){.dse-duo{grid-template-columns:1fr}}
+
+.dse-lq{
+  background:#f6f0e4;border-color:rgba(140,110,60,.22);
+}
+.dse-lq:hover{box-shadow:0 4px 14px rgba(120,95,50,.16)}
+.dse-lq .tx b{color:#5d4726}
+.dse-lq .tx span,.dse-lq .go{color:#7a6240;opacity:.88}
+html[data-theme="dark"] .dse-lq{
+  background:#332c22;border-color:#4a3f30;
+}
+html[data-theme="dark"] .dse-lq .tx b{color:#d9c49b}
+html[data-theme="dark"] .dse-lq .tx span,
+html[data-theme="dark"] .dse-lq .go{color:#b19c78}
+
+/* ---- 卷二 LQ 題卡 ----
+   與 mc 的 .ppq 刻意長得不一樣：LQ 是「一道大題 + 多級子題」的結構，
+   所以用左側豎線表示層級，而不是 MCQ 那種一排選項按鈕。 */
+.lqlist{display:flex;flex-direction:column;gap:14px}
+.lq-card{
+  background:var(--paper);border:1px solid var(--line);border-radius:3px;
+  padding:16px 18px;box-shadow:var(--shadow);
+}
+.lq-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.lq-qid{
+  font-family:var(--font-mono,monospace);font-size:15px;font-weight:700;
+  color:var(--on-accent);background:var(--accent);
+  padding:2px 9px;border-radius:3px;letter-spacing:.02em;
+}
+.lq-part{font-size:12px;color:var(--muted)}
+.lq-total{
+  font-size:12px;color:var(--amber);background:var(--amber-soft);
+  border:1px solid color-mix(in srgb,var(--amber) 30%,transparent);
+  padding:1px 7px;border-radius:999px;
+}
+.lq-pg{font-size:11px;color:var(--muted);opacity:.8;margin-left:auto}
+.lq-flag{
+  font-size:11px;padding:1px 6px;border-radius:3px;
+  background:var(--paper-alt,var(--paper-soft));color:var(--muted);
+  border:1px solid var(--line);
+}
+.lq-flag-warn{background:var(--amber-soft);color:var(--amber);border-color:color-mix(in srgb,var(--amber) 35%,transparent)}
+
+.lq-stem{font-size:14px;line-height:1.75;color:var(--ink);margin-bottom:12px}
+.lq-figs{
+  font-size:11.5px;color:var(--muted);background:var(--accent-soft);
+  border-left:3px solid var(--accent);padding:6px 10px;border-radius:2px;
+  margin-bottom:12px;
+}
+.lq-figs-note{display:block;opacity:.75;margin-top:2px}
+
+.lq-subs{display:flex;flex-direction:column;gap:10px}
+.lq-sub{
+  display:flex;align-items:flex-start;gap:8px;
+  padding-left:10px;border-left:2px solid var(--line);
+}
+.lq-sub2{padding-left:26px;border-left-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+.lq-no{
+  font-family:var(--font-mono,monospace);font-size:12px;font-weight:700;
+  color:var(--accent);flex:0 0 auto;min-width:34px;padding-top:2px;
+}
+.lq-q{flex:1;min-width:0;font-size:13.5px;line-height:1.72;color:var(--ink)}
+.lq-mk{
+  flex:0 0 auto;font-size:11px;color:var(--muted);
+  background:var(--paper-soft,var(--paper-alt));border:1px solid var(--line);
+  padding:1px 6px;border-radius:999px;white-space:nowrap;margin-top:2px;
+}
+.lq-inf{
+  flex:0 0 auto;font-size:10px;color:var(--amber);background:var(--amber-soft);
+  padding:1px 5px;border-radius:3px;margin-top:3px;white-space:nowrap;
+}
+
+.lq-tools{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.lq-btn{
+  font-size:12.5px;padding:6px 14px;border-radius:3px;cursor:pointer;
+  background:var(--paper-soft,var(--paper-alt));color:var(--muted);
+  border:1px solid var(--line);transition:var(--dur-fast);
+}
+.lq-btn:hover{border-color:var(--accent);color:var(--accent)}
+.lq-btn.open{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.lq-note-btn:hover{border-color:var(--amber);color:var(--amber)}
+
+.lq-panel{
+  max-height:0;overflow:hidden;
+  transition:max-height var(--dur-slow) var(--ease-ios,ease);
+}
+.lq-panel.open{max-height:1200px}
+.lq-panel-in{
+  margin-top:12px;padding:12px 14px;border-radius:3px;
+  background:var(--amber-soft);border-left:3px solid var(--amber);
+}
+.lq-todo{font-size:12.5px;line-height:1.7;color:var(--amber)}
+
+.lq-notebox{margin-top:10px}
+.lq-note{min-height:72px}
+
+html[data-theme="dark"] .lq-card{background:var(--paper);border-color:var(--line)}
+html[data-theme="dark"] .lq-btn{background:var(--paper-alt);color:var(--text-soft)}
+html[data-theme="dark"] .lq-mk{background:var(--paper-alt);border-color:var(--line);color:var(--text-soft)}
+
+/* ===== 首页仪表盘（2026-10-30）=====
+   回答「打开后今天该做什么」，而不是「有哪些科目」。 */
+.dash{background:var(--paper);border:1px solid var(--line);border-radius:3px;
+  padding:22px 24px;margin-bottom:18px;box-shadow:var(--shadow)}
+.dash-top{display:flex;align-items:baseline;justify-content:space-between;
+  margin-bottom:16px}
+.dash-top .kick{font-size:10px;color:var(--muted);letter-spacing:.16em}
+.dash-top .dt{font-size:11.5px;color:var(--muted);letter-spacing:.02em}
+.dash-main{display:flex;align-items:center;justify-content:space-between;gap:22px;margin-bottom:18px}
+.dash-num b{display:block;font-size:44px;font-weight:300;color:var(--accent);
+  line-height:1;letter-spacing:-1.5px;font-variant-numeric:tabular-nums}
+.dash-num span{font-size:10.5px;color:var(--muted);letter-spacing:.06em;
+  display:block;margin-top:5px}
+.dash-cta{flex:0 0 auto;min-width:230px;background:#35635b;color:#f7f3ea;border:none;border-radius:3px;
+  padding:15px 26px;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:.03em;
+  transition:transform .12s var(--ease-ios),background .2s var(--ease-ios)}
+.dash-cta:hover{background:#2d554e}
+.dash-cta:active{transform:scale(.985)}
+.dash-metrics{display:flex;border-top:1px dashed var(--line);padding-top:14px}
+.dash-metrics div{flex:1;border-left:2px solid var(--accent-soft);padding-left:12px}
+.dash-metrics div:first-child{border-left-color:var(--accent)}
+.dash-metrics b{display:block;font-size:21px;font-weight:300;color:var(--accent);
+  letter-spacing:-.6px;line-height:1.15;font-variant-numeric:tabular-nums}
+.dash-metrics span{font-size:9.5px;color:var(--muted);letter-spacing:.05em}
+html[data-theme="dark"] .dash-cta{background:#3d6b62}
+html[data-theme="dark"] .dash-cta:hover{background:#47796f}
 </style>
 <script>
 /* iOS 舊版 Safari 的 vh 問題補償：真實可視高度寫進 CSS 變數 */
@@ -2625,8 +2974,8 @@ function topicCardHTML(t){
       <div class="meta">${esc(t.pdf||'')}</div>
       <div class="desc">${esc(desc)}…</div>
       <div class="pbar"><i style="width:${mp}%;background:${masteryColor(m)}"></i></div>
-      <div class="pmeta"><span>掌握度 ${mp}%</span><span>${pts} 知識點 · ${nq} 題</span></div>
-      <div class="foot"><span><span class="pill">${(t.sections||[]).length} 章</span><span class="pill">${pts} 知識點</span></span><span>📝 ${nq} 題</span></div>
+      <div class="pmeta"><span>掌握度 ${mp}%</span></div>
+      <div class="foot"><span class="pill">📖 ${(t.sections||[]).length} 章</span><span class="pill">🎯 ${pts} 知識點</span><span class="pill">📝 ${nq} 題</span></div>
     </div>`;
 }
 /* 單元卡片（科目有 units 時的首頁層） */
@@ -2643,8 +2992,8 @@ function unitCardHTML(u){
       <h3>${u.emoji?esc(u.emoji)+' ':''}${esc(u.title)}<span class="badge ${mp>=85?'ok':mp>=30?'mid':'plain'}">${masteryLabel(m)}</span></h3>
       <div class="desc">${esc(u.description||names)}</div>
       <div class="pbar"><i style="width:${mp}%;background:${masteryColor(m)}"></i></div>
-      <div class="pmeta"><span>掌握度 ${mp}%</span><span>${nPts} 知識點 · ${nQ} 題</span></div>
-      <div class="foot"><span><span class="pill">${ts.length} 課題</span><span class="pill">${nSec} 章</span><span class="pill">${nPts} 知識點</span></span><span>進入 →</span></div>
+      <div class="pmeta"><span>掌握度 ${mp}%</span></div>
+      <div class="foot"><span class="pill">📚 ${ts.length} 課題</span><span class="pill">📖 ${nSec} 章</span><span class="pill">🎯 ${nPts} 知識點</span><span class="pill">📝 ${nQ} 題</span></div>
     </div>`;
 }
 function viewHome(){
@@ -2660,9 +3009,29 @@ function viewHome(){
     : TOPICS.map(topicCardHTML).join('');
   const due=dueList().length, fresh=newPointCount(), sc=streak(), mc=masteredCount();
   const om=Math.round(overallMastery()*100);
+  // 卷二（LQ）統計：與卷一 MC 完全分開，首頁卡片各自顯示自己的数量
+  const _LQ=(SUB&&SUB._lq&&SUB._lq.years)||{};
+  const LQYRS=Object.keys(_LQ).length;
+  const LQN=Object.keys(_LQ).reduce((a,y)=>a+(_LQ[y]||[]).length,0);
   const freshCards=dueList().slice(0,3).map(x=>`<div class="rrow"><div class="rt"><b>${esc(x.o.p.title)}</b><span>${esc(x.o.t.title)} · ${esc(x.o.s.title)}${x.fresh?' · 還沒測過':''}</span></div><button class="go" onclick="jumpPoint('${x.pid}')">去看</button><button class="go" style="background:var(--ink)" onclick="startQuiz({mode:'point',id:'${x.pid}'})">測驗</button></div>`).join('');
+  const _d=new Date();
+  const _wd=['日','一','二','三','四','五','六'][_d.getDay()];
+  const dateStr=(_d.getMonth()+1)+'月'+_d.getDate()+'日 · 星期'+_wd;
   app.innerHTML=`
   <div class="view">
+    <div class="dash">
+      <div class="dash-top"><span class="kick">今日任務</span><span class="dt">${dateStr}</span></div>
+      <div class="dash-main">
+        <div class="dash-num"><b>${due}</b><span>題待複習</span></div>
+        <button class="dash-cta" onclick="go('${due?'#/review':'#/quiz'}')">${due?'開始今日複習':'開始測驗'}</button>
+      </div>
+      <div class="dash-metrics">
+        <div><b>${due}</b><span>待複習</span></div>
+        <div><b>${w}</b><span>錯題</span></div>
+        <div><b>${sc}</b><span>連續天數</span></div>
+        <div><b>${mc}</b><span>已熟練</span></div>
+      </div>
+    </div>
     <div class="hero">
       <div style="font-size:13px;opacity:.8;margin-bottom:4px">${esc(SITE_TITLE)}</div>
       <h1>${esc(SUB.full||SITE_NAME)}</h1>
@@ -2670,26 +3039,47 @@ function viewHome(){
       <div class="pbar" style="background:rgba(255,255,255,.25);margin-top:14px"><i style="width:${om}%;background:#fff"></i></div>
       <div class="pmeta" style="color:rgba(255,255,255,.85)"><span>本科掌握度 ${om}%</span><span>已熟練 ${mc} / ${nPts} 個知識點</span></div>
     </div>
-    <div class="stats">
-      <div class="stat"><b>${sc}</b><span>連續學習天數</span></div>
-      <div class="stat"><b>${due}</b><span>今日待複習</span></div>
-      <div class="stat"><b>${mc}</b><span>已熟練知識點</span></div>
-      <div class="stat"><b>${om}%</b><span>整體掌握度</span></div>
-      <div class="stat"><b>${w}</b><span>錯題待練</span></div>
-      <div class="stat"><b>${nQ}</b><span>測驗題目</span></div>
-    </div>
+    ${/* 原本 6 個統計卡（連續/待複習/已熟練/掌握度/錯題/題目）已併入上方 .dash 儀表盤，
+         避免同一組數字在首屏出現兩次。2026-10-30 */''}
+    ${SUB&&SUB.id==='bio'?`
+    ${/* DSE 真題分兩張卡：卷一（MC 選擇題）與卷二（LQ 長題目）**完全分開**。
+         兩者題型、題號體系、答題方式都不同，混在一張卡裡用戶會以為是同一套。
+         2026-10-30 */''}
+    <div class="dse-duo">
+      <div class="dse-hero dse-mc" onclick="go('#/pastpaper')">
+        <span class="ic">📝</span>
+        <span class="tx"><b>卷一 · 選擇題</b>
+          <span>2012–2023 · MC · 附逐題詳解與正確率</span></span>
+        <span class="go">開始 →</span>
+      </div>
+      ${LQN>0?`
+      <div class="dse-hero dse-lq" onclick="go('#/lq')">
+        <span class="ic">✍️</span>
+        <span class="tx"><b>卷二 · 長題目</b>
+          <span>${LQYRS} 個年份 · ${LQN} 道大題 · 原文與分項分值</span></span>
+        <span class="go">開始 →</span>
+      </div>`:''}
+    </div>`:''}
     <div class="quick">
       <button onclick="go('#/review')">📅 今日複習${due?'（'+due+'）':''}</button>
       <button onclick="go('#/quiz')">🚀 開始測驗</button>
       <button onclick="go('#/graph')">🕸️ 看關聯地圖</button>
       <button onclick="go('#/wrong')">📕 重練錯題（${w}）</button>
       ${extrasOf().length?'<button onclick="go(\'#/extras\')">⚛️ 額外資訊</button>':''}
-      ${SUB&&SUB.id==='bio'?'<button onclick="go(\'#/pastpaper\')">📝 DSE 真題</button>':''}
     </div>
     ${freshCards?`<div style="margin-bottom:24px"><div style="font-weight:700;margin:0 0 4px">📌 先從這裡開始</div><div class="tmeta" style="margin-bottom:6px">依你的學習記錄排出來的優先複習項目</div>${freshCards}</div>`:''}
     ${hasUnits()?`<div class="tmeta" style="margin:0 0 10px">${UNITS.length} 個分區 · 共 ${TOPICS.length} 個課題，點分區進入</div>`:''}
     <div class="grid">${cards}</div>
   </div>`;
+  tiltCards();
+}
+/* 手账感：给首页/单元页的课题卡随机倾斜 −1.6° ~ +1.6°。
+   每次渲染重新随机；通过 CSS 变量 --tilt 注入，不会覆盖 :hover 的位移。
+   回退：删除本函数与两处 tiltCards() 调用即可（CSS 里的 var(--tilt,0deg) 有兜底）。 */
+function tiltCards(){
+  document.querySelectorAll('#app .grid .tcard').forEach(function(c){
+    c.style.setProperty('--tilt',(Math.random()*3.2-1.6).toFixed(2)+'deg');
+  });
 }
 /* 單元頁：列出該單元底下的課題 */
 function viewUnit(uid){
@@ -3951,6 +4341,160 @@ function ppToggle(btn){
   btn.querySelector('.ppbtn-i').textContent=open?'▴':'▾';
 }
 function ppSetTopic(k){ PP_TOPIC=k; viewPastPaper(); }
+
+/* ---------------- DSE 卷二：長題目（LQ） ----------------
+   ⚠️ 與卷一選擇題**完全分開**的視圖。用戶明確要求分開存放，理由：
+     · 答題方式不同：MC 點選項即可判分；LQ 要自己寫長答，只能對照評分指引
+     · 題號體系不同：MC 是 qnum=1..40；LQ 是 1(a)(i)(1) 三級編號
+     · 統計口徑不同：混在一起「446 道選擇題」這類數字會失真
+
+   數據來源：SUB._lq（由 data/bio/_lq.json 注入），與 SUB._pastpaper 互不相干。
+
+   目前狀態：題幹由 PaddleOCR-VL 從原卷還原，**評分指引尚未收錄**，
+   所以「評分指引」區塊顯示待整提示，不假裝有答案。 */
+let LQ_YEAR='', LQ_PART='';
+function lqAll(){
+  const yrs=(SUB&&SUB._lq&&SUB._lq.years)||{}, out=[];
+  Object.keys(yrs).sort().forEach(y=>(yrs[y]||[]).forEach(q=>out.push(q)));
+  return out;
+}
+function lqYearList(){ return Object.keys((SUB&&SUB._lq&&SUB._lq.years)||{}).sort(); }
+function lqPartName(p){
+  return ({A:'甲部 · 人體生理學',B:'乙部 · 應用生態學',
+           C:'丙部 · 微生物與人類',D:'丁部 · 生物工程'})[p]||p||'';
+}
+function lqSubHTML(s){
+  const ind=(s.level||1)>1?' lq-sub2':'';
+  const mk=s.marks?`<span class="lq-mk">${s.marks} 分</span>`:'';
+  const inf=s.marksInferred?`<span class="lq-inf" title="分值由程序依評卷順序推斷，請對照原卷">推定</span>`:'';
+  const no=s.no?`<span class="lq-no">(${esc(s.no)})</span>`:'';
+  return `<div class="lq-sub${ind}">${no}<div class="lq-q md">${mdLite(s.q||'')}</div>${mk}${inf}</div>`;
+}
+function lqCard(q){
+  const subs=(q.subqs||[]).map(lqSubHTML).join('');
+  const flags=[];
+  if(q.ocr) flags.push('<span class="lq-flag" title="此題由 OCR 從原卷還原，文字可能仍有錯字，重要處請對照原卷">OCR</span>');
+  if(q.needsReview) flags.push('<span class="lq-flag lq-flag-warn" title="子題或分值可能與原卷不符，待人工核對">待核對</span>');
+  const stem=q.stem?`<div class="lq-stem md">${mdLite(q.stem)}</div>`:'';
+  const figs=(q.figRefs||[]).length
+    ? `<div class="lq-figs">本題涉及原卷附圖 ${q.figRefs.map(f=>'圖 '+esc(f)).join('、')}<span class="lq-figs-note">配圖裁切中，暫請對照原卷</span></div>`:'';
+  return `<div class="lq-card" data-id="${esc(q.id)}">
+    <div class="lq-head">
+      <span class="lq-qid">${esc(q.qnum)}</span>
+      <span class="lq-part">${esc(lqPartName(q.part))}</span>
+      ${q.marksTotal?`<span class="lq-total">${q.marksTotal} 分</span>`:''}
+      <span class="lq-pg">p${esc(q.page)}</span>
+      ${flags.join('')}
+    </div>
+    ${stem}
+    ${figs}
+    <div class="lq-subs">${subs}</div>
+    <div class="lq-tools">
+      <button class="lq-btn" onclick="lqToggle(this)"><span class="lq-btn-t">評分指引</span><span class="lq-btn-i">▾</span></button>
+      <button class="lq-btn lq-note-btn" onclick="lqToggleNote(this)">✎ 寫筆記</button>
+    </div>
+    <div class="lq-panel">
+      <div class="lq-panel-in">
+        <div class="lq-todo">此題的官方評分指引（Marking Scheme）尚未收錄。<br>
+          目前可先對照課本相應課題溫習；收錄後會顯示在這裡。</div>
+      </div>
+    </div>
+    <div class="lq-notebox" style="display:none">
+      <textarea class="wnote lq-note" placeholder="寫下答題思路：這題問什麼、要用哪些關鍵字、哪一步最易失分…"
+        onchange="setLqNote('${esc(q.id)}',this.value)"></textarea>
+    </div>
+  </div>`;
+}
+function lqToggle(btn){
+  const card=btn.closest('.lq-card');
+  const box=card.querySelector('.lq-panel');
+  const open=!box.classList.contains('open');
+  box.classList.toggle('open',open);
+  btn.classList.toggle('open',open);
+  btn.querySelector('.lq-btn-t').textContent=open?'收起':'評分指引';
+  btn.querySelector('.lq-btn-i').textContent=open?'▴':'▾';
+}
+function lqToggleNote(btn){
+  const card=btn.closest('.lq-card');
+  const box=card.querySelector('.lq-notebox');
+  const show=box.style.display==='none';
+  box.style.display=show?'block':'none';
+  if(show){ const t=box.querySelector('textarea'); if(t)t.focus(); }
+}
+function setLqNote(id,v){
+  const s=STORE.get(); s.lqnotes=s.lqnotes||{};
+  if(v&&v.trim()) s.lqnotes[id]=v; else delete s.lqnotes[id];
+  STORE.set(s);
+}
+function lqGetNote(id){ const s=STORE.get(); return (s.lqnotes||{})[id]||''; }
+function lqSetYear(y){ LQ_YEAR=y; viewLQ(); }
+function lqSetPart(p){ LQ_PART=(LQ_PART===p?'':p); viewLQ(); }
+function viewLQ(){
+  navOn('pastpaper');
+  if(needsContent())return;
+  const all=lqAll();
+  if(!all.length){
+    app.innerHTML=`<div class="view">
+      <div class="thead"><button class="back" onclick="go('#/home')">← 返回首頁</button><h2>✍️ DSE 卷二 · 長題目</h2></div>
+      <div class="emptybox"><p>卷二的長題目還在整理中。</p>
+        <p>卷一選擇題已可正常使用：<button class="go" onclick="go('#/pastpaper')">去看卷一 MC</button></p></div>
+    </div>`;
+    return;
+  }
+  const years=lqYearList();
+  const parts=['A','B','C','D'];
+  const pool=all.filter(q=>(!LQ_YEAR||String(q.year)===LQ_YEAR)&&(!LQ_PART||q.part===LQ_PART));
+  const yrChips=years.map(y=>{
+    const n=all.filter(q=>String(q.year)===y).length;
+    return `<button class="ppchip${LQ_YEAR===y?' on':''}" onclick="lqSetYear('${esc(y)}')">${esc(y==='PP'?'PP 練習卷':(y==='SP'?'SP 樣本卷':y))} <span>${n}</span></button>`;
+  }).join('');
+  const partChips=parts.map(p=>{
+    const n=all.filter(q=>q.part===p).length;
+    if(!n) return '';
+    return `<button class="ppchip${LQ_PART===p?' on':''}" onclick="lqSetPart('${p}')">${esc(lqPartName(p).split(' · ')[0])} <span>${n}</span></button>`;
+  }).join('');
+
+  const byYear={};
+  pool.forEach(q=>{ (byYear[q.year]=byYear[q.year]||[]).push(q); });
+  const groups=Object.keys(byYear).sort().map(y=>{
+    const qs=byYear[y].slice().sort((a,b)=>String(a.qnum).localeCompare(String(b.qnum),'zh',{numeric:true}));
+    const mk=qs.reduce((a,q)=>a+(q.marksTotal||0),0);
+    return `<div class="pcard"><h4>${esc(y==='PP'?'PP 練習卷':(y==='SP'?'SP 樣本卷':y+' 年'))}
+      <span class="pg">${qs.length} 道大題 · ${mk} 分</span></h4>
+      <div class="lqlist">${qs.map(lqCard).join('')}</div></div>`;
+  }).join('');
+
+  const nRev=all.filter(q=>q.needsReview).length;
+  app.innerHTML=`
+  <div class="view">
+    <div class="thead"><button class="back" onclick="go('#/home')">← 返回首頁</button>
+      <h2>✍️ DSE 卷二 · 長題目</h2></div>
+    <div class="tmeta">
+      共 ${years.length} 個年份 · <b>${all.length}</b> 道大題。
+      長題目需自行書寫，與卷一選擇題<b>分開收錄</b>。
+      ${nRev?`其中 <b>${nRev}</b> 道的子題或分值待人工核對（卡片上有「待核對」標記）。`:''}
+      評分指引尚未收錄。
+    </div>
+    <div class="quick" style="margin:12px 0 6px">
+      <button onclick="go('#/pastpaper')">📝 切到卷一 MC</button>
+    </div>
+    <div class="ppchips">
+      <button class="ppchip${LQ_YEAR===''?' on':''}" onclick="lqSetYear('')">全部年份 <span>${all.length}</span></button>
+      ${yrChips}
+    </div>
+    <div class="ppchips" style="margin-top:6px">${partChips}</div>
+    <div id="lq-body" style="margin-top:10px">${groups||'<div class="emptybox"><p>此篩選條件下沒有題目。</p></div>'}</div>
+  </div>`;
+  // 回填筆記
+  document.querySelectorAll('.lq-note').forEach(t=>{
+    const card=t.closest('.lq-card');
+    if(!card)return;
+    const v=lqGetNote(card.dataset.id);
+    if(v)t.value=v;
+  });
+}
+
+
 let ppLazyObs=null;
 function ppLazyInit(){
   const imgs=document.querySelectorAll('#pp-bytopic img.pplazy[data-src]');
@@ -4456,6 +5000,7 @@ function route(){
   else if(rest.indexOf('/graph/')===0){ viewGraph(decodeURIComponent(rest.slice(7))); }
   else if(rest==='/graph')viewGraph();
   else if(rest==='/pastpaper')viewPastPaper();
+  else if(rest==='/lq')viewLQ();
   else if(rest==='/extras')viewExtras();
   else if(rest.indexOf('/extras/')===0){ var ex=rest.slice(8).split('@'); viewExtra(decodeURIComponent(ex[0]), ex[1]||''); }
   else if(rest==='/quiz')viewQuiz();
@@ -4484,7 +5029,17 @@ function hideBoot(){
   },wait);
 }
 
-window.addEventListener('hashchange',route);
+window.addEventListener('hashchange',function(){
+  /* 分頁切換走 View Transitions：瀏覽器自動快照新舊頁並做交叉轉場，
+     所以 route() 不需要保留舊 DOM，也不需要改渲染邏輯。
+     data-anim="off" 或系統「減少動態」→ 直接跳轉，省掉無意義的合成開銷。 */
+  var off=document.documentElement.getAttribute('data-anim')==='off'
+        ||(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches);
+  if(document.startViewTransition&&!off){
+    try{ document.startViewTransition(function(){route();}); return; }catch(e){}
+  }
+  route();
+});
 window.addEventListener('pagehide',flushSeen);
 document.addEventListener('visibilitychange',function(){if(document.hidden)flushSeen();});
 route();

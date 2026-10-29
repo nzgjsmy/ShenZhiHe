@@ -140,6 +140,34 @@ scratch/_browser_check.js
 scratch/shot_*.png
 scratch/_bak_pp_v024.json
 
+# LQ 核對頁（由 lq_review.py 生成，23MB，可隨時重跑；腳本本身要入庫）
+scratch/_lq_review/
+scratch/_shots/
+
+# LQ（卷二）深度識別中間產物（可由 lq_vl.py / lq_vl_parse.py 重建，體積大）
+scratch/_lq_vl/
+scratch/_lq_vl_raw/
+scratch/_lq_ocr_v4/
+scratch/_lq_ocr_v6/
+scratch/_lq_fixlist.txt
+scratch/_vl_out/
+scratch/_vl_run*.log
+
+# 字體子集化的字符集清單（可由 build 流程重新生成）
+scratch/_charset.txt
+scratch/_charset_title.txt
+
+# 改動前的備份快照（回退用，不必入庫）
+scratch/_bak/
+
+# 設計原型（獨立 HTML，雙擊可看，不影響正式站點；設計結論已寫進
+# docs/2026-10-30-設計與改造總覽.md，原型檔本身體積大不入庫）
+scratch/_proto/
+
+# 字體原始檔與全量備份（5.7MB）。部署只用 site/fonts/LongCang-Title.woff2（316KB）；
+# 若日後新增標題文字需重新子集化，從這裡的原始 TTF 重跑。
+scratch/_fonts/
+
 # WorkBuddy 本地運行時資料（工作區記憶會話日誌等，不進倉庫；
 # 協作者共享的記憶請寫 SHARED-MEMORY.md + docs/journal/）
 .workbuddy/
