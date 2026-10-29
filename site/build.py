@@ -233,6 +233,18 @@ def load_subject(sid):
         else:
             print("  warning: %s/_lq.json 格式不是物件，已跳過" % sid)
 
+    # 每日小知識（_daily.json）：可選檔，沒有就不顯示。
+    # 科目首頁獨立一格「今日小知識」，按日期輪換一條。
+    daily = None
+    daily_path = os.path.join(sdir, "_daily.json")
+    if os.path.exists(daily_path):
+        d = load(daily_path, None)
+        if isinstance(d, dict) and isinstance(d.get("items"), list):
+            daily = d
+            print("  note: %s 載入每日小知識 %d 條" % (sid, len(d["items"])))
+        else:
+            print("  warning: %s/_daily.json 格式不對（需為 {items:[...]}），已跳過" % sid)
+
     # 額外資訊：extras/<科目>/*.json（元素週期表、速查表…），依 order 排序
     extras = []
     edir = os.path.join(EXTRAS, sid)
@@ -322,6 +334,7 @@ def load_subject(sid):
         "extras": extras,
         "_pastpaper": pastpaper,
         "_lq": lq,
+        "_daily": daily,
         "stats": {
             "topics": len(topics),
             "sections": sum(len(t.get("sections", [])) for t in topics),

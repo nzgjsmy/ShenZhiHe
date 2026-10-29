@@ -2255,6 +2255,58 @@ html[data-theme="dark"] .subcard{
   vertical-align:middle;margin-right:9px;
   transform:translateY(-1px);
 }
+
+/* ---------- ⑬ 今日小知識（2026-10-30） ----------
+   科目首頁的一格「每日科普」。資料來自 data/<科目>/_daily.json，
+   沒有檔案或 items 為空時整塊不渲染（不佔位、不留空殼）。
+   視覺上刻意跟黃色便利貼（今日任務）區分：淡青紙 + 左側實邊，像夾在筆記裡的便條。 */
+.hn-daily{
+  position:relative;
+  background:var(--accent-soft);
+  border-left:4px solid var(--accent);
+  border-radius:0 3px 3px 0;
+  padding:18px 22px 20px;
+  margin:0 0 26px;
+  box-shadow:0 1px 2px rgba(70,60,40,.07),0 6px 18px rgba(70,60,40,.06);
+}
+.hn-daily-head{
+  display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  margin-bottom:9px;
+}
+.hn-daily-lbl{
+  font-size:9.5px;letter-spacing:.22em;color:var(--accent);
+  font-weight:700;
+}
+.hn-daily-tag{
+  font-size:10.5px;color:var(--muted);letter-spacing:.04em;
+  border-bottom:1px dashed var(--hn-edge);padding-bottom:1px;
+}
+.hn-daily-t{
+  font-family:var(--hn-serif);font-size:19px;font-weight:500;
+  color:var(--hn-title);line-height:1.5;letter-spacing:-.2px;
+  margin-bottom:7px;
+}
+.hn-daily-x{
+  font-size:13.5px;line-height:1.9;color:var(--text-soft);
+}
+html[data-theme="dark"] .hn-daily{
+  box-shadow:0 1px 2px rgba(0,0,0,.30),0 6px 18px rgba(0,0,0,.26);
+}
+@media (max-width:860px){
+  .hn-daily{padding:15px 17px 17px;margin-bottom:20px}
+  .hn-daily-t{font-size:17px}
+  .hn-daily-x{font-size:13px;line-height:1.8}
+}
+
+/* 三科總覽頁頂右側的總量文字（取代原本會「跳回自己」的按鈕） */
+.hn-stat{
+  font-size:12px;color:var(--hn-muted);letter-spacing:.06em;
+  display:inline-block;padding-top:10px;
+  font-variant-numeric:tabular-nums;
+}
+@media (max-width:860px){
+  .hn-stat{padding-top:0;font-size:11.5px}
+}
 </style>
 <script>
 /* iOS 舊版 Safari 的 vh 問題補償：真實可視高度寫進 CSS 變數 */
@@ -3243,6 +3295,9 @@ function viewSubjects(){
   const _d=new Date();
   const _wd=['日','一','二','三','四','五','六'][_d.getDay()];
   const hnDate=_d.getFullYear()+' · '+String(_d.getMonth()+1).padStart(2,'0')+' · '+String(_d.getDate()).padStart(2,'0')+'　星期'+_wd;
+  // 三科總覽頁頂右側的總量提示（沒有「當前科目」時代替按鈕，避免按鈕跳回自己）
+  const _totPts=SUBJECTS.reduce((a,s)=>a+((s.stats||{}).points||0),0);
+  const _totQ=SUBJECTS.reduce((a,s)=>a+((s.stats||{}).questions||0),0);
   const cards=SUBJECTS.map(s=>{
     const st=s.stats||{};
     const on=SUB&&s.id===SUB.id;
@@ -3277,7 +3332,9 @@ function viewSubjects(){
         <span class="hn-hand">↳ 挑一科進去，今天的份就開始了。</span>
       </div>
       <div class="hn-r">
-        <button class="hn-btn" onclick="go('${SUB?'#/home':'#/subjects'}')">${SUB?'繼續 '+esc(SUB.title):'開始學習'} →</button>
+        ${SUB
+          ? `<button class="hn-btn" onclick="go('#/home')">繼續 ${esc(SUB.title)} →</button>`
+          : `<span class="hn-stat">${SUBJECTS.length} 科 · ${_totPts} 個知識點 · ${_totQ} 道題</span>`}
       </div>
     </div>
     <div class="subgrid">${cards}</div>
@@ -3551,6 +3608,10 @@ function viewHome(){
     : TOPICS.map(topicCardHTML).join('');
   const due=dueList().length, fresh=newPointCount(), sc=streak(), mc=masteredCount();
   const om=Math.round(overallMastery()*100);
+  // 今日小知識：按「今天第幾天 % 條數」輪換，加內容不必改程式
+  const _daily=(SUB&&SUB._daily&&SUB._daily.items)||[];
+  const dailyItem=_daily.length?_daily[Math.floor(Date.now()/86400000)%_daily.length]:null;
+
   // 手記區用：科目描述的首句。
   // ⚠️ 不能只按句號切 —— 生物科的描述是「細胞與生命基礎、人體營養與運輸、…」
   // 這種頓號串起來的長列表，整份都沒有句號，切完還是全列出來。所以要限字數。
@@ -3600,6 +3661,15 @@ function viewHome(){
     ${/* 原本 6 個統計卡（連續/待複習/已熟練/掌握度/錯題/題目）已併入上方 .dash 儀表盤，
          避免同一組數字在首屏出現兩次。2026-10-30 */''}
     ${SUB&&SUB.id==='bio'?`
+    ${dailyItem?`
+    <div class="hn-daily">
+      <div class="hn-daily-head">
+        <span class="hn-daily-lbl">今 日 小 知 識</span>
+        ${dailyItem.tag?`<span class="hn-daily-tag">${esc(dailyItem.tag)}</span>`:''}
+      </div>
+      <div class="hn-daily-t">${esc(dailyItem.t||'')}</div>
+      <div class="hn-daily-x">${esc(dailyItem.x||'')}</div>
+    </div>`:''}
     ${/* DSE 真題分兩張卡：卷一（MC 選擇題）與卷二（LQ 長題目）**完全分開**。
          兩者題型、題號體系、答題方式都不同，混在一張卡裡用戶會以為是同一套。
          2026-10-30 */''}
@@ -5568,7 +5638,11 @@ registerSW();
 
 /* ---------------- router ---------------- */
 function route(){
-  let h=location.hash||'#/home';
+  /* 空 hash（首次打开、根路径）→ 三科總覽。
+     原本預設 '#/home' 會直接落到「上次那科」的科目頁，用戶每次都要再點一次
+     「科目」才能看到三科總覽；改成先進總覽，由用戶自己挑一科。
+     ⚠️ 只影響「完全沒有 hash」的情況；帶 hash 的連結（#/bio/home 等）照舊。 */
+  let h=location.hash||'#/subjects';
   window.scrollTo(0,0);
   closePip();
   /* 離開測驗頁時移除勾選浮動條，避免它跟著跑到別的頁面 */
