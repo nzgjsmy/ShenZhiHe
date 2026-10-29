@@ -63,6 +63,15 @@ f6chem/
 5. **改版必须 bump `site/version.json` 的 version**
    `service-worker.js` 的缓存键是 `shenzhine-<version>`，不 bump 客户端会一直用旧缓存。
 
+   **但不要 bump 太频繁** —— 每 bump 一次，客户端就被强制刷新一次、缓存作废一次。
+   规矩：
+   - **同一批改动只 bump 一次**。改题解、改文案、修样式这类连续工作，
+     先在本地全部做完，最后统一 bump 一次、部署一次。
+   - 只在「**内容或功能有实质变化**」时 bump。纯排版微调、临时排查、
+     中间态的构建，**不 bump、不部署**，留在本地累积。
+   - 一次大批量改动用一个版本号（如 V0.23.0），不要拆成 V0.22.1 / V0.22.2 / V0.22.3。
+   - 部署前顺手看一眼 `git log` 最近 3 个版本号，如果连续三个都是小版本号，说明拆得太碎了。
+
 6. **`data/bio/_pastpaper.json` 只允许改 `explanation` 和 `explSource`**
    其余字段（`q`/`options`/`answer`/`topic`/`pct`/`img`/`optImg`/`qImg`/`ocr*`）已人工校对过，
    **任何"顺手优化"都会破坏已校对的内容**。写完题解跑 `scripts/guard_data.py` 自检。
