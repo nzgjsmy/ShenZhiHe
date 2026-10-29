@@ -3420,7 +3420,7 @@ function viewSubjects(){
         <span class="hn-news-sub">${NEWS.length} 則 · 皆附原始連結</span>
       </div>
       <div class="hn-news-list">
-        ${NEWS.slice(0,6).map(nw=>`
+        ${NEWS.slice(0,9).map(nw=>`
         <div class="hn-news-item">
           <div class="hn-news-meta">
             <span class="hn-news-cat cat-${esc(nw.cat||'')}">${esc(_CAT[nw.cat]||nw.cat||'')}</span>

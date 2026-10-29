@@ -3,27 +3,65 @@
   "items": [
     {
       "date": "2026-10-29",
+      "cat": "phys",
+      "t": "愛因斯坦方程式可以解釋沒有暗能量的宇宙",
+      "x": "數學家發現了他們認為宇宙標準模型中的一個根本缺陷，這可能會挑戰對暗能量的需求。他們的計算表明，用於描述宇宙膨脹的數學框架本質上是不穩定的，並且宇宙可能",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261028232719.htm",
+      "orig": "Einstein's equations may explain the universe without dark e"
+    },
+    {
+      "date": "2026-10-29",
+      "cat": "phys",
+      "t": "科學家剛剛打破了物理學教科書的規則",
+      "x": "科學家們透過產生比傳統理論預測的能量高得多的 X 射線來挑戰雷射物理學的長期規則。這項令人驚訝的發現揭示了兩個電子如何協同工作可以克服先前公認的極限，為量子研究開闢新的可能性。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261027063713.htm",
+      "orig": "Scientists just broke a textbook rule of physics"
+    },
+    {
+      "date": "2026-10-29",
+      "cat": "chem",
+      "t": "晶體中的微小缺陷揭示了巨大的量子驚喜",
+      "x": "研究人員解決了一個長期存在的挑戰，即了解鑽石和碳化矽等材料中的微小缺陷在光照下如何表現。他們的新計算方法揭示了碳化矽中令人驚訝的重要能量損失機制，科學家之前已經發現了這個機制",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261022081302.htm",
+      "orig": "A tiny defect in a crystal reveals a big quantum surprise"
+    },
+    {
+      "date": "2026-10-29",
+      "cat": "chem",
+      "t": "革命性的新型顯微鏡可以揭示隱藏的生命機制",
+      "x": "研究人員開發了一種革命性的顯微鏡，它使用極其強大的激光，使以前看不見的細胞結構變得更容易看到。該技術極大地提高了影像清晰度，使科學家能夠檢查傳統電子顯微鏡難以檢測的小蛋白質",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261021231230.htm",
+      "orig": "A revolutionary new microscope could reveal the hidden machi"
+    },
+    {
+      "date": "2026-10-29",
+      "cat": "bio",
+      "t": "科學家發現有毒火蠑螈的秘密發光",
+      "x": "研究人員在歐洲常見的黑黃火蠑螈中發現了一種令人驚訝的隱藏能力：它們在紫外線下發出綠色和青色的光。這種神秘的螢光主要來自於它們皮膚的腺體和有毒的分泌物，可以持續發光24小時以上",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261027063707.htm",
+      "orig": "Scientists discover a secret glow in toxic fire salamanders"
+    },
+    {
+      "date": "2026-10-29",
+      "cat": "bio",
+      "t": "殺死恐龍的小行星可能幫助螞蟻征服了世界",
+      "x": "殺死恐龍的小行星可能為螞蟻征服地球奠定了基礎，隱藏在螞蟻 DNA 中的「跳躍基因」帶來了令人驚訝的推動力。科學家發現，這些可移動遺傳元件的活動爆發與主要螞蟻群體的崛起同時發生，這可能導致了螞蟻的滅絕。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261026225608.htm",
+      "orig": "The asteroid that killed the dinosaurs may have helped ants "
+    },
+    {
+      "date": "2026-10-29",
       "cat": "bio",
       "t": "擊退乳癌大魔王！「智慧導彈」ADC新藥精準打擊三陰性乳癌，台灣實績超越國際",
       "x": "三陰性乳癌惡性度高，傳統化療副作用大。「智慧導彈」Trop-2 ADC藥物能精準毒殺癌細胞，台灣患者存活期更達18個月，超越國際數據。醫師盼未來能爭取第一線使用，讓病友兼顧療效與生活品質。",
       "src": "泛科學",
       "url": "https://pansci.asia/archives/382475"
-    },
-    {
-      "date": "2026-10-27",
-      "cat": "bio",
-      "t": "牙齦長血泡、腿冒紅點？當心免疫性血小板低下症(ITP)拉警報，擺脫類固醇依賴有新解！",
-      "x": "牙齦長血泡、腿部冒紅點？當心是「免疫性血小板低下症」的出血警訊。若類固醇治療易復發，現有TPO-RA等二線藥物能直接刺激血小板生成，助患者擺脫出血危機與類固醇依賴。",
-      "src": "泛科學",
-      "url": "https://pansci.asia/archives/382449"
-    },
-    {
-      "date": "2026-10-22",
-      "cat": "bio",
-      "t": "害怕心臟二次開刀？「經導管瓣中瓣手術」免開胸，高齡瓣膜退化患者的新救星！",
-      "x": "生物瓣膜退化卻害怕二次開胸？「經導管瓣中瓣手術」讓患者免開胸、免停心跳即可置換新瓣膜。這項微創技術傷口小、恢復快，更獲健保條件給付，為高齡心臟病患帶來全新曙光。",
-      "src": "泛科學",
-      "url": "https://pansci.asia/archives/382454"
     },
     {
       "date": "2026-10-10",
@@ -34,28 +72,12 @@
       "url": "https://pansci.asia/archives/382456"
     },
     {
-      "date": "2026-10-07",
-      "cat": "chem",
-      "t": "2026 諾貝爾化學獎：分子為什麼只挑一隻手",
-      "x": "頒給 Henri B. Kagan 與曾我憲三（Kenso Soai），表彰他們發現「不對稱有機合成中的非線性效應與自催化」。天然的胺基酸幾乎只以單一手性存在，這種偏好在化學上本來難以解釋——他們找到的機制讓少許過量的某一手性產物能自我放大，被稱為「手性的自我複製」。",
-      "src": "NobelPrize.org",
-      "url": "https://www.nobelprize.org/all-nobel-prizes-2026/"
-    },
-    {
       "date": "2026-10-06",
       "cat": "phys",
       "t": "2026 諾貝爾物理獎：用南極的冰抓宇宙來的微中子",
       "x": "頒給 Francis Halzen，表彰他主導「冰立方微中子天文台」並發現來自天體物理源的高能微中子。他在 1988 年提出大膽構想：把南極一立方公里的冰當探測介質，埋入上千個光感測器，捕捉微中子撞擊冰原子時發出的微弱閃光。微中子幾乎不被物質阻擋，能直接從黑洞噴流這類極端天體的核心逃出來，帶來光學望遠鏡永遠看不到的資訊。",
       "src": "NobelPrize.org",
       "url": "https://www.nobelprize.org/all-nobel-prizes-2026/"
-    },
-    {
-      "date": "2026-10-05",
-      "cat": "bio",
-      "t": "2026 諾貝爾生醫獎：用光開關神經細胞",
-      "x": "頒給 Karl Deisseroth、Peter Hegemann、Georg Nagel，表彰「光門控離子通道與光遺傳學」。起點是一種不起眼的單細胞綠藻——Hegemann 與 Nagel 發現它的 channelrhodopsin 蛋白受藍光照射時會打開離子通道；Deisseroth 把這個基因導入大鼠神經元，成功用光觸發神經訊號。如今全球實驗室用它開關特定神經細胞，找出哪些回路掌管記憶、情緒與行為。",
-      "src": "NobelPrize.org",
-      "url": "https://www.nobelprize.org/prizes/medicine/2026/press-release/"
     }
   ]
 }
