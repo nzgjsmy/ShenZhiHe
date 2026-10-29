@@ -1,0 +1,191 @@
+name: daily-audit
+
+# 目的：云端定时巡检题库 —— 电脑关机也能跑。
+#
+# ⚠️ 为什么这个文件同时存在于 source 与 main 两个分支？
+#   GitHub 官方规则：`schedule`（定时）事件**要求 workflow 文件存在于默认分支**，
+#   否则 Cron 永远不会触发。本仓库默认分支是 main（部署产物分支）。
+#   而 `push` 事件不受此限制，所以 source 分支上也需要一份供 push 触发使用。
+#   两份内容必须保持一致。
+#
+#   与 verify.yml 的分工：
+#     verify.yml  = 提交时的「守门员」，不通过就不能合并（每次 push/PR 跑）
+#     daily-audit = 定时「体检」，主动找存量问题，开 Issue 提醒（每天跑）
+#
+# 设计原则：
+#   1. 本 workflow 完全不调用 AI，不消耗任何积分 —— 纯 Python 标准库脚本
+#   2. 只读不改：发现问题时开 Issue，绝不自动改题库（题库是人工校对过的内容）
+#   3. 幂等：同一天重复触发不会刷屏（按日期去重）
+#
+# ⚠️ 注意：main 分支是部署产物分支，此文件**不会**影响 GitHub Pages 构建
+#   （Pages 用的是根目录的 index.html，workflow 放在 .github/ 下不参与部署）。
+
+on:
+  schedule:
+    # 每天 UTC 03:17（= 港时 11:17）。刻意避开整点，减少 GitHub 调度拥塞导致的延迟
+    - cron: '17 3 * * *'
+  workflow_dispatch:  # 手动触发
+    inputs:
+      force:
+        description: '强制重跑（忽略当天去重）'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write   # 只有开 Issue 需要
+
+concurrency:
+  group: daily-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 检出源码分支（main 是产物分支，题库在 source 上）
+        run: |
+          set -e
+          git fetch origin source --depth=1
+          git checkout FETCH_HEAD -- data scripts
+          echo "已检出 source 分支的 data/ 与 scripts/"
+          ls data/bio/_pastpaper.json
+
+      - name: 题库体检（零依赖，仅标准库）
+        id: audit
+        continue-on-error: true
+        run: |
+          set +e
+          # --quiet 只输出「真正需要处理」的条目（脚本内置 QUIET_SKIP 过滤掉统计类信息），
+          # 与 verify_build.py 的门禁口径完全一致。
+          python scripts/audit_questions.py --quiet > audit.txt 2>audit.err
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+          echo "--- 发现的问题 ---"; cat audit.txt
+          echo "--- stderr ---"; head -c 1000 audit.err
+          exit 0
+
+      - name: 解析结果并判断是否需要开 Issue
+        id: decide
+        env:
+          FORCE: ${{ inputs.force }}
+        run: |
+          set +e
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import os, datetime
+
+          FORCE = os.environ.get('FORCE', '').lower() == 'true'
+          today = datetime.datetime.now().strftime('%Y-%m-%d')
+
+          # audit.txt 每行一条，格式：[类别] 描述
+          items = []
+          try:
+              with open('audit.txt', encoding='utf-8-sig', errors='replace') as f:
+                  for line in f:
+                      line = line.strip()
+                      if not line:
+                          continue
+                      if line.startswith('[') and ']' in line:
+                          cat, _, msg = line.partition(']')
+                          items.append((cat.lstrip('[').strip(), msg.strip()))
+                      else:
+                          items.append(('其他', line))
+          except Exception as e:
+              print(f'::warning::读取 audit.txt 失败: {e}')
+
+          total = len(items)
+          lines = []
+          for cat, msg in items[:50]:
+              lines.append(f'- **{cat}**: {msg}')
+          if total > 50:
+              lines.append(f'- …另有 {total-50} 条，详见运行日志')
+
+          print(f'need_issue={str(total > 0).lower()}')
+          print(f'total={total}')
+          print(f'today={today}')
+
+          with open('issue_body.md', 'w', encoding='utf-8') as f:
+              f.write('## 自动巡检报告\n\n')
+              f.write(f'**日期**: {today}\n\n')
+              if total == 0:
+                  f.write('✅ 未发现需要处理的问题。\n')
+              else:
+                  f.write(f'共发现 **{total}** 个问题：\n\n')
+                  f.write('\n'.join(lines) if lines else '（详见运行日志）')
+                  f.write('\n\n> 本 Issue 由 `daily-audit` 自动创建，仅供参考。')
+                  f.write('题库内容为人工校对成果，请人工确认后再修改。\n')
+          PY
+          exit 0
+
+      - name: 检查今天是否已开过 Issue（去重）
+        id: dedup
+        env:
+          NEED: ${{ steps.decide.outputs.need_issue }}
+          TODAY: ${{ steps.decide.outputs.today }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          set +e
+          NEED="$NEED"; TODAY="$TODAY"; FORCE="$FORCE"
+          if [ "$NEED" != "true" ]; then
+            echo "should_open=false" >> "$GITHUB_OUTPUT"
+            echo "无需开 Issue：未发现问题"
+            exit 0
+          fi
+          if [ "$FORCE" = "true" ]; then
+            echo "should_open=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # 找今天由本 workflow 创建的 Issue
+          COUNT=$(gh issue list --state all \
+            --search "in:title 巡检 created:>=$(date -u +%Y-%m-%d)" \
+            --json title --jq 'length' 2>/dev/null || echo "0")
+          if [ "${COUNT:-0}" -gt 0 ]; then
+            echo "should_open=false" >> "$GITHUB_OUTPUT"
+            echo "今天已有巡检 Issue，跳过（去重生效）"
+          else
+            echo "should_open=true" >> "$GITHUB_OUTPUT"
+          fi
+          exit 0
+
+      - name: 开 Issue
+        if: steps.dedup.outputs.should_open == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOTAL: ${{ steps.decide.outputs.total }}
+          TODAY: ${{ steps.decide.outputs.today }}
+        run: |
+          set +e
+          # 先确保标签存在（不存在则创建），避免因标签缺失导致开 Issue 失败
+          gh label create "巡检" --color "0E8A16" --description "daily-audit 自动巡检产生" 2>/dev/null
+          # 先尝试带标签；失败则不带标签重试（保证 Issue 一定开出来）
+          gh issue create \
+            --title "🔍 题库巡检：发现 $TOTAL 个问题（$TODAY）" \
+            --body-file issue_body.md \
+            --label "巡检" 2>/dev/null
+          RC=$?
+          if [ $RC -ne 0 ]; then
+            echo "带标签创建失败，改用无标签重试"
+            gh issue create \
+              --title "🔍 题库巡检：发现 $TOTAL 个问题（$TODAY）" \
+              --body-file issue_body.md
+            RC=$?
+          fi
+          if [ $RC -eq 0 ]; then
+            echo "Issue 已创建"
+          else
+            echo "::error::Issue 创建失败"
+            exit 1
+          fi
+
+      - name: 汇总
+        if: always()
+        run: |
+          echo "### 巡检结果"
+          echo "- 问题总数: ${{ steps.decide.outputs.total }}"
+          echo "- 需要开 Issue: ${{ steps.dedup.outputs.should_open }}"
+          echo "- 脚本退出码: ${{ steps.audit.outputs.exit_code }}"
