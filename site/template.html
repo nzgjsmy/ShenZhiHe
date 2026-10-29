@@ -253,6 +253,21 @@ section.sblock>h3{font-size:20px;margin:0 0 4px;padding-left:12px;border-left:5p
 pre.mdcodewrap{position:relative;margin:10px 0;padding:10px 12px;background:#f6f4ee;border:1px solid var(--line);border-left:3px solid #0f766e;border-radius:8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 pre.mdcodewrap code{display:block;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:13px;line-height:1.65;white-space:pre;color:#3d3a33;background:none;padding:0;border:0;overflow-wrap:normal}
 pre.mdcodewrap[data-lang]::before{content:attr(data-lang);position:absolute;top:4px;right:8px;font-size:10.5px;color:var(--muted);letter-spacing:.04em}
+/* ---------- 通用的 markdown 樣式 ----------
+   以前只有 .pcard .md（知識點卡）與 .pipbody .md（畫中畫）有表格／列表樣式，
+   真題頁的題解（.ppexpl .md）沒有 → 268 條含表格的題解渲染成「無框裸表格」，
+   深色主題下更是沒有底色。這裡補一套通用規則，三種容器共用；
+   下方更具體的規則（如 .pcard .md table）仍可再覆蓋。 */
+.md table{border-collapse:collapse;margin:10px 0;font-size:14px;width:100%;background:var(--paper-soft)}
+.md th,.md td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+.md th{background:var(--paper-alt);font-weight:700}
+.md tr:nth-child(even) td{background:var(--paper)}
+.md ul,.md ol{margin:8px 0;padding-left:24px}
+.md li{margin:4px 0}
+.md p{margin:8px 0}
+.md blockquote.mdquote{margin:10px 0;padding:2px 12px;border-left:3px solid var(--line);background:var(--paper-soft);border-radius:0 8px 8px 0}
+.md blockquote.mdquote table{margin:6px 0;background:var(--paper)}
+.md blockquote.mdquote th{background:var(--paper-alt)}
 /* 行內代碼 */
 .md code,.pipbody code{background:#f1efe8;border:1px solid var(--line);border-radius:4px;padding:0 4px;font-size:.94em;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 .tags{margin-top:8px}
@@ -1736,8 +1751,48 @@ function inline(s){
      原字元，不影響抄寫。 */
   return subify(t);
 }
+/* markdown 表格 → HTML。抽成函數，普通表格與引用塊內的表格共用。
+   分隔行（第 2 行且每格都是 ---/:--:）會被跳過。 */
+function mdTable(rows){
+  let out='<table>';
+  rows.forEach((r,ri)=>{
+    const cells=r.trim().replace(/^\|/,'').replace(/\|\s*$/,'').split('|').map(c=>c.trim());
+    if(ri===1&&cells.length&&cells.every(c=>/^:?-{2,}:?$/.test(c)))return;
+    if(cells.length&&cells[cells.length-1]==='')cells.pop();
+    const tag=ri===0?'th':'td';
+    out+='<tr>'+cells.map(c=>'<'+tag+'>'+inline(c)+'</'+tag+'>').join('')+'</tr>';
+  });
+  return out+'</table>';
+}
+/* 錯題本／未整理清單的題幹摘要。
+   ⚠️ 不能直接用 slice(0,300)：那會把 markdown 表格切一半、程式碼塊切到沒有收尾的 ```，
+   mdLite 會把後面的內容整段當成程式碼，畫面直接壞掉。
+   改成「先切到完整的一行／段落邊界，再補省略號」。 */
+function mdBrief(src,limit){
+  let t=String(src||'');
+  if(t.length<=limit) return mdLite(t);
+  const cut=t.slice(0,limit);
+  // 切到最後一個換行（段落邊界）
+  let p=cut.lastIndexOf('\n');
+  if(p>limit*0.4) cut=cut.slice(0,p);
+  else{
+    // 沒有換行就退而求其次：切到最後一個句號／換行，並避開未閉合的 ``` 與表格行
+    p=Math.max(cut.lastIndexOf('。'),cut.lastIndexOf('．'),cut.lastIndexOf('. '));
+    if(p>limit*0.4) cut=cut.slice(0,p+1);
+    const fences=(cut.match(/```/g)||[]).length;
+    if(fences%2) cut=cut.slice(0,cut.lastIndexOf('\n'));
+    const lines=cut.split('\n').filter(l=>!/^\s*\|/.test(l));
+    cut=lines.join('\n');
+  }
+  return mdLite(cut+' …');
+}
 function mdLite(src,keywords){
-  const lines = String(src||'').split(/\r?\n/);
+  // ⚠️ 防禦：資料層若誤把 JSON 的轉義序列「\n」當成內容存進來（兩個字元：反斜杠+n），
+  //   mdLite 是「逐行」解析的，整段會被當成一行，表格／清單／程式碼塊全部退化成純文字。
+  //   歷史上真的發生過（152 條題解受影響）。這裡做一次就地正規化，雙保險。
+  let raw=String(src||'');
+  if(raw.indexOf('\\n')>=0) raw=raw.replace(/\\n/g,'\n');
+  const lines = raw.split(/\r?\n/);
   let html='', i=0;
   const isTableRow=l=>/^\s*\|.*\|\s*$/.test(l);
   // 圖片行：![說明](src)——src 為 build 注入的 data URI；連續圖片行併成一個 figure
@@ -1784,16 +1839,8 @@ function mdLite(src,keywords){
     }
     if(isTableRow(line)){
       const rows=[];
-      while(i<lines.length&&isTableRow(rows.length<1||true?lines[i]:lines[i])){ if(!isTableRow(lines[i]))break; rows.push(lines[i]); i++; }
-      let out='<table>';
-      rows.forEach((r,ri)=>{
-        const cells=r.trim().replace(/^\|/,'').replace(/\|\s*$/,'').split('|').map(c=>c.trim());
-        if(ri===1&&cells.every(c=>/^:?-{2,}:?$/.test(c)))return;
-        if(cells.length&&cells[cells.length-1]==='')cells.pop();
-        const tag=ri===0?'th':'td';
-        out+='<tr>'+cells.map(c=>'<'+tag+'>'+inline(c)+'</'+tag+'>').join('')+'</tr>';
-      });
-      html+=out+'</table>';continue;
+      while(i<lines.length&&isTableRow(lines[i])){ rows.push(lines[i]); i++; }
+      html+=mdTable(rows);continue;
     }
     if(/^\s*[-*]\s+/.test(line)){
       let items=[];
@@ -1806,7 +1853,20 @@ function mdLite(src,keywords){
       html+='<ol>'+items.map(x=>'<li>'+inline(x)+'</li>').join('')+'</ol>';continue;
     }
     if(/^\s*#{1,4}\s+/.test(line)){html+='<p><strong>'+inline(line.replace(/^\s*#{1,4}\s+/,''))+'</strong></p>';i++;continue;}
-    if(/^\s*>\s?/.test(line)){html+='<p style="color:var(--muted)">'+inline(line.replace(/^\s*>\s?/,''))+'</p>';i++;continue;}
+    if(/^\s*>\s?/.test(line)){
+      // 引用塊：內容是表格行時也要渲染成表格（否則會變成一堆 | 與 --- 的亂碼）
+      const inner=line.replace(/^\s*>\s?/,'');
+      if(isTableRow(inner)){
+        const rows=[];
+        while(i<lines.length){
+          const l2=lines[i].replace(/^\s*>\s?/,'');
+          if(!isTableRow(l2))break;
+          rows.push(l2); i++;
+        }
+        html+='<blockquote class="mdquote">'+mdTable(rows)+'</blockquote>';continue;
+      }
+      html+='<p style="color:var(--muted)">'+inline(inner)+'</p>';i++;continue;
+    }
     let para=[];
     while(i<lines.length&&lines[i].trim()&&!isTableRow(lines[i])&&!IMG_LINE_RE.test(lines[i])&&!/^```/.test(lines[i].trim())&&!/^\s*[-*]\s+/.test(lines[i])&&!/^\s*\d+[.)]\s+/.test(lines[i])&&!/^\s*#{1,4}\s+/.test(lines[i])&&!/^\s*>\s?/.test(lines[i])){para.push(lines[i]);i++;}
     html+='<p>'+para.map(inline).join('<br>')+'</p>';
@@ -3648,12 +3708,13 @@ function renderQ(){
 }
 function explain(ok,q,extra){
   const e=document.getElementById('expl');
-  const correct=q.type==='mc'?q.options[q.answer]:q.type==='tf'?(q.answer?'正確':'錯誤'):(Array.isArray(q.answer)?q.answer[0]:q.answer);
+  const correct=q.type==='mc'?(q.options||[])[q.answer]:q.type==='tf'?(q.answer?'正確':'錯誤'):(Array.isArray(q.answer)?q.answer[0]:q.answer);
   e.className='expl show '+(ok?'good':'bad');
   const nd=QZ.nextDue;
   const dueLine=nd?'<div style="margin-top:6px;font-size:13.5px;color:var(--muted)">📅 這個知識點 '+fmtDue(nd.due)+' 再複習一次</div>':'';
-  e.innerHTML=(ok?'<strong>✅ 答對了！</strong>':'<strong>❌ 不對喔。</strong> 正確答案：<code>'+esc(correct)+'</code>')+(extra?'<br>'+extra:'')+
-    (q.explanation?'<div style="margin-top:6px">'+esc(q.explanation)+'</div>':'')+
+  // 題解走 mdLite：quiz 資料裡有些題解寫了 **粗體**、換行、列表（esc 會讓它們原樣顯示）
+  e.innerHTML=(ok?'<strong>✅ 答對了！</strong>':'<strong>❌ 不對喔。</strong> 正確答案：<code>'+esc(correct==null?'—':correct)+'</code>')+(extra?'<br>'+extra:'')+
+    (q.explanation?'<div style="margin-top:6px" class="md">'+mdLite(q.explanation)+'</div>':'')+
     (q.point&&PMAP[q.point]?'<div style="margin-top:6px">📖 相關知識點：<button class="pipopen" onclick="openPip(\''+q.point+'\')">'+esc(PMAP[q.point].p.title)+'</button> <span style="font-size:12.5px;color:var(--muted)">畫中畫開啟，測驗進度不會丟</span></div>':'')+
     dueLine;
   const nb=document.getElementById('nextbtn'); if(nb)nb.style.display='inline-block';
@@ -3756,7 +3817,7 @@ function viewWrong(){
         <span class="wpct">答對率 ${q.pct}%</span>
         ${done?'<span class="wdone">已答對</span>':'<span class="wpend">未答對</span>'}
       </div>
-      <div class="md wstem">${mdLite((q.q||'').slice(0,300))}</div>
+      <div class="md wstem">${mdBrief(q.q,300)}</div>
       <div class="wans">正確答案：<b>${esc(q.answer||'—')}</b></div>
       <textarea class="wnote" placeholder="寫下自己的錯題筆記：為甚麼會錯、下次怎樣避免…"
         onchange="setWrongNote('${esc(q.id)}',this.value)">${esc(NT[q.id]||'')}</textarea>
@@ -3770,7 +3831,7 @@ function viewWrong(){
     return `<div class="wcard">
       <div class="whead"><span class="wq">${esc(q.id)}</span>
         ${done?'<span class="wdone">已答對</span>':'<span class="wpend">未答對</span>'}</div>
-      <div class="md wstem">${mdLite((q.q||'').slice(0,300))}</div>
+      <div class="md wstem">${mdBrief(q.q,300)}</div>
       <textarea class="wnote" placeholder="寫下自己的錯題筆記：為甚麼會錯、下次怎樣避免…"
         onchange="setWrongNote('${esc(q.id)}',this.value)">${esc(NT[q.id]||'')}</textarea>
       <div class="wbtns">${fixBtn(q.id,done)}
@@ -3836,15 +3897,16 @@ function ppCard(q){
   const ex=q.explanation
     ? (q.explSource==='notes'?`<div class="ppsrc">依筆記整理</div>`:'')+mdLite(q.explanation)
     : (isSample
-        ? '<span class="ppnoex">樣本試卷（PP／SP）的題解整理中，先對照筆記的相應課題溫習。</span>'
+        ? '<span class="ppnoex">PP（練習卷）／SP（樣本試卷）的題解整理中，先對照筆記的相應課題溫習。</span>'
         : '<span class="ppnoex">原稿未附詳解，可對照筆記相應章節複習。</span>');
   const img=q.img?`<div class="ppfigbox"><img class="pplazy" data-src="${esc(q.img)}" alt="${q.year} 第 ${q.qnum} 題圖" decoding="async"></div>`:'';
-  const yrLab=q.year==='PP'?'PP 樣本卷':(q.year==='SP'?'SP 練習卷':q.year);
+  // ⚠️ PP = Practice Paper（練習卷）；SP = Sample Paper（樣本試卷）。別搞反。
+  const yrLab=q.year==='PP'?'PP 練習卷':(q.year==='SP'?'SP 樣本試卷':q.year);
   return `<div class="ppq" data-ans="${esc(q.answer||'')}" data-id="${esc(q.id)}">
     <div class="ppqh"><span class="ppy">${yrLab}</span><span class="ppqn">Q${q.qnum}</span>
       <span class="pptag">${esc(ppTopicName(q.topic))}</span>
       ${q.ocr?'<span class="ppocr" title="此题由 OCR 还原，文字可能有错字">OCR</span>':''}
-      ${q.pct>0?`<span class="pppct ${ppCls(q.pct)}">答對率 ${q.pct}%</span>`:'<span class="pppct">樣本卷 · 無官方得分率</span>'}</div>
+      ${q.pct>0?`<span class="pppct ${ppCls(q.pct)}">答對率 ${q.pct}%</span>`:'<span class="pppct">PP／SP · 無官方得分率</span>'}</div>
     ${img}
     ${qImg}
     <div class="md ppstem">${mdLite(q.q||'')}</div>

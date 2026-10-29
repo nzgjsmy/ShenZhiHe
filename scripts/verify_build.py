@@ -139,6 +139,24 @@ def main():
         check("build.mjs 仍是转发桩（已废弃）", "已废弃" in s and "build.py" in s,
               "" if "已废弃" in s else "有人恢复了旧实现 → 会丢真题与搜索 worker")
 
+    # 9) 题库体检：字面 \n、答案越界、空选项、指引串题、配图缺失……
+    #    这些问题不会让构建失败，但会让线上「题目看起来是坏的」，所以当门禁。
+    try:
+        import subprocess
+        r = subprocess.run([sys.executable,
+                            os.path.join(BASE, "scripts", "audit_questions.py"), "--quiet"],
+                           capture_output=True, text=True, cwd=BASE)
+        out = (r.stdout or "") + (r.stderr or "")
+        bad_lines = [l.strip() for l in out.splitlines()
+                     if l.strip().startswith(("A1-", "A2-", "B1-", "B2-", "B3-",
+                                              "B6-", "B7-", "B9-", "B10-",
+                                              "B12-", "C1-"))]
+        n_bad = len(bad_lines)
+        check("题库体检（字面\\n / 答案越界 / 空选项 / 串题 / 缺图）", n_bad == 0,
+              "" if n_bad == 0 else ("%d 项：%s" % (n_bad, " ｜ ".join(bad_lines[:3]))))
+    except Exception as e:
+        check("题库体检（audit_questions.py 可运行）", False, str(e)[:80])
+
     # 输出
     print()
     for name, detail in ok:

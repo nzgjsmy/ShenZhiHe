@@ -127,3 +127,10 @@ scratch/_pp_build.log
 
 # 题解扩写中间产物（纯文本题解稿）
 scratch/_ex_*.txt
+
+# 本輪排查的臨時腳本與截圖
+scratch/_md_*.js
+scratch/_shot_*.js
+scratch/_browser_check.js
+scratch/shot_*.png
+scratch/_bak_pp_v024.json

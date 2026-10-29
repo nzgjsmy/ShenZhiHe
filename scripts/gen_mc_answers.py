@@ -13,7 +13,7 @@
           含題庫缺少的 21 道題，所以不要改讀 _pastpaper.json）
 模板：data/bio/_mc_answers_template.html（骨架 + CSS，含 {{SUB}} {{KPI}} <!--T1..T4--> 佔位）
 
-樣本卷（PP/SP）官方沒有公布每題答對率，pct 記為 0：
+PP（練習卷）／SP（樣本試卷）官方沒有公布每題答對率，pct 記為 0：
   - 矩陣裡照樣顯示答案，得分率以「—」表示
   - 匯總表、最難／最易兩表不納入統計
 """
@@ -140,7 +140,7 @@ def build_html(data):
     nq = sum(len(qs) for _, qs in data)
     st = stats([q for _, qs in data if _ not in SAMPLE for q in qs])
     sub = ("資料來源：2012–2022 各年《評卷參考》卷一甲部答案表（括號內為答對百分率）；"
-           "PP（樣本試卷）、SP（練習卷）另據其建議答案補入，<b>這兩份卷官方沒有公布答對率</b>。<br>\n"
+           "PP（練習卷）、SP（樣本試卷）另據其評卷參考補入，<b>這兩份卷官方沒有公布答對率</b>。<br>\n"
            "    共 <b>%d</b> 個年份、<b>%d</b> 條題目（2013 年第 9 題被刪除，不計入統計）。" % (len(data), nq))
     kpi = ('\n    <div class="kpi"><div class="lab">全期平均答對率</div><div class="val">%.1f<small>%%</small></div></div>\n'
            '    <div class="kpi"><div class="lab">最易一題</div><div class="val">%d<small>%%</small></div></div>\n'
