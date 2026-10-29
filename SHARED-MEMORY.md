@@ -42,7 +42,7 @@
 
 | 项目 | 值 |
 |---|---|
-| 站点版本 | V0.24.1 |
+| 站点版本 | V0.25.0 |
 | 题库 | **446 题** = 2012–2022 共 374（缺 22 道多為選項為圖者）＋ **PP 樣本卷 36** ＋ **SP 練習卷 36**（均 2026-10-29 新增） |
 | **卷二 LQ** | **23 道大题 · 107 子题 · 3 个年份（2019／2020／2021）**，独立存放于 `data/bio/_lq.json`。**与卷一 MC 完全分开**（用户硬约束）。其余 11 年 PaddleOCR-VL 识别中 |
 | 课题分类 | 27 个（bio02–bio29，bio99 已归零） |
@@ -50,12 +50,15 @@
 | 配图 | 131 张题目图 + 26 张选项图 + **PP 19 张** + **SP 14 张** + 3 道整题原卷图（V0.24.1 起 PP／SP 配圖才真的上線） |
 | 题干完整度 | **446 / 446 全部有题干**（V0.19.1 起零空白）；选项为图的 23 题选项文字为空屬正常 |
 | 数据主档 | `f6chem/data/bio/_pastpaper.json`（481 KB） |
-| 线上体积 | index.html 3.89 MB（图片外置） |
+| 线上体积 | index.html 4.34 MB（图片外置，img/ 1097 个文件） |
+| **视觉风格** | **手帳風**（V0.25.0）：整站＝「攤在桌上的方格紙」。紙面頁頭、黃色便利貼儀表盤、紙緣書籤導航（7 項）、手帳卡片（膠帶／圖釘／emoji 貼紙，**按索引隨機傾斜**）。淺色象牙紙 `#f6f2e4`（亮度 0.887）、卡片 `#fbf8ee`（0.938）。配色全走 `--hn-*` 語義變數 |
+| **每日小知識** | 三科各 20 條、按「今天第幾天 % 條數」輪換，**20 天不重複**。資料 `data/<科目>/_daily.json`，無檔案則整塊不渲染 |
+| **科研時事** | 泛科學（繁中）＋ ScienceDaily（英文自動翻譯）。**每科最多 3 條、共 9 條**，皆附原始連結。資料 `data/_news.json`，由 `scripts/fetch_news.py` 抓取 |
 | 原卷工具 | `scripts/pastpaper/`（PDF→頁圖→OCR→題號定位→墨跡包絡裁圖→拼圖目檢，見該目錄 README） |
 | 协作文档 | `docs/贡献指南.md`（给人看）、`AGENTS.md`（给 AI 看）、`docs/journal/`（各自的日志）、`docs/团队工作空间接入指南.md`（团队协作怎么接） |
 | 项目级 AI 配置 | `.codebuddy/`（随 git 走，clone 即生效）：`CODEBUDDY.md` 记忆、`rules/` 规则、`skills/` 技能、`commands/`（`/verify` `/deploy` `/write-explanation`） |
 | 检查工具 | `scripts/verify_build.py`（构建自检）、`scripts/guard_data.py`（题库守门员）、`scripts/check_quiz.py`（测验题自检） |
-| CI | `verify.yml`（提交守门，11 项）、`daily-audit.yml`（**云端定时巡检**，每天 UTC 03:17，开 Issue 不改代码，零 token 消耗；⚠️ 因 `schedule` 要求 workflow 在默认分支，此文件在 `main` 与 `source` **两分支各存一份且须保持一致**） |
+| CI | `verify.yml`（提交守门，13 项）、`daily-audit.yml`（**云端定时巡检**，每天 UTC 03:17，开 Issue 不改代码，零 token）、`daily-news.yml`（**科研時事自動抓取→構建→部署**，⚠️ `schedule` 目前**註解中**，僅開 `workflow_dispatch` 待人工驗證）。⚠️ 因 `schedule` 要求 workflow 在默认分支，上述文件在 `main` 与 `source` **两分支各存一份且须保持一致** |
 | 部署包 | `default-workspace/神智核-GitHub部署包`（独立 git 仓库，remote `nzgjsmy/ShenZhiHe`） |
 
 ---
@@ -221,6 +224,15 @@ grep -nE "color:#[0-9a-f]{6}" site/template.html | grep -v "^[0-9]*:  --"
 > 每人/每个 AI 在 `docs/journal/<日期>-<名字>.md` 写自己的详细日志，
 > 只在这里留**一行摘要 + 文件名**。单人时可直接写在这里。
 
+
+### [2026-10-30 03:15] WorkBuddy · 部署 V0.25.0（手帳風全套 + 科普 + 時事）
+- **已上線**：<https://nzgjsmy.github.io/ShenZhiHe/>，`SW_VERSION = V0.25.0`。
+- 六步部署全走：bump 版本 → build → verify(13/13) → guard_data(0) → prep_ghpages → 部署包（`rm -rf img` 後整份 `cp -r`）→ push → 驗收。
+- **部署踩到的坑**：部署包的 remote 就是主倉庫的 `main`，而 `main` 上有之前同步的兩個 workflow 提交，
+  本地落後 2 個 commit → **`git pull --rebase` 接上再推**，不要 force push。
+- 驗收（線上真實瀏覽器）：落地三科總覽 4 卡、科研時事 9 條、紙張 `rgb(246,242,228)`、書籤 7 項、
+  生物頁每日小知識正常、**JS 零錯誤**；圖片抽查 `img/pp/2019/f05.webp`、`img/pp/PP/f02.webp` 均 200。
+- 圖片同步校驗：源與部署包 `find img -type f` 都是 **1097** 個。
 
 ### [2026-10-30 03:05] WorkBuddy · 英文源 + 自動翻譯（三科均衡 3+3+3）
 - **源**：中文泛科學（偏醫療）＋ 英文 ScienceDaily 分科 RSS（物理/化學/生物各 60 條，科研向）。
