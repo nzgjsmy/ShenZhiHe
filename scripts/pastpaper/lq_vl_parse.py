@@ -126,18 +126,34 @@ def sort_blocks(blocks):
     return out
 
 
+# 答題簿 / 空白頁的頁眉。PP 樣本卷二共 30 頁，其中 **p001–p021 是答題簿**、
+# p022–p029 才是題目、p030 是鳴謝。不過濾的話答題簿的殘留文字會被當成
+# 大題（實測 PP 多出 2 道「大題」、總分虛高到 94，而真實約 80）。
+SKIP_MARK = ("不予評閱", "不予评阅", "請勿在此頁書寫", "请勿在此页书写",
+             "本頁留空", "本页留空")
+
+
 def load_pages(key):
     d = os.path.join(VL, key)
     if not os.path.isdir(d):
         return []
     out = []
+    skipped = 0
     for f in sorted(os.listdir(d)):
         if not re.match(r"p\d+\.json$", f):
             continue
         n = int(re.search(r"\d+", f).group())
         raw = json.load(open(os.path.join(d, f), encoding="utf-8"))
         r = raw.get("res") or raw
+        # 答題簿 / 空白頁：整頁文本裡會反覆出現「寫於邊界以外的答案，將不予評閱」
+        body = " ".join((it.get("block_content") or "")
+                        for it in (r.get("parsing_res_list") or []))
+        if any(m in body for m in SKIP_MARK):
+            skipped += 1
+            continue
         out.append((n, r))
+    if skipped:
+        print("  [%s] 跳過 %d 頁答題簿/空白頁" % (key, skipped))
     out.sort(key=lambda x: x[0])
     return out
 
