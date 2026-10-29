@@ -136,3 +136,99 @@ GitHub 只从**默认分支**读 workflow 列表。这个仓库默认分支是 `
 ## 状态
 
 代码已全部推 `source`，workflow 也同步到了 `main`。**未 bump 版本号**（部署由 workflow 完成，不需要手改版本）。
+
+---
+
+## 补记：英文源 + 自动翻译（用户追问后）
+
+### 先测能不能翻
+
+用户问「可以加英文源之后自动翻译吗」。先测两个免费接口：
+
+| 接口 | 结果 |
+|---|---|
+| Google `translate_a/single?client=gtx` | ✅ 0.8–1.1 秒，繁体，质量好 |
+| MyMemory | ✅ 可用但慢（1.7s），额度也小 |
+
+Google 那条实测翻译：
+
+```
+Scientists discover a new way to break down forever chemicals
+→ 科學家發現一種永久分解化學物質的新方法
+
+Quantum entanglement observed at room temperature for the first time
+→ 首次在室溫下觀察到量子糾纏
+
+The asteroid that killed the dinosaurs may have helped ants conquer the world
+→ 殺死恐龍的小行星可能幫助螞蟻征服了世界
+```
+
+标题级别够用。注意 `forever chemicals` 机翻成「永久化学物质」，专业上应该说「全氟化合物」——这类术语机翻会失准，所以**原文一定要能核对**。
+
+### 三个设计约束
+
+**① 只翻入选的少数几条**
+
+ScienceDaily 每个分科源有 60 条。如果全翻就是 180 次请求，必被限流。所以先按源取前 2 条，只翻这 6 条。每天 6 次请求，完全安全。
+
+**② 失败保留英文，不丢条目**
+
+```python
+zh_t = translate(title)
+if zh_t:
+    entry["orig"] = entry["t"]
+    entry["t"] = zh_t[:60]
+    entry["src"] = name + "（譯）"
+```
+
+翻译失败就什么都不改，英文原样留着。数据管道不能因为一个可选环节挂掉。
+
+**③ 明确标注机翻**
+
+`src` 写成「ScienceDaily（譯）」。不让用户误以为这是人工翻译的。原文存 `orig` 字段，以后要做「查看原文」也有数据。
+
+### 科目平衡是必须的
+
+加英文源之前，7 条里 phys 只有 1 条（就那条诺贝尔物理奖）。因为中文源偏医疗，bio 会把物理化学全挤出去。
+
+改成：合并后按日期排序，但**每科最多取 3 条**，共 9 条。
+
+```python
+picked, cnt = [], {}
+for it in merged:
+    c = it.get("cat") or "bio"
+    if cnt.get(c, 0) >= 3:
+        continue
+    cnt[c] = cnt.get(c, 0) + 1
+    picked.append(it)
+    if len(picked) >= KEEP:
+        break
+```
+
+结果：phys 3 / chem 3 / bio 3，前端 3×3 排列整齐。
+
+**代价**：手写的诺贝尔化学奖、生医奖两条被挤出榜（它们日期是 10/5–10/7，比新抓的旧）。时事本来就有时效性，被新内容顶掉是合理的——但这也说明「手写精品」和「自动抓取」在同一个池子里竞争时会吃亏。
+
+如果以后想让精选内容长期在榜，可以给条目加 `pin: true` 并让它不参与每科 3 条的限制。
+
+### 依赖风险
+
+Google 这个端点是**免费非官方接口**，没有 SLA，可能随时改协议、限流或封 IP。
+
+脚本已做容错（失败保留英文），所以最坏情况是「时事变成英文」，不会空白或崩。
+
+但如果长期失效，需要换方案：
+- 换其他免费翻译（LibreTranslate 公共实例、MyMemory）
+- 或者接 AI（要 key，但质量最好）
+- 或者干脆只显示英文原文，把「读英文科技新闻」当成一个卖点
+
+### 验证
+
+| 项目 | 结果 |
+|---|---|
+| 抓取 | 泛科学 10 条取 6、ScienceDaily 三科各 60 条取 2 |
+| 翻译 | 6 条全部成功，无失败 |
+| 科目分布 | phys 3 / chem 3 / bio 3 |
+| 页面渲染 | 9 张卡片三列三行，标签与来源标注清楚 |
+| `verify_build.py` | 13/13 |
+| `guard_data.py` | 0 改动 |
