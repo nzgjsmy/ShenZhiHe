@@ -144,9 +144,10 @@ def dump_year(key):
                 body = re.sub(r"\s+", " ", body).strip()
                 bl = cur_block()
                 # 得分點常跨兩行：正文的後半段（'體。'）單獨一行，
-                # 分值標在上一行末尾。這時把上一行的正文接過來。
+                # 分值標在上一行末尾。這時把上一行的正文接過來，
+                # 並用 ↳ 標出「這行是接續推定，正文可能不完整」。
                 if not body:
-                    body = prev_text
+                    body = ("↳ " + prev_text) if prev_text else "（正文未讀出）"
                 else:
                     prev_text = body
                 bl[3].append((v, body))
@@ -157,7 +158,7 @@ def dump_year(key):
                              if abs(x["x0"] - col_x) > 90)
                 t = re.sub(r"\s+", " ", t).strip()
                 if t:
-                    prev_text = (prev_text + t) if prev_text else t
+                    prev_text = t
     return blocks
 
 
