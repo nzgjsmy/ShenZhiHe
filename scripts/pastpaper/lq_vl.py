@@ -37,8 +37,12 @@ import sys
 import time
 
 _ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-PAGES = os.path.join(_ROOT, "scratch", "_lq_pages")
-OUT = os.path.join(_ROOT, "scratch", "_lq_vl")
+# 页图输入目录与识别产物输出目录。默认是卷二（LQ）原卷；
+# 用环境变量可以指向别的来源 —— 例如官方「参考答案.pdf」的评分参考：
+#   LQ_PAGES_DIR=scratch/_ref_pages LQ_OUT_DIR=scratch/_ref_vl \
+#       python scripts/pastpaper/lq_vl.py 2019
+PAGES = os.environ.get("LQ_PAGES_DIR") or os.path.join(_ROOT, "scratch", "_lq_pages")
+OUT = os.environ.get("LQ_OUT_DIR") or os.path.join(_ROOT, "scratch", "_lq_vl")
 
 # 各年份的页数（与 _lq_pages/<key>/pNNN.jpg 一致）
 PAGE_COUNT = {
@@ -100,8 +104,14 @@ def run_page(key, n):
 def run_year(key):
     total = PAGE_COUNT.get(key, 0)
     if not total:
-        print("[miss] 未知年份", key)
-        return
+        # PAGE_COUNT 表里没有的来源（例如参考资料），按实际页图数推导
+        d = os.path.join(PAGES, key)
+        if os.path.isdir(d):
+            total = len([f for f in os.listdir(d)
+                         if f.lower().endswith((".jpg", ".png"))])
+        if not total:
+            print("[miss] 未知年份且没有页图：", key)
+            return
     os.makedirs(os.path.join(OUT, key), exist_ok=True)
     t0 = time.time()
     done = 0
