@@ -5303,7 +5303,9 @@ function viewLQ(){
       長題目需自行書寫，與卷一選擇題<b>分開收錄</b>。
       ${nRev?`其中 <b>${nRev}</b> 道的子題或分值待人工核對（卡片上有「待核對」標記）。`:''}
       ${nGuide
-        ? `參考答案已整理 <b>${nGuide}</b> 道（按鈕顯示「參考答案」），其餘 ${all.length-nGuide} 道仍待收錄。`
+        ? (all.length-nGuide > 0
+          ? `參考答案已整理 <b>${nGuide}</b> 道（按鈕顯示「參考答案」），其餘 <b>${all.length-nGuide}</b> 道仍待收錄。`
+          : `<b>全部 ${all.length} 道大題均已附上參考答案</b>（本站依題目與 DSE 生物科評分慣例整理，非官方評分指引）。`)
         : '評分指引尚未收錄。'}
     </div>
     <div class="quick" style="margin:12px 0 6px">
