@@ -104,6 +104,71 @@ def cmd_dump(year, page):
         print("  y=%5d | %s" % (r["y0"], "  ||  ".join(parts)))
 
 
+def cmd_sheet(year, *pages):
+    """一次 dump 多頁，只看含分值／小題標記的行 —— 用來逐頁人工核對分值。"""
+    for pg in pages:
+        if not pg.lower().endswith((".jpg", ".png", ".jpeg")):
+            pg += ".jpg"
+        path = os.path.join(PAGES, year, pg)
+        if not os.path.exists(path):
+            print("== %s %s 缺" % (year, pg))
+            continue
+        print("===== %s %s =====" % (year, pg))
+        for r in rows_of(boxes_of(path)):
+            line = []
+            has = False
+            for b in r["items"]:
+                t = b["t"]
+                if MARK.match(t):
+                    t = "【%s 分】" % MARK.match(t).group(1)
+                    has = True
+                elif SUB.match(t):
+                    t = "〈%s〉" % SUB.match(t).group(1)
+                    has = True
+                line.append(t[:52])
+            if has:
+                print("   " + "  ".join(line))
+
+
+def cmd_check(year):
+    """一卷一屏：先列我們的題目與子題分值，再列原卷各頁印著的分值。"""
+    import json
+    lq = json.load(open(os.path.join(ROOT, "data", "bio", "_lq.json"),
+                        encoding="utf-8"))
+    qs = lq["years"].get(year, [])
+    print("========== 我們的資料（%s）==========" % year)
+    for q in qs:
+        subs = " ".join("%s%s=%s" % (s.get("no"),
+                                     "" if (s.get("level") or 1) <= 1 else "",
+                                     s.get("marks"))
+                        for s in (q.get("subqs") or []))
+        print("  %-6s p%-4s 總=%-4s | %s" % (q["qnum"], q.get("page"),
+                                             q.get("marksTotal"), subs))
+    d = os.path.join(PAGES, year)
+    pages = sorted(f for f in os.listdir(d) if f.lower().endswith(".jpg"))
+    print("========== 原卷印刷分值 ==========")
+    for pg in pages:
+        lines = []
+        for r in rows_of(boxes_of(os.path.join(d, pg))):
+            line = []
+            has = False
+            for b in r["items"]:
+                t = b["t"]
+                if MARK.match(t):
+                    t = "【%s分】" % MARK.match(t).group(1)
+                    has = True
+                elif SUB.match(t):
+                    t = "〈%s〉" % SUB.match(t).group(1)
+                    has = True
+                line.append(t[:44])
+            if has:
+                lines.append("  " + "  ".join(line))
+        if lines:
+            print("--- %s ---" % pg)
+            for l in lines:
+                print(l)
+
+
 def main():
     if len(sys.argv) < 3:
         print(__doc__)
@@ -113,6 +178,10 @@ def main():
         cmd_find(sys.argv[2], *sys.argv[3:])
     elif cmd == "dump":
         cmd_dump(sys.argv[2], sys.argv[3])
+    elif cmd == "sheet":
+        cmd_sheet(sys.argv[2], *sys.argv[3:])
+    elif cmd == "check":
+        cmd_check(sys.argv[2])
 
 
 if __name__ == "__main__":
