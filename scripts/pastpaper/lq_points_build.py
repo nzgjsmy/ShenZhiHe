@@ -98,6 +98,29 @@ SYN = {
 ROMAN = ["i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x"]
 MARK = re.compile(r"[（(]\s*([a-z]{1,3}|\d{1,2})\s*[)）]", re.I)
 
+# ──「關係／方向」詞 ────────────────────────────────────────────────
+# DSE 長題目絕大多數得分點要求的是**一條完整的陳述**（誰上升、誰下降、
+# 兩者什麼關係），光寫出「尿液排泄量」「鈉濃度」這些名詞**並不得分**。
+# 所以除了概念詞，還要把得分點裡的關係詞抽出來，學生作答時一併檢查。
+UP = ("上升 升高 增加 增多 增大 變大 變高 加快 提高 較高 越高 愈高 越大 愈大 "
+      "越多 愈多 越快 愈快 越強 愈強 越長 愈長 越高越 最大 最高 較多 較快 較大 "
+      "正比 正相關 促進 活化 刺激 擴大 上升至 由低至高 由小至大 回升 旺盛 "
+      "大於 高於 多於 快於").split()
+DOWN = ("下降 降低 減少 減小 變小 變低 減慢 放緩 下降至 較低 越低 愈低 越小 愈小 "
+        "越少 愈少 越慢 愈慢 越弱 愈弱 越短 愈短 最低愈 最小 最低 較少 較慢 較小 "
+        "反比 負相關 抑制 受阻 減弱 萎縮 下跌 由高至低 由大至小 回落 "
+        "小於 低於 少於 慢於").split()
+ANY = ("隨着 隨著 隨 而變 而改 導致 引起 造成 因此 因而 故此 由於 令 使 讓 "
+       "改變 變化 差異 相比 比較 相關 趨勢 模式 依次 關係 影響 取決於 "
+       "正相關 負相關 相反 一致").split()
+
+# 「越…越…」／「愈…愈…」= 兩個變量的**反向對比**（A 越高，B 越少）。
+# 只有出現這種句式才判定為「反向關係」，作答時兩個方向都要寫到。
+# 一般的因果鏈（滲透壓升高 → 釋放 ADH → 尿量減少）雖然 up/down 都出現，
+# 但那是一條鏈，寫出任一段都算對 —— 這種放寬為 any。
+YUE_UP = [w for w in UP if ("越" in w or "愈" in w)]
+YUE_DOWN = [w for w in DOWN if ("越" in w or "愈" in w)]
+
 # 切詞殘留常見的「斷頭斷尾」——以這些字開頭／結尾的多半不是完整概念
 BAD_HEAD = "並他其之於從到使為被把讓給男女大小多少高低前後"
 BAD_TAIL = "的了他其之於與和及就都很更最又有沒不"
@@ -105,6 +128,50 @@ BAD_TAIL = "的了他其之於與和及就都很更最又有沒不"
 
 def strip_md(s):
     return MD.sub("", s or "").strip()
+
+
+def _has(text, ws):
+    return any(w in text for w in ws)
+
+
+def _first(text, ws):
+    """詞在文本中首次出現的位置，沒出現回傳 -1。"""
+    p = [text.find(w) for w in ws if w in text]
+    return min(p) if p else -1
+
+
+def relation_of(text):
+    """判斷一個得分點**要不要寫出關係／方向**，要的話要哪一種。
+
+    → {'m': 'inv'|'up'|'down'|'any'}
+
+    - 'inv'  反向對比：得分點用了「越…越…」句式（A 越高，B 越少），
+             作答時**兩個方向都要寫到**，只寫一邊不算。
+    - 'up'   要寫出「上升／變大／增加」
+    - 'down' 要寫出「下降／變小／減少」
+    - 'any'  因果鏈型（如「滲透壓升高 → 釋放 ADH → 尿量減少」）：
+             up/down 都出現在得分點裡，但那是一條鏈，寫出任一段都算對；
+             或純因果／比較措辭（「導致」「隨…而改變」）。
+    - None   純名詞型得分點（如「限制酶」「PCR」），不要求關係。
+
+    ⚠️ 關鍵：得分點若指明了具體方向，作答只寫「有變化／有影響」這種
+    中性詞**不算命中** —— DSE 要的是「變大還是變小」，不是「有變化」。
+    所以 'up'/'down'/'inv'/'chain' 四種都要求作答裡出現**方向詞**，
+    只有得分點本身也沒方向的 'any' 才接受純因果措辭。
+    """
+    t = text or ""
+    if _has(t, YUE_UP) and _has(t, YUE_DOWN):
+        return {"m": "inv"}
+    pu, pd = _first(t, UP), _first(t, DOWN)
+    if pu >= 0 and pd >= 0:
+        return {"m": "chain"}        # 因果鏈：寫出任一段（但仍要有方向詞）
+    if pu >= 0:
+        return {"m": "up"}
+    if pd >= 0:
+        return {"m": "down"}
+    if _has(t, ANY):
+        return {"m": "any"}
+    return None
 
 
 def parse_mark(text):
@@ -205,7 +272,7 @@ def parse_guide(txt, qnum):
         if m:
             # full 要保留原始整行 —— 標記的括號被 TITLE 正則吃掉了，
             # parse_mark 必須用整行才認得出（i）/（ii）(1) 這種層級
-            last = {"mark": m.group(1), "full": line, "pts": []}
+            last = {"mark": m.group(1), "full": line, "pts": [], "rels": []}
             out.append(last)
             continue
         mp = POINT.match(line)
@@ -213,6 +280,7 @@ def parse_guide(txt, qnum):
             ws = keywords_of(mp.group(1))
             if ws:
                 last["pts"].append(expand(ws))
+                last["rels"].append(relation_of(mp.group(1)))
     return out
 
 
@@ -257,6 +325,13 @@ def main():
                     continue
                 used.add(idx)
                 (q["subqs"][idx])["points"] = pts
+                # 平行陣列：每個得分點對應的「關係／方向」要求
+                # （None = 純名詞型得分點，不要求寫出關係）
+                rels = g.get("rels") or []
+                if any(r for r in rels):
+                    (q["subqs"][idx])["pointRel"] = rels
+                else:
+                    (q["subqs"][idx]).pop("pointRel", None)
                 got += 1
             total_sub += sum(1 for s in (q.get("subqs") or [])
                              if s.get("marks") not in (None, ""))

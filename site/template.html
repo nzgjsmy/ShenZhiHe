@@ -5324,6 +5324,60 @@ function lqHit(cands,txt){
   }
   return false;
 }
+/* ──「關係／方向」判定 ──────────────────────────────────────────────
+   DSE 長題目的得分點要的是**一條完整陳述**（誰上升、誰下降、兩者什麼關係），
+   光把「尿液排泄量」「鈉濃度」這些名詞列出來**不給分**；
+   只寫「有變化／有影響」這種沒指出方向的**也不給分**。
+   所以判分時除了概念詞，還要檢查作答有沒有寫出得分點要求的方向。     */
+const REL_UP=('上升 升高 增加 增多 增大 變大 變高 加快 提高 較高 越高 愈高 越大 愈大 '
+ +'越多 愈多 越快 愈快 越強 愈強 最大 最高 較多 較快 較大 正比 正相關 促進 活化 '
+ +'刺激 擴大 回升 大於 高於 多於 快於').split(' ');
+const REL_DOWN=('下降 降低 減少 減小 變小 變低 減慢 放緩 較低 越低 愈低 越小 愈小 '
+ +'越少 愈少 越慢 愈慢 越弱 愈弱 最小 最低 較少 較慢 較小 反比 負相關 抑制 受阻 '
+ +'減弱 萎縮 下跌 回落 小於 低於 少於 慢於').split(' ');
+const REL_ANY=('導致 引起 造成 因此 因而 故此 由於 改變 變化 差異 相比 比較 相關 '
+ +'趨勢 模式 依次 關係 影響 取決於 隨着 隨著').split(' ');
+// 只覆盖方向词里会出现的简体字 —— 让学生写简体也能识别
+const S2T={减:'減',变:'變',较:'較',来:'來',说:'說',过:'過',还:'還',应:'應',关:'關',
+ 响:'響',导:'導',随:'隨',着:'著',趋:'趨',势:'勢',异:'異',强:'強',长:'長',进:'進',
+ 扩:'擴',抑:'抑',缩:'縮',涨:'漲',较:'較',级:'級',两:'兩',个:'個',这:'這'};
+function lqT2S(s){
+  return String(s||'').replace(/[减变较来说过还应关响导随著趋势异强长进扩抑缩涨级两个这]/g,
+    function(c){ return S2T[c]||c; });
+}
+function lqHas(ws,txt){
+  for(let i=0;i<ws.length;i++) if(txt.indexOf(ws[i])>=0) return true;
+  return false;
+}
+/* 回傳 {ok, why}
+   m 為得分點要求的關係型態：
+     inv   反向對比（A 越高、B 越少）→ 兩個方向都要寫到
+     up    要寫出上升／變大
+     down  要寫出下降／變小
+     chain 因果鏈（滲透壓升高 → 釋放 ADH → 尿量減少）→ 寫出任一段，但仍要有方向詞
+     any   得分點本身無方向，有因果／比較措辭即可
+     null  純名詞型得分點，不要求關係                                        */
+function lqRelState(m,R){
+  if(!m) return {ok:true,why:''};
+  if(m==='inv'){
+    if(R.u&&R.d) return {ok:true,why:''};
+    if(R.u||R.d) return {ok:false,why:'只寫了一邊的方向 —— 這題是「一個上升、另一個下降」，<b>兩邊都要寫</b>。'};
+    return {ok:false,why:R.a?'你寫了「有變化／有影響」，但<b>沒指出具體是上升還是下降</b> —— 這種中性寫法 DSE 不給分。':'還沒寫出它的變化方向。'};
+  }
+  if(m==='up'||m==='down'){
+    const want=m==='up', yes=want?R.u:R.d, rev=want?R.d:R.u;
+    if(yes) return {ok:true,why:''};
+    if(rev) return {ok:false,why:'方向寫反了 —— 這題要的是'+(want?'<b>上升／變大</b>':'<b>下降／變小</b>')+'。'};
+    return {ok:false,why:R.a
+      ?'你寫了「有變化／有影響」，但<b>沒指出是'+(want?'上升':'下降')+'還是'+(want?'下降':'上升')+'</b> —— 中性寫法不給分。'
+      :'還沒寫出它的變化方向（'+(want?'上升／變大':'下降／變小')+'）。'};
+  }
+  if(m==='chain'){
+    if(R.u||R.d) return {ok:true,why:''};
+    return {ok:false,why:R.a?'你寫了「有變化／有影響」，但<b>沒指出具體的變化方向</b> —— 中性寫法不給分。':'還沒寫出它的變化方向。'};
+  }
+  return (R.u||R.d||R.a)?{ok:true,why:''}:{ok:false,why:'還沒寫出兩者之間的關係。'};
+}
 function lqTogglePrac(btn){
   const card=btn.closest('.lq-card');
   const box=card.querySelector('.lq-prac');
@@ -5348,14 +5402,24 @@ function lqSaveAns(id,i,v){
   if(v&&v.trim()) s.lqans[id][i]=v; else delete s.lqans[id][i];
   STORE.set(s);
 }
-function lqVerdict(n,m,empty){
+function lqVerdict(n,m,empty,near){
   if(m<=0) return {cls:'',t:'老師點評：這題暫時沒有可核對的得分點，直接對照參考答案吧。'};
   if(empty) return {cls:'low',t:'老師點評：空白是長題目最致命的失分 —— 哪怕只寫出兩三個關鍵詞，也比留白好。'};
-  if(n<=0) return {cls:'low',t:'老師點評：你寫的方向似乎還沒碰到這題的得分點。建議先回到題目，圈出它在問什麼（為什麼？如何？比較？），再按提示想想該用哪個概念。'};
   if(n>=m) return {cls:'good',t:'老師點評：這題的得分點你都寫到了，答得很完整。接著可以對照參考答案，看看用字是否更精準、因果鏈是否更順。'};
+  // 「提到概念但沒寫出方向」是最需要點破的情況 —— 學生常以為寫到名詞就有分
+  if(n<=0&&near>0) return {cls:'low',
+    t:'老師點評：你提到了 '+near+' 個得分點的「概念」，但<b>都只寫出名詞，沒寫出變化／關係</b>。'
+     +'DSE 長題目要的是「誰上升、誰下降」這種完整陳述；'
+     +'只列「尿液排泄量」「鈉濃度」這類關鍵詞，或只寫「有變化／有影響」，'
+     +'改卷時都是<b>不給分</b>的。按下面的提示把方向補上。'};
+  if(n<=0) return {cls:'low',t:'老師點評：你寫的方向似乎還沒碰到這題的得分點。建議先回到題目，圈出它在問什麼（為什麼？如何？比較？），再按提示想想該用哪個概念。'};
   const r=n/m;
-  if(r>=0.6) return {cls:'mid',t:'老師點評：方向對了，但還有 '+(m-n)+' 個得分點沒觸及。DSE 長題目是按點給分，漏一個就少一分。'};
-  return {cls:'low',t:'老師點評：只觸及 '+n+'/'+m+' 個得分點。先回到題目，想清楚它問的是「為什麼」還是「如何」，再把因果鏈寫完整。'};
+  if(r>=0.6) return {cls:'mid',t:'老師點評：方向對了，但還有 '+(m-n)+' 個得分點沒觸及'
+    +(near>0?'（其中 '+near+' 個你提到了概念，只是還沒寫出變化方向）':'')
+    +'。DSE 長題目是按點給分，漏一個就少一分。'};
+  return {cls:'low',t:'老師點評：只觸及 '+n+'/'+m+' 個得分點'
+    +(near>0?'，另有 '+near+' 個提到概念但未寫完整':'')
+    +'。先回到題目，想清楚它問的是「為什麼」還是「如何」，再把因果鏈寫完整。'};
 }
 function lqEval(item,withHint){
   const card=item.closest('.lq-card');
@@ -5365,29 +5429,58 @@ function lqEval(item,withHint){
   const sub=(q.subqs||[])[i];
   if(!sub) return null;
   const pts=sub.points||[];
+  const rels=sub.pointRel||[];
   const raw=((item.querySelector('textarea')||{}).value)||'';
   const txt=lqNorm(raw);
-  const hits=pts.map(c=>lqHit(c,txt));
-  const n=hits.filter(Boolean).length, m=pts.length;
-  const v=lqVerdict(n,m,!raw.trim());
-  const miss=pts.filter((c,k)=>!hits[k]);
+  // 關係詞要在「簡體已轉繁體」的文本上找，學生寫「减少」才認得到「減少」
+  const rt=lqNorm(lqT2S(raw));
+  const R={u:lqHas(REL_UP,rt),d:lqHas(REL_DOWN,rt),a:lqHas(REL_ANY,rt)};
+  // 逐得分點：先比概念，概念中了再比「關係／方向」
+  const st=pts.map(function(c,k){
+    const rel=(rels[k]||{}).m;
+    if(!lqHit(c,txt)) return {s:'miss',c:c,why:'',rel:rel};
+    const rs=lqRelState(rel,R);
+    return rs.ok?{s:'hit',c:c,why:'',rel:rel}:{s:'near',c:c,why:rs.why,rel:rel};
+  });
+  const m=pts.length;
+  const n=st.filter(function(x){return x.s==='hit';}).length;
+  const near=st.filter(function(x){return x.s==='near';});
+  const miss=st.filter(function(x){return x.s==='miss';});
+  const v=lqVerdict(n,m,!raw.trim(),near.length);
   const lvl=+item.dataset.hint||0;
   let hintHtml='';
   if(withHint&&m>0){
-    if(!miss.length){
+    // 提示排成**一條連續的隊列**：先把「提到概念但缺方向」的補完
+    // （這比再丟一個新概念有用），補完才給還沒碰到的概念。
+    const queue=near.concat(miss);
+    if(!queue.length){
       hintHtml=`<div class="lq-fb-h">這題的得分點你都寫到了，不需要提示了。</div>`;
-    }else if(lvl<miss.length){
-      // 提示要給「最有資訊量」的那個詞 —— 候選詞裡最長的通常最像完整概念，
-      // 短的碎片（如「三組」）單看沒有指引作用
-      const kw=miss[lvl].slice().sort((a,b)=>b.length-a.length)[0];
-      hintHtml=`<div class="lq-fb-h">💡 提示 ${lvl+1}/${miss.length}：<b>${esc(kw)}</b>
-        —— 順著這個概念，把它的原因或結果寫出來。</div>`;
+    }else if(lvl<queue.length){
+      const it=queue[lvl], no=`<div class="lq-fb-h">💡 提示 ${lvl+1}/${queue.length}：`;
+      if(lvl<near.length){
+        hintHtml=no+it.why+`</div>`;
+      }else{
+        // 提示要給「最有資訊量」的那個詞 —— 候選詞裡最長的通常最像完整概念，
+        // 短的碎片（如「三組」）單看沒有指引作用。
+        // ⚠️ 若該得分點還要求變化方向，提示必須一併講清楚，
+        // 否則學生照著提示寫完概念仍拿不到分，提示就自相矛盾了。
+        const kw=it.c.slice().sort((a,b)=>b.length-a.length)[0];
+        const need=it.rel==='inv'
+          ? '這題是「一個上升、另一個下降」，<b>兩個方向都要寫</b>。'
+          : it.rel==='up' ? '還要寫出它<b>上升／變大</b>。'
+          : it.rel==='down' ? '還要寫出它<b>下降／變小</b>。'
+          : it.rel==='chain' ? '還要寫出<b>變化的方向</b>。'
+          : '';
+        hintHtml=no+`<b>${esc(kw)}</b> —— 順著這個概念，把它的原因或結果寫出來。`
+          +(need?`<br>${need}`:'')+`</div>`;
+      }
     }else{
       hintHtml=`<div class="lq-fb-h">提示都給完了 —— 這時直接看參考答案，
         然後蓋著答案再寫一次，效果最好。</div>`;
     }
   }
-  const bar=m?`<div class="lq-fb-n">得分點：<b>${n} / ${m}</b></div>`:'';
+  const bar=m?`<div class="lq-fb-n">得分點：<b>${n} / ${m}</b>`
+    +(near.length?`　｜　提到概念但未寫完整：<b>${near.length}</b> 個`:'')+`</div>`:'';
   return {cls:v.cls,html:`<div class="lq-fb-t">${v.t}</div>${bar}${hintHtml}`};
 }
 function lqCheck(btn){
