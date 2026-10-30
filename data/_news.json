@@ -1,80 +1,86 @@
 {
-  "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。本檔由 scripts/fetch_news.py 自動抓取泛科學 RSS 產生，可手動補充。",
-  "items": [
-    {
-      "date": "2026-10-30",
-      "cat": "phys",
-      "t": "Smaller EV batteries, longer range? Scientists may have foun",
-      "x": "Scientists have developed a new technology that could make electric vehicle batteries smaller, lighter, and longer-lasting, potent…",
-      "src": "ScienceDaily",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261027063708.htm"
-    },
-    {
-      "date": "2026-10-30",
-      "cat": "phys",
-      "t": "New 3D thermal invisibility cloak makes objects disappear fr",
-      "x": "Researchers have developed a groundbreaking 3D invisibility cloak that can hide complex objects from infrared cameras while protec…",
-      "src": "ScienceDaily",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261025073051.htm"
-    },
-    {
-      "date": "2026-10-30",
-      "cat": "chem",
-      "t": "AI reveals a hidden chemical shortcut that could turn CO2 in",
-      "x": "Scientists used artificial intelligence to uncover nearly 10,000 chemical reactions involved in transforming carbon dioxide into f…",
-      "src": "ScienceDaily",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261013015758.htm"
-    },
-    {
-      "date": "2026-10-30",
-      "cat": "chem",
-      "t": "Scientists discover a hidden factor that can make or break c",
-      "x": "Researchers discovered a hidden factor that can determine whether chemical reactions succeed or fail, and then used it to boost th…",
-      "src": "ScienceDaily",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261008005244.htm"
-    },
-    {
-      "date": "2026-10-30",
-      "cat": "bio",
-      "t": "Do spiders dream? Scientists just found a surprising clue",
-      "x": "Scientists have discovered that spiders may sleep in ways surprisingly similar to humans, complete with distinct sleep stages and…",
-      "src": "ScienceDaily",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261026225555.htm"
-    },
-    {
-      "date": "2026-10-30",
-      "cat": "bio",
-      "t": "Chinese scientists discover “D-rex,” a giant fungus with roo",
-      "x": "Scientists have discovered a giant new fungus in China that grows up to 20 inches tall and weighs nearly five pounds, making it th…",
-      "src": "ScienceDaily",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261025073034.htm"
-    },
-    {
-      "date": "2026-10-29",
-      "cat": "phys",
-      "t": "愛因斯坦方程式可以解釋沒有暗能量的宇宙",
-      "x": "數學家發現了他們認為宇宙標準模型中的一個根本缺陷，這可能會挑戰對暗能量的需求。他們的計算表明，用於描述宇宙膨脹的數學框架本質上是不穩定的，並且宇宙可能",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261028232719.htm",
-      "orig": "Einstein's equations may explain the universe without dark e"
-    },
-    {
-      "date": "2026-10-29",
-      "cat": "chem",
-      "t": "晶體中的微小缺陷揭示了巨大的量子驚喜",
-      "x": "研究人員解決了一個長期存在的挑戰，即了解鑽石和碳化矽等材料中的微小缺陷在光照下如何表現。他們的新計算方法揭示了碳化矽中令人驚訝的重要能量損失機制，科學家之前已經發現了這個機制",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261022081302.htm",
-      "orig": "A tiny defect in a crystal reveals a big quantum surprise"
-    },
-    {
-      "date": "2026-10-29",
-      "cat": "bio",
-      "t": "科學家發現有毒火蠑螈的秘密發光",
-      "x": "研究人員在歐洲常見的黑黃火蠑螈中發現了一種令人驚訝的隱藏能力：它們在紫外線下發出綠色和青色的光。這種神秘的螢光主要來自於它們皮膚的腺體和有毒的分泌物，可以持續發光24小時以上",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261027063707.htm",
-      "orig": "Scientists discover a secret glow in toxic fire salamanders"
-    }
-  ]
+ "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。本檔由 scripts/fetch_news.py 自動抓取泛科學 RSS 產生，可手動補充。",
+ "items": [
+  {
+   "date": "2026-10-30",
+   "cat": "phys",
+   "t": "電動車電池更小，續航里程更長？科學家可能找到了方法",
+   "x": "科學家們開發出了一種新技術，可以讓電動車電池變得更小、更輕、更持久、更強大…",
+   "src": "ScienceDaily（譯）",
+   "url": "https://www.sciencedaily.com/releases/2026/10/261027063708.htm",
+   "orig": "Smaller EV batteries, longer range? Scientists may have found a way"
+  },
+  {
+   "date": "2026-10-30",
+   "cat": "phys",
+   "t": "新型3D熱隱形斗篷使物件從紅外線攝影機消失",
+   "x": "研究人員開發了一種突破性的 3D 隱形斗篷，可以隱藏紅外線攝影機發現的複雜物體，同時保護...",
+   "src": "ScienceDaily（譯）",
+   "url": "https://www.sciencedaily.com/releases/2026/10/261025073051.htm",
+   "orig": "New 3D thermal invisibility cloak makes objects disappear from infrared cameras"
+  },
+  {
+   "date": "2026-10-30",
+   "cat": "chem",
+   "t": "人工智慧揭示了一種隱藏的化學捷徑，可以將二氧化碳轉化為燃料",
+   "x": "科學家利用人工智慧發現了近 10,000 個將二氧化碳轉化為氣體的化學反應…",
+   "src": "ScienceDaily（譯）",
+   "url": "https://www.sciencedaily.com/releases/2026/10/261013015758.htm",
+   "orig": "AI reveals a hidden chemical shortcut that could turn CO2 into fuel"
+  },
+  {
+   "date": "2026-10-30",
+   "cat": "chem",
+   "t": "科學家發現了一個可以引發或破壞化學反應的隱藏因素",
+   "x": "研究人員發現了一個可以決定化學反應成功或失敗的隱藏因素，然後用它來促進…",
+   "src": "ScienceDaily（譯）",
+   "url": "https://www.sciencedaily.com/releases/2026/10/261008005244.htm",
+   "orig": "Scientists discover a hidden factor that can make or break chemical reactions"
+  },
+  {
+   "date": "2026-10-30",
+   "cat": "bio",
+   "t": "蜘蛛會做夢嗎？科學家剛剛發現了一個令人驚訝的線索",
+   "x": "科學家發現蜘蛛的睡眠方式可能與人類驚人地相似，具有不同的睡眠階段...",
+   "src": "ScienceDaily（譯）",
+   "url": "https://www.sciencedaily.com/releases/2026/10/261026225555.htm",
+   "orig": "Do spiders dream? Scientists just found a surprising clue"
+  },
+  {
+   "date": "2026-10-30",
+   "cat": "bio",
+   "t": "中國科學家發現「D-rex」巨型真菌，其根系可追溯到6500萬年前",
+   "x": "科學家在中國發現了一種巨大的新真菌，它可以長到 20 英寸高，重近 5 磅，使其成為...",
+   "src": "ScienceDaily（譯）",
+   "url": "https://www.sciencedaily.com/releases/2026/10/261025073034.htm",
+   "orig": "Chinese scientists discover “D-rex,” a giant fungus with roots stretching back 65 million years"
+  },
+  {
+   "date": "2026-10-29",
+   "cat": "phys",
+   "t": "愛因斯坦方程式可以解釋沒有暗能量的宇宙",
+   "x": "數學家發現了他們認為宇宙標準模型中的一個根本缺陷，這可能會挑戰對暗能量的需求。他們的計算表明，用於描述宇宙膨脹的數學框架本質上是不穩定的，並且宇宙可能",
+   "src": "ScienceDaily（譯）",
+   "url": "https://www.sciencedaily.com/releases/2026/10/261028232719.htm",
+   "orig": "Einstein's equations may explain the universe without dark e"
+  },
+  {
+   "date": "2026-10-29",
+   "cat": "chem",
+   "t": "晶體中的微小缺陷揭示了巨大的量子驚喜",
+   "x": "研究人員解決了一個長期存在的挑戰，即了解鑽石和碳化矽等材料中的微小缺陷在光照下如何表現。他們的新計算方法揭示了碳化矽中令人驚訝的重要能量損失機制，科學家之前已經發現了這個機制",
+   "src": "ScienceDaily（譯）",
+   "url": "https://www.sciencedaily.com/releases/2026/10/261022081302.htm",
+   "orig": "A tiny defect in a crystal reveals a big quantum surprise"
+  },
+  {
+   "date": "2026-10-29",
+   "cat": "bio",
+   "t": "科學家發現有毒火蠑螈的秘密發光",
+   "x": "研究人員在歐洲常見的黑黃火蠑螈中發現了一種令人驚訝的隱藏能力：它們在紫外線下發出綠色和青色的光。這種神秘的螢光主要來自於它們皮膚的腺體和有毒的分泌物，可以持續發光24小時以上",
+   "src": "ScienceDaily（譯）",
+   "url": "https://www.sciencedaily.com/releases/2026/10/261027063707.htm",
+   "orig": "Scientists discover a secret glow in toxic fire salamanders"
+  }
+ ]
 }

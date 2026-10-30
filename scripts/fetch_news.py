@@ -25,6 +25,7 @@ import os
 import re
 import ssl
 import sys
+import time
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -93,26 +94,81 @@ def parse_date(s):
     return datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
 
+UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+      "(KHTML, like Gecko) Chrome/122.0 Safari/537.36")
+
+
+def _g_translate(text, client):
+    """Google 免費端點（非官方）。client 不同，走的後端也不同 —— 一個被限流
+    另一個往往還能用，這是這條路最關鍵的一點。"""
+    q = urllib.parse.quote(text[:900])
+    url = ("https://translate.googleapis.com/translate_a/single"
+           "?client=%s&sl=en&tl=zh-TW&dt=t&q=%s" % (client, q))
+    req = urllib.request.Request(url, headers={"User-Agent": UA})
+    with urllib.request.urlopen(req, timeout=15,
+                                context=ssl.create_default_context()) as r:
+        data = json.loads(r.read().decode("utf-8"))
+    out = "".join(seg[0] for seg in data[0] if seg and seg[0]).strip()
+    return out if out and out != text else ""
+
+
+def _mymemory(text):
+    """MyMemory 備援（免費翻譯記憶庫，無需 key，匿名每日有額度）。"""
+    url = ("https://api.mymemory.translated.net/get?q=%s&langpair=en|zh-TW"
+           % urllib.parse.quote(text[:500]))
+    req = urllib.request.Request(url, headers={"User-Agent": UA})
+    with urllib.request.urlopen(req, timeout=20,
+                                context=ssl.create_default_context()) as r:
+        d = json.loads(r.read().decode("utf-8"))
+    out = (d.get("responseData") or {}).get("translatedText") or ""
+    # 額度用完時它會把警告字串塞進 translatedText
+    if "MYMEMORY WARNING" in out.upper() or len(out) < 2:
+        return ""
+    return out.strip()
+
+
+# Google 的 zh-TW 輸出常把「系」誤轉成「係」（係 在繁體是「是」的意思）。
+# 這幾組是實測抓到、一定錯的，逐條修正；「係數」本身正確，不動。
+T2_FIX = [("根係", "根系"), ("係統", "系統"), ("一係列", "一系列"),
+          ("體係", "體系"), ("聯係", "聯繫"), ("派係", "派系"),
+          ("關係統", "關係系統"), ("學係", "學系"), ("係譜", "系譜")]
+
+
+def _fix_trad(s):
+    for a, b in T2_FIX:
+        s = s.replace(a, b)
+    return s
+
+
 def translate(text):
     """英→繁中。失敗回空字串（呼叫端保留英文，不阻斷流程）。
 
-    ⚠️ 用的是 Google 的免費端點（client=gtx），非官方 API，隨時可能失效或限流。
-    所以：① 只翻入選的少數條目 ② 失敗一律回空、保留原文 ③ 原文另存 orig 供核對。
+    ⚠️ 用 Google 的免費端點，非官方 API，**會限流**。
+    2026-10 實測：`client=gtx` 被 429 擋死（每日時事因此整批沒翻成），
+    但 `client=at` 與 `client=dict-chrome-ex` 走的是不同後端，仍然可用。
+
+    所以依序試多個端點，任一成功即止；全失敗才回空、保留英文原文。
+    另外：① 只翻入選的少數條目 ② 原文另存 orig 供核對 ③ 條目前後加小延遲。
     """
     if not text:
         return ""
+    for client in ("at", "dict-chrome-ex", "gtx"):
+        try:
+            out = _g_translate(text, client)
+            if out:
+                return _fix_trad(out)
+        except Exception as e:
+            print("    翻譯端點 %s 失敗：%s" % (client, str(e)[:40]))
+        time.sleep(0.4)
     try:
-        q = urllib.parse.quote(text[:900])
-        url = ("https://translate.googleapis.com/translate_a/single"
-               "?client=gtx&sl=en&tl=zh-TW&dt=t&q=" + q)
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        ctx = ssl.create_default_context()
-        with urllib.request.urlopen(req, timeout=15, context=ctx) as r:
-            data = json.loads(r.read().decode("utf-8"))
-        return "".join(seg[0] for seg in data[0] if seg and seg[0]).strip()
+        out = _mymemory(text)
+        if out:
+            print("    （改用 MyMemory 備援）")
+            return _fix_trad(out)
     except Exception as e:
-        print("    翻譯失敗（保留英文）：%s" % str(e)[:50])
-        return ""
+        print("    MyMemory 也失敗：%s" % str(e)[:40])
+    print("    翻譯失敗（保留英文）：%s" % (text or "")[:40])
+    return ""
 
 
 def fetch(url):
@@ -122,7 +178,102 @@ def fetch(url):
         return r.read()
 
 
+def refetch_title(url):
+    """回原文頁面取回**完整標題**（補翻舊資料用）。
+
+    ⚠️ 為什麼需要：早先翻譯失敗時只存了截斷到 60 字的 `orig`，
+    直接拿它去翻會鬧笑話 —— 實測過：
+        "Chinese scientists discover ... a giant fungus with roo" → 「巨型袋鼠菌」
+        "Scientists discover a hidden factor that can make or break c" → 「成就或破壞c」
+        "...could turn CO2 i" → 「將二氧化碳轉化為二氧化碳」
+    所以補翻前先回原頁把標題補全。
+    """
+    if not url:
+        return ""
+    try:
+        html = fetch(url).decode("utf-8", "ignore")
+    except Exception:
+        return ""
+    pats = (r'<meta[^>]+property=["\']og:title["\'][^>]+content=["\']([^"\']+)',
+            r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:title',
+            r"<title[^>]*>(.*?)</title>")
+    for pat in pats:
+        m = re.search(pat, html, re.S | re.I)
+        if not m:
+            continue
+        t = strip_html(m.group(1)).strip()
+        t = re.sub(r"\s*[|\-–]\s*ScienceDaily\s*$", "", t, flags=re.I).strip()
+        if len(t) >= 20:
+            return t
+    return ""
+
+
+def retranslate():
+    """把既有 _news.json 裡「沒翻成」的英文條目補翻。
+
+    為什麼需要：翻譯端點會限流（2026-10-30 那批就整批落成英文），
+    條目本身已經寫進檔了、不會再被抓一次，所以要有個專門補翻的入口。
+    """
+    if not os.path.exists(OUT):
+        print("  %s 不存在" % OUT)
+        return
+    d = json.load(io.open(OUT, encoding="utf-8"))
+    items = d.get("items") or []
+
+    def is_ascii_title(t):
+        # 標題裡沒有中日韓字元 = 還沒翻
+        return not re.search(r"[\u4e00-\u9fff]", t or "")
+
+    todo = [it for it in items if is_ascii_title(it.get("t"))]
+    print("  待補翻 %d / %d 條" % (len(todo), len(items)))
+
+    fixed = 0
+    for it in todo:
+        # 一律用**完整原文**去翻。舊資料的 orig 可能是被截到 60 字的版本
+        # （那時翻譯失敗、只存了截斷的 t），這種要重新抓原文，不能直接拿來翻。
+        t0 = it.get("orig") or it.get("t") or ""
+        x0 = it.get("origX") or it.get("x") or ""
+        if len(t0) >= 58 and not re.search(r"[。！？.!?]$", t0):
+            t0 = refetch_title(it.get("url") or "") or t0
+        zh_t = translate(t0)
+        if not zh_t:
+            print("    ✗ 仍失敗：%s" % t0[:44])
+            continue
+        it["orig"] = t0
+        it["t"] = zh_t[:60]
+        # 摘要原本也是英文才重翻，否則保留
+        if is_ascii_title(it.get("x")):
+            zh_x = translate(x0)
+            if zh_x:
+                it["x"] = zh_x[:130].rstrip() + ("…" if len(zh_x) > 130 else "")
+        src = (it.get("src") or "").replace("（譯）", "")
+        it["src"] = src + "（譯）"
+        fixed += 1
+        print("    ✓ [%s] %s" % (it.get("cat"), it["t"][:44]))
+        time.sleep(0.5)
+
+    # 繁中用字修正也對「既有條目」做一次（Google 的 zh-TW 常把「系」誤轉「係」）
+    tuned = 0
+    for it in items:
+        for k in ("t", "x"):
+            v = it.get(k)
+            if v:
+                nv = _fix_trad(v)
+                if nv != v:
+                    it[k] = nv
+                    tuned += 1
+
+    if fixed or tuned:
+        io.open(OUT, "w", encoding="utf-8", newline="\n").write(
+            json.dumps(d, ensure_ascii=False, indent=1) + "\n")
+    print("  補翻 %d 條，用字修正 %d 處" % (fixed, tuned))
+
+
 def main():
+    if "--retranslate" in sys.argv:
+        retranslate()
+        return
+
     dry = "--dry-run" in sys.argv
 
     old = []
@@ -186,11 +337,16 @@ def main():
             }
 
             if lang == "en":
+                # ⚠️ 完整原文一定要留下 —— 翻譯失敗後要補翻時，
+                # 只有截斷到 60 字的 t 是不夠的：
+                # "giant fungus with roo" 會被翻成「巨型袋鼠菌」，
+                # "make or break c" 會被翻成「成就或破壞c」。
+                entry["orig"] = title
+                entry["origX"] = desc
                 # 翻譯標題與摘要；失敗就保留英文，不丟條目
                 zh_t = translate(title)
-                zh_x = translate(desc[:300])
+                zh_x = translate(desc[:400])
                 if zh_t:
-                    entry["orig"] = entry["t"]
                     entry["t"] = zh_t[:60]
                     entry["src"] = name + "（譯）"
                 if zh_x:

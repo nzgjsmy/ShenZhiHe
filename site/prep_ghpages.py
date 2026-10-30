@@ -7,7 +7,8 @@
 3. 附一個精簡的 README 與 404 提示頁
 4. 附上 PWA 資源（manifest.json、service-worker.js、favicon.ico、圖示檔），讓使用者
    可以「加到主畫面」——這同時是 iOS 不清空學習進度的前提
-5. 把 service-worker.js 裡的 __SW_VERSION__ 換成站點版號（改版即換快取名）
+5. 把 service-worker.js 裡的 __SW_VERSION__ 換成「站點版號-資料指紋」
+   （改版或改資料都會換快取名 —— 只改資料不 bump 版號時，使用者也能立刻看到新內容）
 6. 複製 index.html 引用到的筆記原圖到 img/（圖片外置：HTML 保持 ~2 MB，
    SW 同源緩存天然覆蓋，離線體驗不變）
 """
@@ -24,6 +25,34 @@ META = site_meta()
 SITE_NAME = META["name"]
 SITE_VER = META["version"]
 SITE_TITLE = "%s %s" % (SITE_NAME, SITE_VER)
+
+
+def data_rev():
+    """資料修訂號 —— 讓 SW 快取鍵跟著**資料**變，不必為純資料更新 bump 版號。
+
+    為什麼需要：SW 拿快取名當失效依據（`shenzhine-<版號>`）。只改資料、
+    不改版號時快取名不變，而導航請求是「快取優先 + 背景更新」——
+    使用者**第一次打開看到的是舊內容**，要再刷新一次才會新。
+    每日新聞就是這樣的情況：版號沒動，早上打開還是昨天的。
+
+    所以在快取鍵後面加一段資料指紋：任何 data/*.json 變了，快取鍵就變，
+    使用者下次打開直接拿到新內容。版號（畫面顯示的）仍然由 version.json 決定。
+    """
+    import glob
+    import hashlib
+    h = hashlib.md5()
+    root = os.path.dirname(SITE)
+    for p in sorted(glob.glob(os.path.join(root, "data", "**", "*.json"),
+                             recursive=True)):
+        try:
+            with io.open(p, "rb") as f:
+                h.update(f.read())
+        except OSError:
+            pass
+    return h.hexdigest()[:8]
+
+
+SW_VER = "%s-%s" % (SITE_VER, data_rev())
 
 
 README = """# {ST}
@@ -308,7 +337,7 @@ def copy_pwa():
         if name == "service-worker.js":
             with io.open(src, encoding="utf-8") as f:
                 js = f.read()
-            js = js.replace("__SW_VERSION__", SITE_VER)
+            js = js.replace("__SW_VERSION__", SW_VER)
             with io.open(dst, "w", encoding="utf-8") as f:
                 f.write(js)
         else:
