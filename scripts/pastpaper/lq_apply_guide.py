@@ -10,6 +10,10 @@
 
 所以约定：正文写在纯文本稿里，用 `@@@ <题号>` 分节，本脚本只做搬运。
 
+文本稿存放位置
+--------------
+    scripts/pastpaper/lq_guides/<年份>.txt     （入庫，隨 git 走）
+
 文本稿格式
 ----------
     @@@ 1(a)
@@ -59,7 +63,8 @@ def main():
     year = sys.argv[1] if len(sys.argv) > 1 else "2019"
     dry = "--dry-run" in sys.argv
 
-    path = os.path.join(ROOT, "scratch", "_lq_guide_%s.txt" % year)
+    # 題解稿放在 scripts/pastpaper/lq_guides/<年份>.txt（入庫，可長期維護）
+    path = os.path.join(ROOT, "scripts", "pastpaper", "lq_guides", "%s.txt" % year)
     guides = parse_guide_file(path)
     print("題解稿：%s  共 %d 節" % (os.path.basename(path), len(guides)))
 
