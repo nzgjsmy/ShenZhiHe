@@ -33,7 +33,11 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 PAGES = os.environ.get("LQ_PAGES_DIR") or os.path.join(ROOT, "scratch", "_ref_pages")
 OUT = os.environ.get("LQ_EXTRACT_DIR") or os.path.join(ROOT, "scratch", "_ref_extract")
 
-QNUM = re.compile(r"^\s*(\d{1,2})\s*[.．]\s*$")
+# 行首题号。
+# ⚠️ 新版式（PP 等）把题号和小题标记放在**同一个框**里 —— '1.(a) (i)'；
+# 旧版式是两个独立框（'1.' 与 '(a)(i)'）。所以这里只匹配**开头**的题号，
+# 剩下的 '(a) (i)' 留给标记解析。负向后视排除小数（'5.25' 不是题号）。
+QNUM = re.compile(r"^\s*(\d{1,2})\s*[.．](?!\d)")
 # 一个框里可能只装一个标记，也可能装 '(a)(i)' 这种两个连排
 ONE_MARK = re.compile(r"^\s*[（(]\s*([a-z]{1,3}|\d{1,2})\s*[）)]\s*$")
 ONLY_MARKS = re.compile(r"^\s*(?:[（(]\s*[a-z]{1,3}\s*[）)]\s*)+$")
@@ -122,15 +126,20 @@ def parse_head_marks(text):
     '(a)(i)' → part='a', sub='i'
     '(1)'    → sub='#1'
     '(ii）下列任何两项：' → sub='ii'   （标记后面常跟着题干文字）
+
+    ⚠️ 右括号**故意不要求**。扫描件里 part 切换的行经常被 OCR 读残 ——
+    '1. (b) (i)' 会被读成 '(b (i)'（第一个右括号丢失）。若严格要求括号配对，
+    这一行就解析不出 part 切换，导致**后一个大题的分值被并进前一个大题**
+    （2017 1(a) 就是这样被算成 19 分的，实际官方只有 11 分）。
     """
     text = (text or "").strip()
     if not text or not text[0] in "（(":
         return None, None
-    toks = re.findall(r"[（(]\s*([a-z]{1,3}|\d{1,2})\s*[）)]", text)
+    toks = re.findall(r"[（(]\s*([a-z]{1,3}|\d{1,2})", text)
     if not toks:
         return None, None
     part = sub = None
-    for t in toks:
+    for t in toks[:3]:
         if t.isdigit():
             sub = "#" + t
         elif ROMAN.match(t):
@@ -156,6 +165,7 @@ def extract_year(key, pages):
     subsub_seq = 0
     cur_sub = None
     cur_subsub = None
+    known_qs = set()      # 已出现过的题号（跨页续写时用）
 
     def bucket():
         if cur_q is None:
@@ -204,25 +214,49 @@ def extract_year(key, pages):
                             q["total"] = int(mt.group(1))
                     continue
             # ---- 行首：题号 / 部分 / 小题
-            m = QNUM.match(ht)
-            if m and head["x0"] < page_w * 0.30 and len(r["items"]) >= 2:
-                cur_q = m.group(1)
-                cur_part = None
-                cur_sub = None
-                cur_subsub = None
-                part_seq = 0
-                sub_seq = 0
-                subsub_seq = 0
-                res.setdefault(cur_q, {"total": None, "parts": [], "sum": 0})
-            # 行首可能有两三个小标记框：'(a)' '(i)'。
-            # 注意这不能放进题号分支的 else 里 —— 题号行后面往往紧跟
-            # '(a)(i)' 这样的标记框，两个都要处理。
+            # （题号也由下面的循环统一处理，好让「题号连续性」判断只有一处）
+            # 行首可能有两三个小标记框：'(a)' '(i)'。题号之后也要接着解析。
+            # 新版式的题号与标记同框（'1.(a) (i)'），所以要先把题号剥掉。
             for b in r["items"][:3]:
                 if b["x0"] > page_w * 0.30:
                     break
-                if QNUM.match(b["t"]):
-                    continue
-                p, s = parse_head_marks(b["t"])
+                txt = b["t"]
+                mq = QNUM.match(txt)
+                if mq:
+                    q = mq.group(1)
+                    # 题号必须**连续**：要么是已知题号（跨页续写），要么正好
+                    # 是当前题号的下一个。正文里出现的「10.」「11.」之类会被
+                    # 这里挡掉（它们既不是已知题号、也不是 +1）。
+                    #
+                    # 还要处理「题号回退」：参考 PDF 裡卷一最後一題的續頁可能
+                    # 被誤划進卷二（比如 2013 的 p006 還留著卷一第 10 題的尾巴，
+                    # 會把 cur_q 設成 '10'，後面卷二的 1/2/3/4 就全被當成
+                    # 不連續而丟掉）。遇到**更小的**題號 → 判定前面的題號是
+                    # 誤判，直接重置。
+                    if cur_q is None:
+                        ok = True
+                    elif q in known_qs:
+                        ok = True
+                    elif int(q) < int(cur_q):
+                        ok = True          # 回退 → 重置（前面的題號是誤判）
+                    else:
+                        ok = (q == str(int(cur_q) + 1))
+                    if not ok:
+                        txt = ""
+                    else:
+                        cur_q = q
+                        known_qs.add(q)
+                        cur_part = None
+                        cur_sub = None
+                        cur_subsub = None
+                        part_seq = 0
+                        sub_seq = 0
+                        subsub_seq = 0
+                        res.setdefault(cur_q, {"total": None, "parts": [], "sum": 0})
+                        txt = txt[mq.end():]
+                    if not txt.strip():
+                        continue
+                p, s = parse_head_marks(txt)
                 if p is None and s is None:
                     continue
                 if p:
@@ -368,13 +402,14 @@ def _run_one(key):
     pages = []
     if feature:
         a = min(num(p) or 0 for p in feature)
-        lo = max(1, a - 1)
-        pages = [p for p in sorted(have)
-                 if lo <= (num(p) or 0) <= last]
+        # 卷二＝anchor 到末页的**连续段**。⚠️ 不要再往前扩一页 ——
+        # 卷一最後一題的續頁常混在卷二第一頁之前（2013 的 p006 還留著卷一
+        # 第 10 題的尾巴），擴進來會讓卷一的題號頂掉卷二的題號。
+        pages = [p for p in sorted(have) if a <= (num(p) or 0) <= last]
         # 匹配矩阵只用于**区间内**补充（不引入区间外的卷一页）
         for p in sorted(match_pages):
             n = num(p)
-            if n is not None and lo <= n <= last and p not in pages:
+            if n is not None and a <= n <= last and p not in pages:
                 pages.append(p)
         pages = sorted(pages, key=lambda p: num(p) or 0)
     elif match_pages:
