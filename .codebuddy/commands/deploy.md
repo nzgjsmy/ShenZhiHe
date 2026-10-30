@@ -29,10 +29,39 @@ NO_WIPE=1 python site/prep_ghpages.py || exit 1
 
 # 3) 同步到 git 部署包（★ 先清后拷，不能用 cp -rn）
 DEPLOY="<工作区父目录>/神智核-GitHub部署包"
-cp gh-pages/index.html        "$DEPLOY/index.html" || exit 1
-cp gh-pages/service-worker.js "$DEPLOY/service-worker.js" || exit 1
+# 3a) 顶层文件：除 img/ 外**全部**同步。
+#     ⚠️ 以前这一步只 cp 了 index.html 和 service-worker.js，漏掉 README.md
+#     与 404.html —— 它们带着版号（README 标题、404 页标题），结果 404 页
+#     会一直显示上一个版本的号，看起来像「版本没更新」。两个文件都带版号，
+#     必须跟着 version.json 走。
+for f in index.html service-worker.js README.md 404.html manifest.json \
+         apple-touch-icon.png apple-touch-icon-152.png apple-touch-icon-167.png \
+         favicon-32.png favicon.ico icon-192.png icon-512.png icon-maskable-512.png; do
+  [ -f "gh-pages/$f" ] && cp "gh-pages/$f" "$DEPLOY/$f"
+done
+rm -rf "$DEPLOY/files" && cp -r gh-pages/files "$DEPLOY/files" 2>/dev/null
 rm -rf "$DEPLOY/img"          # ⚠️ 先清：cp -rn 的 no-clobber 会漏掉改过的图
 cp -r  gh-pages/img           "$DEPLOY/img" || exit 1
+
+# 3b) 校验：部署包里这几个文件的版号必须与 version.json 一致
+python - <<'PYEOF'
+import json, io, re, sys, os
+ver = json.load(io.open("site/version.json", encoding="utf-8"))["version"]
+dep = os.path.join(os.path.dirname(os.path.abspath("site")), "..",
+                   "神智核-GitHub部署包")
+bad = []
+for f in ("index.html", "service-worker.js", "README.md", "404.html"):
+    p = os.path.join(dep, f)
+    if not os.path.exists(p):
+        bad.append(f + "（缺文件）")
+        continue
+    t = io.open(p, encoding="utf-8", errors="ignore").read()
+    if ver not in t:
+        bad.append(f + "（无 " + ver + "）")
+if bad:
+    print("✗ 版号没同步：", "、".join(bad)); sys.exit(1)
+print("✓ 部署包版号一致：", ver)
+PYEOF
 
 # 4) 推送（部署包是独立 git 仓库，推 main）
 cd "$DEPLOY" && git add -A && git commit -m "$ARGUMENTS" && git push origin main || exit 1
