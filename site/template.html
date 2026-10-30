@@ -1870,6 +1870,8 @@ html[data-theme="dark"] .dse-lq .go{color:#b19c78}
 .lq-btn:hover{border-color:var(--accent);color:var(--accent)}
 .lq-btn.open{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 .lq-note-btn:hover{border-color:var(--amber);color:var(--amber)}
+.lq-prac-btn:hover{border-color:var(--green);color:var(--green)}
+.lq-prac-btn.open{background:var(--green);color:#fff;border-color:var(--green)}
 
 .lq-panel{
   max-height:0;overflow:hidden;
@@ -1884,6 +1886,29 @@ html[data-theme="dark"] .dse-lq .go{color:#b19c78}
 
 .lq-notebox{margin-top:10px}
 .lq-note{min-height:72px}
+
+/* ---- 練習作答（離線自評）---- */
+.lq-prac{margin-top:12px;display:none;border-top:1px solid var(--line);padding-top:6px}
+.lq-prac.on{display:block}
+.lq-prac-lead{font-size:12px;line-height:1.7;color:var(--muted);margin:0 0 8px}
+.lq-prac-item{padding:10px 0;border-bottom:1px dashed var(--line)}
+.lq-prac-item:last-child{border-bottom:0}
+.lq-prac-hd{display:flex;align-items:baseline;gap:8px;margin-bottom:7px;font-size:12.5px;color:var(--muted)}
+.lq-prac-hd b{color:var(--ink);font-weight:500}
+.lq-prac-hd .lq-prac-mk{color:var(--accent)}
+.lq-ans{width:100%;min-height:66px;font-size:13px;line-height:1.7}
+.lq-prac-btns{display:flex;gap:8px;margin-top:7px;flex-wrap:wrap}
+.lq-fb{margin-top:9px;font-size:12.5px;line-height:1.78;border-radius:10px;padding:10px 12px;
+  background:var(--paper-soft);border:1px solid var(--line);color:var(--text-soft);display:none}
+.lq-fb.on{display:block}
+.lq-fb.good{background:var(--green-tint);border-color:color-mix(in srgb,var(--green) 30%,transparent)}
+.lq-fb.mid{background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 30%,transparent)}
+.lq-fb.low{background:var(--red-soft);border-color:color-mix(in srgb,var(--red) 28%,transparent)}
+.lq-fb .lq-fb-t{font-weight:500;color:var(--ink)}
+.lq-fb .lq-fb-n{margin-top:5px;font-size:12px}
+.lq-fb .lq-fb-h{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);color:var(--amber)}
+.lq-prac-none{font-size:12px;color:var(--muted);padding:8px 0}
+html[data-theme="dark"] .lq-fb{background:var(--panel)}
 
 html[data-theme="dark"] .lq-card{background:var(--paper);border-color:var(--line)}
 html[data-theme="dark"] .lq-btn{background:var(--paper-alt);color:var(--text-soft)}
@@ -5201,6 +5226,7 @@ function lqCard(q){
   const stem=q.stem?`<div class="lq-stem md">${mdLite(q.stem)}</div>`:'';
   const figs=(q.figRefs||[]).length
     ? `<div class="lq-figs">本題涉及原卷附圖 ${q.figRefs.map(f=>'圖 '+esc(f)).join('、')}<span class="lq-figs-note">配圖裁切中，暫請對照原卷</span></div>`:'';
+  const nPrac=(q.subqs||[]).filter(s=>s.points&&s.points.length).length;
   return `<div class="lq-card" data-id="${esc(q.id)}">
     <div class="lq-head">
       <span class="lq-qid">${esc(q.qnum)}</span>
@@ -5215,6 +5241,7 @@ function lqCard(q){
     <div class="lq-tools">
       <button class="lq-btn" data-lbl="${q.guide?'參考答案':'評分指引'}" onclick="lqToggle(this)"><span class="lq-btn-t">${q.guide?'參考答案':'評分指引'}</span><span class="lq-btn-i">▾</span></button>
       <button class="lq-btn lq-note-btn" onclick="lqToggleNote(this)">✎ 寫筆記</button>
+      ${nPrac?`<button class="lq-btn lq-prac-btn" onclick="lqTogglePrac(this)" title="自己先寫一次，再看看得分點有沒有寫到"><span class="lq-btn-t">✍️ 練習作答</span><span class="lq-btn-i">▾</span></button>`:''}
     </div>
     <div class="lq-panel">
       <div class="lq-panel-in">
@@ -5225,6 +5252,28 @@ function lqCard(q){
           目前可先對照課本相應課題溫習；收錄後會顯示在這裡。</div>`}
       </div>
     </div>
+    ${nPrac?`<div class="lq-prac">
+      <p class="lq-prac-lead">先蓋著參考答案自己寫一次，再按「對一對」。
+      這不是改卷 —— 只幫你檢查<b>關鍵概念</b>有沒有寫到，用字不必跟參考答案相同。</p>
+      ${(q.subqs||[]).map((s,i)=>{
+        if(!s.points||!s.points.length) return '';
+        // 上面已經顯示過完整題目，這裡只標「第幾小題 + 幾分」就好 ——
+        // 別把題幹再抄一次：裡面常有 $...$ 公式，光剝 HTML 標籤會露出原始定界符
+        return `<div class="lq-prac-item" data-i="${i}" data-hint="0">
+          <div class="lq-prac-hd">
+            <b>(${esc(s.no)})</b>
+            ${s.marks?`<span class="lq-prac-mk">${s.marks} 分</span>`:''}
+          </div>
+          <textarea class="wnote lq-ans" placeholder="用自己的話寫出答案：先講結論，再講原因／機制…"
+            onchange="lqSaveAns('${esc(q.id)}','${i}',this.value)"></textarea>
+          <div class="lq-prac-btns">
+            <button class="lq-btn" onclick="lqCheck(this)">對一對</button>
+            <button class="lq-btn lq-note-btn" onclick="lqHint(this)">💡 提示</button>
+          </div>
+          <div class="lq-fb"></div>
+        </div>`;
+      }).join('')}
+    </div>`:''}
     <div class="lq-notebox" style="display:none">
       <textarea class="wnote lq-note" placeholder="寫下答題思路：這題問什麼、要用哪些關鍵字、哪一步最易失分…"
         onchange="setLqNote('${esc(q.id)}',this.value)"></textarea>
@@ -5255,6 +5304,112 @@ function setLqNote(id,v){
   STORE.set(s);
 }
 function lqGetNote(id){ const s=STORE.get(); return (s.lqnotes||{})[id]||''; }
+
+/* ---------- 練習作答（離線自評）----------
+   站點是純離線單檔案，沒有後端，所以「老師怎麼改」只能這樣近似：
+   把每道小題的得分點濃縮成關鍵概念詞，檢查學生作答有沒有提到。
+   —— 不要求用字與參考答案相同，同義詞、子串、自己的話都算。      */
+function lqById(id){
+  let r=null;
+  (lqAll()||[]).forEach(q=>{ if(q.id===id) r=q; });
+  return r;
+}
+function lqNorm(s){
+  return String(s||'').replace(/[\s，。、：；！？（）()「」『』“”‘’"'·\-—…]/g,'').toLowerCase();
+}
+function lqHit(cands,txt){
+  for(let i=0;i<cands.length;i++){
+    const w=lqNorm(cands[i]);
+    if(w.length>=2 && txt.indexOf(w)>=0) return true;
+  }
+  return false;
+}
+function lqTogglePrac(btn){
+  const card=btn.closest('.lq-card');
+  const box=card.querySelector('.lq-prac');
+  if(!box) return;
+  const open=!box.classList.contains('on');
+  box.classList.toggle('on',open);
+  btn.classList.toggle('open',open);
+  btn.querySelector('.lq-btn-i').textContent=open?'▴':'▾';
+  if(open){
+    // 還原先前寫過的答案
+    const s=STORE.get(); const saved=(s.lqans||{})[card.dataset.id]||{};
+    box.querySelectorAll('.lq-prac-item').forEach(it=>{
+      const v=saved[it.dataset.i];
+      const t=it.querySelector('textarea');
+      if(v!=null && t) t.value=v;
+    });
+  }
+}
+function lqSaveAns(id,i,v){
+  const s=STORE.get(); s.lqans=s.lqans||{};
+  s.lqans[id]=s.lqans[id]||{};
+  if(v&&v.trim()) s.lqans[id][i]=v; else delete s.lqans[id][i];
+  STORE.set(s);
+}
+function lqVerdict(n,m,empty){
+  if(m<=0) return {cls:'',t:'老師點評：這題暫時沒有可核對的得分點，直接對照參考答案吧。'};
+  if(empty) return {cls:'low',t:'老師點評：空白是長題目最致命的失分 —— 哪怕只寫出兩三個關鍵詞，也比留白好。'};
+  if(n<=0) return {cls:'low',t:'老師點評：你寫的方向似乎還沒碰到這題的得分點。建議先回到題目，圈出它在問什麼（為什麼？如何？比較？），再按提示想想該用哪個概念。'};
+  if(n>=m) return {cls:'good',t:'老師點評：這題的得分點你都寫到了，答得很完整。接著可以對照參考答案，看看用字是否更精準、因果鏈是否更順。'};
+  const r=n/m;
+  if(r>=0.6) return {cls:'mid',t:'老師點評：方向對了，但還有 '+(m-n)+' 個得分點沒觸及。DSE 長題目是按點給分，漏一個就少一分。'};
+  return {cls:'low',t:'老師點評：只觸及 '+n+'/'+m+' 個得分點。先回到題目，想清楚它問的是「為什麼」還是「如何」，再把因果鏈寫完整。'};
+}
+function lqEval(item,withHint){
+  const card=item.closest('.lq-card');
+  const q=lqById(card.dataset.id);
+  if(!q) return null;
+  const i=+item.dataset.i;
+  const sub=(q.subqs||[])[i];
+  if(!sub) return null;
+  const pts=sub.points||[];
+  const raw=((item.querySelector('textarea')||{}).value)||'';
+  const txt=lqNorm(raw);
+  const hits=pts.map(c=>lqHit(c,txt));
+  const n=hits.filter(Boolean).length, m=pts.length;
+  const v=lqVerdict(n,m,!raw.trim());
+  const miss=pts.filter((c,k)=>!hits[k]);
+  const lvl=+item.dataset.hint||0;
+  let hintHtml='';
+  if(withHint&&m>0){
+    if(!miss.length){
+      hintHtml=`<div class="lq-fb-h">這題的得分點你都寫到了，不需要提示了。</div>`;
+    }else if(lvl<miss.length){
+      // 提示要給「最有資訊量」的那個詞 —— 候選詞裡最長的通常最像完整概念，
+      // 短的碎片（如「三組」）單看沒有指引作用
+      const kw=miss[lvl].slice().sort((a,b)=>b.length-a.length)[0];
+      hintHtml=`<div class="lq-fb-h">💡 提示 ${lvl+1}/${miss.length}：<b>${esc(kw)}</b>
+        —— 順著這個概念，把它的原因或結果寫出來。</div>`;
+    }else{
+      hintHtml=`<div class="lq-fb-h">提示都給完了 —— 這時直接看參考答案，
+        然後蓋著答案再寫一次，效果最好。</div>`;
+    }
+  }
+  const bar=m?`<div class="lq-fb-n">得分點：<b>${n} / ${m}</b></div>`:'';
+  return {cls:v.cls,html:`<div class="lq-fb-t">${v.t}</div>${bar}${hintHtml}`};
+}
+function lqCheck(btn){
+  const item=btn.closest('.lq-prac-item');
+  item.dataset.hint='0';
+  const r=lqEval(item,false);
+  if(!r) return;
+  const fb=item.querySelector('.lq-fb');
+  fb.className='lq-fb on '+r.cls;
+  fb.innerHTML=r.html;
+}
+function lqHint(btn){
+  const item=btn.closest('.lq-prac-item');
+  // 先用「目前的」層級顯示，顯示完才推進 —— 否則第一次按會直接跳到第 2 個提示
+  const r=lqEval(item,true);
+  if(!r) return;
+  const fb=item.querySelector('.lq-fb');
+  fb.className='lq-fb on '+(r.cls||'');
+  fb.innerHTML=r.html;
+  const lvl=+item.dataset.hint||0;
+  item.dataset.hint=String(lvl+1);
+}
 function lqSetYear(y){ LQ_YEAR=y; viewLQ(); }
 function lqSetPart(p){ LQ_PART=(LQ_PART===p?'':p); viewLQ(); }
 function viewLQ(){
