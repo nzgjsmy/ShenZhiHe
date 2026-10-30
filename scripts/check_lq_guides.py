@@ -47,6 +47,9 @@ def check(path):
     for i, line in enumerate(io.open(path, encoding="utf-8").read().split("\n"), 1):
         if not line.strip():
             continue
+        # 乱码：写入时混进的 U+FFFD 替换字符，肉眼会显示成方块
+        if "\ufffd" in line:
+            issues.append((i, "乱码字符", "U+FFFD", line.strip()[:56]))
         simp = [c for c in line if c in SIMP]
         if simp:
             issues.append((i, "簡體字", "".join(simp), line.strip()[:56]))
