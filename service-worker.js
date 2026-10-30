@@ -23,10 +23,10 @@
  *   现在改为 10 秒：够 3.5MB 在多数网络下下载完，断网时也还能接受。
  *   若将来单档体积再翻倍，记得同步调大这个值。
  *
- * V0.27.0 由 prep_ghpages.py 在部署时替换成站点版号。改版即换缓存名，
+ * V0.28.0 由 prep_ghpages.py 在部署时替换成站点版号。改版即换缓存名，
  * 避免用户长期停留在旧缓存上，同时 activate 时清掉旧版缓存防止无限增长。
  */
-var SW_VERSION = 'V0.27.0';
+var SW_VERSION = 'V0.28.0';
 var CACHE = 'shenzhine-' + SW_VERSION;
 var NET_TIMEOUT = 10000;
 
