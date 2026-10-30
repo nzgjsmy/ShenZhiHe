@@ -2408,6 +2408,66 @@ html[data-theme="dark"] .hn-daily{
   color:var(--accent);text-decoration:none;letter-spacing:.02em;
   border-bottom:1px dashed color-mix(in srgb,var(--accent) 45%,transparent);
 }
+
+/* ---------- ⑮ 年度諾貝爾獎（置頂於科研時事之上，2026-10-31） ----------
+   資料獨立於 data/_news.json（data/_nobel.json）—— 年度榮譽不該被每日抓取
+   覆蓋或擠掉。金色頂邊 + 獎章，與下面的剪報卡明顯區隔：這是三科的最高榮譽，
+   不是普通時事。每年 10 月公布後只改那個資料檔。 */
+.hn-nobel{
+  margin:32px 0 0;padding-top:24px;
+  border-top:1px dashed var(--hn-edge);
+}
+.hn-nobel-head{
+  display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+  margin-bottom:16px;
+}
+.hn-nobel-head .hn-lbl{color:var(--hn-title);font-size:12.5px;letter-spacing:.26em;font-weight:700}
+.hn-nobel-sub{font-size:11.5px;color:var(--hn-muted);letter-spacing:.04em}
+.hn-nobel-list{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:18px;
+}
+.hn-nobel-item{
+  position:relative;
+  background:var(--hn-paper);
+  border-radius:4px;padding:18px 18px 14px;
+  border-top:3px solid var(--amber);
+  box-shadow:0 1px 2px rgba(70,60,40,.08),0 6px 16px rgba(70,60,40,.07),
+             0 0 0 1px color-mix(in srgb,var(--amber) 14%,transparent);
+  transition:transform .3s var(--ease-ios),box-shadow .3s var(--ease-ios);
+  /* 三張卡摘要長短不一，用 flex 把「來源」連結壓到卡底，底部才對得齊 */
+  display:flex;flex-direction:column;
+}
+.hn-nobel-item:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 10px rgba(70,60,40,.11),0 16px 32px rgba(70,60,40,.11),
+             0 0 0 1px color-mix(in srgb,var(--amber) 26%,transparent);
+}
+.hn-nobel-meta{display:flex;align-items:center;gap:9px;margin-bottom:9px;flex-wrap:wrap}
+.hn-nobel-prize{
+  font-size:10.5px;padding:1.5px 9px;border-radius:999px;
+  letter-spacing:.06em;font-weight:600;
+  background:var(--amber-soft);color:var(--amber);
+  border:1px solid color-mix(in srgb,var(--amber) 34%,transparent);
+}
+.hn-nobel-t{
+  font-family:var(--hn-serif);font-size:16.5px;font-weight:600;
+  color:var(--hn-title);line-height:1.5;letter-spacing:-.1px;
+  margin-bottom:8px;
+}
+.hn-nobel-x{
+  font-size:13px;line-height:1.85;color:var(--text-soft);
+  display:-webkit-box;-webkit-box-orient:vertical;
+  -webkit-line-clamp:6;line-clamp:6;overflow:hidden;
+  flex:1;              /* 撐開剩餘空間，讓下面的獲獎者／連結貼底對齊 */
+}
+.hn-nobel-x b{color:var(--hn-title);font-weight:600}
+.hn-nobel-who{
+  margin-top:10px;font-size:11.5px;color:var(--hn-muted);line-height:1.6;
+  padding-top:8px;border-top:1px dotted var(--hn-edge);
+}
+.hn-nobel-who b{color:var(--text-soft);font-weight:600}
+.hn-nobel .hn-news-src{margin-top:8px}
 .hn-news-src:hover{color:var(--hn-accent);border-bottom-style:solid}
 html[data-theme="dark"] .hn-news-item{
   box-shadow:0 1px 2px rgba(0,0,0,.32),0 6px 16px rgba(0,0,0,.28);
@@ -2646,6 +2706,12 @@ const DATA = JSON.parse(document.getElementById('payload').textContent);
 const SUBJECTS = DATA.subjects || [];
 const SITE = DATA.site || {name:'神智核', version:'V0.1.0'};
 const NEWS = DATA.news || [];   /* 科研時事（站點級，三科總覽頁） */
+/* 年度諾貝爾獎（自然科學三獎）：置頂顯示。獨立資料檔，不被每日抓取覆蓋。 */
+const NOBEL = (DATA.nobel && DATA.nobel.items) ? DATA.nobel : {year:null,items:[]};
+/* 諾貝爾獎摘要允許 **粗體**（用來突顯機制關鍵詞）。
+   順序很重要：先 esc() 擋掉注入，再把轉義後的 ** 換成 <b> —— 星號不屬於
+   HTML 特殊字元，esc 後仍是 **，所以這一步是安全的。 */
+function hnMd(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>'); }
 const SITE_NAME = SITE.name || '神智核';
 const SITE_VER = SITE.version || 'V0.1.0';
 const SITE_TITLE = SITE_NAME + ' ' + SITE_VER;
@@ -3480,6 +3546,26 @@ function viewSubjects(){
       </div>
     </div>
     <div class="subgrid">${cards}</div>
+    ${NOBEL.items.length?`
+    <div class="hn-nobel">
+      <div class="hn-nobel-head">
+        <span class="hn-lbl" style="margin:0">年 度 諾 貝 爾 獎</span>
+        <span class="hn-nobel-sub">${NOBEL.year?esc(NOBEL.year)+' 年 · ':''}自然科學三獎 · 三科最高榮譽</span>
+      </div>
+      <div class="hn-nobel-list">
+        ${NOBEL.items.map(nw=>`
+        <div class="hn-nobel-item">
+          <div class="hn-nobel-meta">
+            <span class="hn-nobel-prize">${esc(nw.prize||'諾貝爾獎')}</span>
+            <span class="hn-news-cat cat-${esc(nw.cat||'')}">${esc(_CAT[nw.cat]||nw.cat||'')}</span>
+          </div>
+          <div class="hn-nobel-t">${esc(nw.t||'')}</div>
+          <div class="hn-nobel-x">${hnMd(nw.x||'')}</div>
+          ${nw.who?`<div class="hn-nobel-who">獲獎者：<b>${esc(nw.who)}</b></div>`:''}
+          ${nw.url?`<a class="hn-news-src" href="${esc(nw.url)}" target="_blank" rel="noopener">${esc(nw.src||'來源')} ↗</a>`:''}
+        </div>`).join('')}
+      </div>
+    </div>`:''}
     ${NEWS.length?`
     <div class="hn-news">
       <div class="hn-news-head">

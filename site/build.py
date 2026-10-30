@@ -403,7 +403,24 @@ def main():
     else:
         print("  note: 沒有 data/_news.json，三科總覽頁不顯示科研時事")
 
-    payload = {"site": site, "subjects": subjects, "news": news}
+    # 年度諾貝爾獎（data/_nobel.json）：置頂顯示在科研時事之上。
+    # 刻意獨立於 _news.json —— 它是年度榮譽，不該被每天的抓取覆蓋或擠掉；
+    # 每年 10 月公布後只改這一個檔（year + items 三條），不必動程式。
+    nobel = {"year": None, "items": [], "announced": ""}
+    nobel_path = os.path.join(DATA, "_nobel.json")
+    if os.path.exists(nobel_path):
+        d = load(nobel_path, None)
+        if isinstance(d, dict) and isinstance(d.get("items"), list) and d["items"]:
+            nobel = {"year": d.get("year"), "announced": d.get("announced") or "",
+                     "items": d["items"]}
+            print("  note: 載入諾貝爾獎 %s 年 %d 條（置頂）"
+                  % (d.get("year"), len(d["items"])))
+        else:
+            print("  warning: data/_nobel.json 格式不對（需為 {year, items:[...]}），已跳過")
+    else:
+        print("  note: 沒有 data/_nobel.json，三科總覽頁不顯示諾貝爾獎")
+
+    payload = {"site": site, "subjects": subjects, "news": news, "nobel": nobel}
 
     tpl_path = os.path.join(BASE, "template.html")
     with io.open(tpl_path, encoding="utf-8") as f:
