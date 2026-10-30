@@ -95,13 +95,21 @@ def _rows(path):
 
 
 def is_paper2(text):
-    """这一页属于卷二吗？"""
-    if "卷二" in text or "試卷二" in text or "试卷二" in text:
+    """这一页属于卷二吗？
+
+    ⚠️ 只认**页面顶部**出现的卷别标记。早期版本在整页文本里搜「卷二」，
+    结果卷一的页面只要正文里引用到「卷二」二字就被误判（2018/2020/SP 的
+    参考件页脚只有纯页码，没有 `BIO 2-x`，全靠这个判据，于是整卷判错、
+    提取结果全废）。所以「卷二」必须在开头几行内出现 —— 那才是页眉上的
+    「卷二甲部」/「生物 試卷二 BIOLOGY PAPER 2」。
+    """
+    head = "\n".join(text.splitlines()[:8])
+    if "卷二" in head or "試卷二" in head or "试卷二" in head:
         return True
-    if "PAPER 2" in text.upper():
+    if "PAPER 2" in head.upper():
         return True
-    # 页脚 'BIO 2-3' / 'PP-DSE-BIO 2-5'
-    if re.search(r"BIO\s*2\s*-\s*\d+", text, re.I):
+    # 页脚 'BIO 2-3' / 'PP-DSE-BIO 2-5' / 'PP-DSE-BIO2--6'（双连字符、无空格都见过）
+    if re.search(r"BIO\s*2\s*-{1,3}\s*\d+", text, re.I):
         return True
     return False
 
@@ -287,21 +295,92 @@ def extract_year(key, pages):
     return res
 
 
+def _pages_from_match(key):
+    """用「题干 ↔ 参考页」匹配矩阵反推卷二页范围（**不扩展**）。
+
+    2018／2020／SP 的参考件页脚只有纯页码（46、47、48…），既没有 `BIO 2-x`
+    也没有「卷二」字样，靠版面特征判不出来。但匹配矩阵已经用题干 bigram
+    把每一道大题定位到了具体页码（2012/2019/2022/2023/PP/SP 都呈强对角线）。
+
+    只取「该年份自身」的匹配页，且不前后扩展 —— 扩展会把卷一页也拉进来。
+    """
+    path = os.path.join(ROOT, "scratch", "_ref_match.json")
+    if not os.path.exists(path):
+        return set()
+    try:
+        m = json.load(open(path, encoding="utf-8"))
+    except Exception:
+        return set()
+    pages = set()
+    for _qid, v in (m or {}).items():
+        for t in v.get("top") or []:
+            if t.get("ref") != key:
+                continue
+            if (t.get("score") or 0) < 0.12:
+                continue
+            pg = str(t.get("page", ""))
+            if re.fullmatch(r"p\d{3}", pg):
+                pages.add(pg + ".jpg")
+    return pages
+
+
 def _run_one(key):
+    """挑出这一份卷的**卷二**评分参考页。
+
+    参考 PDF 里卷一在前、卷二在后，所以卷二一定是一段**连续的尾页**。
+    判据分两层：
+      ① **anchor**：第一个带卷别标记的页（页眉「卷二甲部」/「生物 試卷二」，
+         或页脚 `BIO 2-x`）。卷二页 = anchor（前后各扩一页）到 PDF 末页。
+      ② anchor 找不到时（2018／2020／SP 的参考件页脚只有纯页码），
+         用「题干 ↔ 参考页」匹配矩阵反推，再取连续段。
+    ⚠️ 不要把匹配矩阵的页与 ① 直接**取并集** —— 矩阵对个别题会落到卷一页
+    （PP 的 p005 就是卷一），并进来会让卷一的题号顶掉卷二的题号，整卷错位
+    （实测 FILL 从 11 题掉到 1 题）。矩阵只用来在 ① 判定的区间内做补充。
+    """
     d = os.path.join(PAGES, key)
     if not os.path.isdir(d):
         return key, None, []
-    pages = []
-    for pg in sorted(f for f in os.listdir(d)
-                     if f.lower().endswith((".jpg", ".png"))):
+    have = set(f for f in os.listdir(d)
+               if f.lower().endswith((".jpg", ".png", ".jpeg")))
+
+    def num(p):
+        try:
+            return int(p[1:4])
+        except Exception:
+            return None
+
+    feature = []
+    for pg in sorted(have):
         p = os.path.join(ROOT, "scratch", "_ref_text", key,
                          pg.replace(".jpg", ".txt"))
         if not os.path.exists(p):
             continue
         with open(p, encoding="utf-8") as f:
-            txt = f.read()
-        if is_paper2(txt):
-            pages.append(pg)
+            if is_paper2(f.read()):
+                feature.append(pg)
+
+    match_pages = set()
+    for p in _pages_from_match(key):
+        if p in have:
+            match_pages.add(p)
+
+    last = max((num(p) or 0) for p in have)
+    pages = []
+    if feature:
+        a = min(num(p) or 0 for p in feature)
+        lo = max(1, a - 1)
+        pages = [p for p in sorted(have)
+                 if lo <= (num(p) or 0) <= last]
+        # 匹配矩阵只用于**区间内**补充（不引入区间外的卷一页）
+        for p in sorted(match_pages):
+            n = num(p)
+            if n is not None and lo <= n <= last and p not in pages:
+                pages.append(p)
+        pages = sorted(pages, key=lambda p: num(p) or 0)
+    elif match_pages:
+        ns = sorted(num(p) for p in match_pages if num(p))
+        lo, hi = min(ns), max(ns)
+        pages = [p for p in sorted(have) if lo <= (num(p) or 0) <= hi]
     if not pages:
         return key, None, []
     return key, extract_year(key, pages), pages

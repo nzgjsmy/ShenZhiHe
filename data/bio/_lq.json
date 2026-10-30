@@ -145,7 +145,7 @@
       "no": "i",
       "level": 1,
       "q": "就魚類物種數目而言，比較 AR 地點和沙質海床地區的結果。",
-      "marks": null
+      "marks": 3
      },
      {
       "no": "ii",
@@ -160,7 +160,7 @@
       "marks": 2
      }
     ],
-    "marksTotal": 5,
+    "marksTotal": 8,
     "page": 5,
     "tables": 0,
     "ocr": true,
@@ -4038,7 +4038,7 @@
       "no": "i",
       "level": 1,
       "q": "參考雌激素的分泌，小玲在腹部受傷後，其生殖系統的哪個部分可能受到影響？解釋這如何引致血液測試結果所顯示的那些雌激素水平。",
-      "marks": null
+      "marks": 3
      },
      {
       "no": "ii",
@@ -4059,7 +4059,7 @@
       "marks": 2
      }
     ],
-    "marksTotal": 7,
+    "marksTotal": 10,
     "page": 2,
     "tables": 1,
     "ocr": true,
@@ -4288,7 +4288,7 @@
       "no": "i",
       "level": 1,
       "q": "細菌生長的靜止期有什麼特徵？",
-      "marks": null
+      "marks": 2
      },
      {
       "no": "ii",
@@ -4321,7 +4321,7 @@
       "marks": 1
      }
     ],
-    "marksTotal": 7,
+    "marksTotal": 9,
     "page": 7,
     "tables": 0,
     "ocr": true,
