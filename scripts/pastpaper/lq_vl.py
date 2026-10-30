@@ -43,6 +43,12 @@ _ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__
 #       python scripts/pastpaper/lq_vl.py 2019
 PAGES = os.environ.get("LQ_PAGES_DIR") or os.path.join(_ROOT, "scratch", "_lq_pages")
 OUT = os.environ.get("LQ_OUT_DIR") or os.path.join(_ROOT, "scratch", "_lq_vl")
+# 起始頁。官方「參考答案.pdf」的前幾頁是**卷一 MC 答案表**（題號+答案+答對率），
+# 對本站毫無用處（MC 答案早已在 _mc_answers.json 裡），而且那種「大片空白 + 稀疏表格」
+# 的版面反而是 VLM 最慢的一類。實測跳過它們可省 15 頁、約 1.5 小時。
+#   · 一般年份：p001 = MC 答案表 → 卷二評分參考從 p002 起
+#   · PP：p001 = 封面聲明、p002 = MC 答案表 → 從 p003 起
+FIRST_PAGE = int(os.environ.get("LQ_FIRST_PAGE", "1"))
 
 # 各年份的页数（与 _lq_pages/<key>/pNNN.jpg 一致）
 PAGE_COUNT = {
@@ -115,7 +121,7 @@ def run_year(key):
     os.makedirs(os.path.join(OUT, key), exist_ok=True)
     t0 = time.time()
     done = 0
-    for n in range(1, total + 1):
+    for n in range(FIRST_PAGE, total + 1):
         r = run_page(key, n)
         if r == "ok":
             done += 1
