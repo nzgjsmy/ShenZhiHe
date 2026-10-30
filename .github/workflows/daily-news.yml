@@ -41,6 +41,11 @@ jobs:
       - name: 抓取科研時事（只用標準庫，無第三方依賴）
         run: python scripts/fetch_news.py
 
+      # 翻譯端點會限流（2026-10-30 那批就整批落成英文、沒人發現）。
+      # 這裡再跑一次補翻：已經翻好的不會動，只有仍是英文的會被補上。
+      - name: 補翻未翻譯的英文條目
+        run: python scripts/fetch_news.py --retranslate
+
       - name: 檢查是否有新內容
         id: diff
         run: |
