@@ -370,99 +370,27 @@ main{max-width:1120px;margin:0 auto;padding:26px 20px 80px}
 .view{animation:fade var(--dur-slow) ease}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-/* ===== 分頁切換轉場：翻書頁（2026-10-30 從「上浮淡入」改為 3D 翻頁）=====
-   用戶反饋舊效果「頂欄和書籤的動畫很奇怪」，實測有三個疊加的問題：
-
-   ① 雙重動畫：.view 自己有 fade（opacity 0→1 + translateY 6px），而 route()
-      是在 startViewTransition 的回調裡同步執行的 —— 瀏覽器快照時 .view 的
-      動畫才剛到 0%，所以「新頁快照」本身就是半透明的，再疊一層 vt-in，
-      變成兩次淡入 + 中間一度發虛。修法見下方 @supports。
-   ② group 動畫沒關：只給 header/nav 關了 old/new，但真正做「位置/尺寸插值」
-      的是 ::view-transition-group。欄位高度一變，它們就被插值平移，看起來
-      像文字在抖。
-   ③ 把它們獨立成獨立快照後「紙在翻、頁頭不動」—— 翻書翻的是整張紙，
-      頁頭釘在原地反而露餡。
-
-   所以現在的做法：整頁當一張紙翻。舊頁繞左緣（書脊）向後掀開，新頁就
-   靜靜躺在下面，掀到哪露出哪 —— 這才是翻書的物理。 */
-
-/* 書脊位置：紙張左緣，而不是視口左緣。
-   .sheet 是 max-width:1180 居中，1440 寬的螢幕上左緣在 130px；
-   若軸取視口 left（0px），紙會繞著螢幕外的一點轉，看起來「軸偏了」。 */
-html{
-  --vt-angle:90deg;
-  --vt-dur:.46s;
-  --vt-hinge:max(0px, calc((100vw - 1180px) / 2));
-}
-html[data-anim="simple"]{--vt-angle:0deg;--vt-dur:.26s}
-@media (max-width:860px){html{--vt-angle:78deg;--vt-dur:.44s}}
-
-/* ⚠️ 透視必須掛在 old/new 的「直接父級」上，也就是 image-pair。
-   掛在 ::view-transition 上完全沒用 —— CSS 的 perspective 只作用於直接子元素，
-   而 old/new 是它的孫輩（中間隔了 group 與 image-pair）。
-   更糟的是 UA 樣式給 image-pair 設了 isolation:isolate，它會把
-   transform-style:preserve-3d 強制降級成 flat。
-   結果就是：rotateY 退化成「水平壓縮」、translateZ 完全失效，
-   看起來像圖層被壓窄，一點也不像紙。 */
-::view-transition{perspective:980px}
-::view-transition-image-pair(root){
-  perspective:980px;
-  /* 透視原點往書脊方向挪：軸在 130px，若原點留在正中央（50%），
-     整張紙會以「畫面中心」為消失點變形，左緣反而被拉大翹出視口。 */
-  perspective-origin:34% 47%;
-}
-
-/* ============================================================
-   絲滑的關鍵：整段動畫只碰 transform 與 opacity。
-
-   前幾版為了「擬真」加了 filter:brightness() 和 inset box-shadow，
-   結果反而不絲滑 —— 這兩者都要在合成後重新處理整張 1440×900 的位圖，
-   每幀多一次全畫面重算，觀感就是「黏」。蘋果的轉場之所以順，
-   正是因為它幾乎只用 transform / opacity，剩下全交給 GPU 合成。
-
-   所以現在的取捨：
-   · 3D 形狀留著（rotateY 繞書脊）—— 這是「紙」的來源；
-   · 立體感靠透視梯形，不靠明暗濾鏡；
-   · 紙邊高光用 border-right（靜態繪製一次，之後跟着合成層走），
-     不用 box-shadow（要重新光柵化）；
-   · 輕微 opacity 變化代替 brightness（opacity 是純合成屬性，幾乎零成本）。
-   ============================================================ */
-::view-transition-old(root){
-  z-index:2;                          /* 上層：掀開的那一頁 */
-  transform-origin:var(--vt-hinge) center;
-  backface-visibility:hidden;
-  will-change:transform,opacity;
-  border-right:2px solid rgba(255,255,255,.55);
-  animation:pageTurn var(--vt-dur) cubic-bezier(.32,.72,0,1) both;
-}
-::view-transition-new(root){
-  z-index:1;                          /* 下層：靜止的下一頁 */
-  animation:none;
-}
-
-/* 緩動用 iOS 的 cubic-bezier(.32,.72,0,1)：起步果斷、長尾緩收。
-   它沒有回彈，但在「長距離位移」上特別順，蘋果系統的頁面推入就是這條。
-   （前一版用 cubic-bezier(.34,0,.22,1)，中段偏「頓」，觀感生硬。） */
-
-@keyframes pageTurn{
-  0%  {transform:rotateY(0deg);            opacity:1}
-  70% {                                    opacity:.96}
-  100%{transform:rotateY(var(--vt-angle)); opacity:0}
-}
-
-::view-transition-group(root){animation:none}
-
-/* 頁頭與書籤回歸紙面，跟著紙一起翻。
-   （原本給它們獨立 view-transition-name 是為了避免淡入淡出時文字重影；
-     翻頁方案下舊頁是「掀走」而不是「疊在正面」，不會有重影問題。） */
-header,nav#nav{view-transition-name:none}
-
-/* 有 View Transitions 時，.view 的 fade 必須關掉 —— 否則新頁快照拍到的
-   是它動畫的第 0 幀（近乎透明），翻出來的頁會發虛。 */
-@supports (view-transition-name:none){
-  .view{animation:none}
-}
-
+/* ===== 分頁切換轉場（View Transitions API，2026-10-29）=====
+   用瀏覽器原生轉場：舊頁淡出上移 + 新頁淡入升起，手感接近 iOS 的層級切換。
+   不用自己保留舊 DOM，瀏覽器會自動快照，所以 route() 完全不用改。
+   不支援的瀏覽器（舊 iOS/Firefox）由 JS 判斷後直接跳轉，無動畫也不報錯。
+   simple 檔用變數把位移/縮放歸零，只留淡入淡出；off 檔由 JS 直接不走轉場。 */
+html{--vt-y:26px;--vt-scale:.955}
+html[data-anim="simple"]{--vt-y:0px;--vt-scale:1}
+::view-transition-old(root){animation:vt-out calc(.32s * var(--anim-k)) var(--ease-ios) both}
+::view-transition-new(root){animation:vt-in calc(.32s * var(--anim-k)) var(--ease-ios) both}
+/* group 是瀏覽器內建的容器動畫，默認 250ms；不把它拉齊到 320ms，
+   320ms 的進出場會被提前截斷（實測組動畫 0.25s）。 */
+::view-transition-group(root){animation-duration:calc(.32s * var(--anim-k));animation-timing-function:var(--ease-ios)}
+/* 頂欄與底部 Tab Bar 固定不動（iOS 的做法：導航常駐，只有內容區轉場）。
+   給它們獨立的 view-transition-name 就會從 root 快照裡「挖掉」單獨處理，
+   否則會跟著內容一起淡入淡出，實測中間幀導航文字會疊成兩層重影。 */
+header{view-transition-name:appheader}
+nav#nav{view-transition-name:apptabbar}
+::view-transition-old(appheader),::view-transition-new(appheader),
+::view-transition-old(apptabbar),::view-transition-new(apptabbar){animation:none}
+@keyframes vt-out{to{opacity:0;transform:translateY(calc(var(--vt-y) * -1)) scale(var(--vt-scale))}}
+@keyframes vt-in{from{opacity:0;transform:translateY(var(--vt-y)) scale(var(--vt-scale))}}
 /* ---------- home ---------- */
 .hero{background:linear-gradient(135deg,#0f766e 0%,#115e59 60%,#134e4a 100%);color:#fff;border-radius:22px;padding:38px 34px;box-shadow:var(--shadow);position:relative;overflow:hidden}
 .hero:after{content:"⚗️";position:absolute;right:26px;bottom:-14px;font-size:120px;opacity:.16;transform:rotate(-12deg)}
@@ -2465,6 +2393,35 @@ html[data-theme="dark"] .hn-news-item{
   .hn-news-t{font-size:15px}
   .hn-news-x{font-size:12.5px;line-height:1.8;-webkit-line-clamp:4}
 }
+/* ===== LQ 參考答案（題解）=====
+   題解是幾百字的 Markdown，用 mdLite 渲染。這裡只管「讀起來舒服」：
+   行高放寬、引用塊做成提示條、最後加一條來源聲明。
+   ⚠️ 顏色一律走語意變數 —— 這批卡片在深色主題下曾經整片發白過。 */
+.lq-guide{font-size:13.5px;line-height:1.95;color:var(--text-soft)}
+.lq-guide p{margin:0 0 10px}
+.lq-guide p:last-child{margin-bottom:0}
+.lq-guide strong{color:var(--ink);font-weight:600}
+.lq-guide ul,.lq-guide ol{margin:7px 0 12px;padding-left:20px}
+.lq-guide li{margin:5px 0}
+.lq-guide li::marker{color:var(--accent)}
+.lq-guide blockquote{
+  margin:11px 0;padding:10px 13px;
+  border-left:3px solid var(--accent);
+  background:var(--accent-tint);
+  border-radius:0 5px 5px 0;
+  color:var(--text-soft);font-size:12.5px;line-height:1.8;
+}
+.lq-guide blockquote p{margin:0}
+.lq-guide table{margin:10px 0}
+.lq-guide code{padding:1px 5px;border-radius:4px;background:var(--paper-alt);font-size:12px}
+/* 來源聲明：明確寫「非官方」，不讓人誤以為是考評局文件 */
+.lq-guide-src{
+  margin-top:14px;padding-top:10px;
+  border-top:1px dashed var(--line);
+  font-size:11.5px;line-height:1.7;color:var(--muted);
+}
+.lq-guide-src strong{color:var(--muted);font-weight:600}
+
 </style>
 <script>
 /* iOS 舊版 Safari 的 vh 問題補償：真實可視高度寫進 CSS 變數 */
@@ -5214,8 +5171,10 @@ function ppSetTopic(k){ PP_TOPIC=k; viewPastPaper(); }
 
    數據來源：SUB._lq（由 data/bio/_lq.json 注入），與 SUB._pastpaper 互不相干。
 
-   目前狀態：題幹由 PaddleOCR-VL 從原卷還原，**評分指引尚未收錄**，
-   所以「評分指引」區塊顯示待整提示，不假裝有答案。 */
+   目前狀態：題幹由 PaddleOCR-VL 從原卷還原；參考答案放在 `guide` 欄位，
+   由本站依題目與 DSE 生物科評分慣例整理，**不是考評局的官方評分指引**。
+   所以按鈕文字用「參考答案」而不是「評分指引」，展開後底部另附來源聲明。
+   沒有 `guide` 的題目照舊顯示待整提示，不假裝有答案。 */
 let LQ_YEAR='', LQ_PART='';
 function lqAll(){
   const yrs=(SUB&&SUB._lq&&SUB._lq.years)||{}, out=[];
@@ -5254,13 +5213,16 @@ function lqCard(q){
     ${figs}
     <div class="lq-subs">${subs}</div>
     <div class="lq-tools">
-      <button class="lq-btn" onclick="lqToggle(this)"><span class="lq-btn-t">評分指引</span><span class="lq-btn-i">▾</span></button>
+      <button class="lq-btn" data-lbl="${q.guide?'參考答案':'評分指引'}" onclick="lqToggle(this)"><span class="lq-btn-t">${q.guide?'參考答案':'評分指引'}</span><span class="lq-btn-i">▾</span></button>
       <button class="lq-btn lq-note-btn" onclick="lqToggleNote(this)">✎ 寫筆記</button>
     </div>
     <div class="lq-panel">
       <div class="lq-panel-in">
-        <div class="lq-todo">此題的官方評分指引（Marking Scheme）尚未收錄。<br>
-          目前可先對照課本相應課題溫習；收錄後會顯示在這裡。</div>
+        ${q.guide
+          ? `<div class="lq-guide">${mdLite(q.guide)}</div>
+             ${q.guideSrc?`<div class="lq-guide-src">${mdLite(q.guideSrc)}</div>`:''}`
+          : `<div class="lq-todo">此題的官方評分指引（Marking Scheme）尚未收錄。<br>
+          目前可先對照課本相應課題溫習；收錄後會顯示在這裡。</div>`}
       </div>
     </div>
     <div class="lq-notebox" style="display:none">
@@ -5275,7 +5237,9 @@ function lqToggle(btn){
   const open=!box.classList.contains('open');
   box.classList.toggle('open',open);
   btn.classList.toggle('open',open);
-  btn.querySelector('.lq-btn-t').textContent=open?'收起':'評分指引';
+  // 按鈕文字不能寫死：有題解的題目叫「參考答案」，沒有的叫「評分指引」
+  const lbl=btn.dataset.lbl||'評分指引';
+  btn.querySelector('.lq-btn-t').textContent=open?'收起':lbl;
   btn.querySelector('.lq-btn-i').textContent=open?'▴':'▾';
 }
 function lqToggleNote(btn){
@@ -5329,6 +5293,7 @@ function viewLQ(){
   }).join('');
 
   const nRev=all.filter(q=>q.needsReview).length;
+  const nGuide=all.filter(q=>q.guide).length;
   app.innerHTML=`
   <div class="view">
     <div class="thead"><button class="back" onclick="go('#/home')">← 返回首頁</button>
@@ -5337,7 +5302,9 @@ function viewLQ(){
       共 ${years.length} 個年份 · <b>${all.length}</b> 道大題。
       長題目需自行書寫，與卷一選擇題<b>分開收錄</b>。
       ${nRev?`其中 <b>${nRev}</b> 道的子題或分值待人工核對（卡片上有「待核對」標記）。`:''}
-      評分指引尚未收錄。
+      ${nGuide
+        ? `參考答案已整理 <b>${nGuide}</b> 道（按鈕顯示「參考答案」），其餘 ${all.length-nGuide} 道仍待收錄。`
+        : '評分指引尚未收錄。'}
     </div>
     <div class="quick" style="margin:12px 0 6px">
       <button onclick="go('#/pastpaper')">📝 切到卷一 MC</button>
