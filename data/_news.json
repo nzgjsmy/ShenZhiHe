@@ -1,86 +1,92 @@
 {
- "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。本檔由 scripts/fetch_news.py 自動抓取泛科學 RSS 產生，可手動補充。",
- "items": [
-  {
-   "date": "2026-10-30",
-   "cat": "phys",
-   "t": "電動車電池更小，續航里程更長？科學家可能找到了方法",
-   "x": "科學家們開發出了一種新技術，可以讓電動車電池變得更小、更輕、更持久、更強大…",
-   "src": "ScienceDaily（譯）",
-   "url": "https://www.sciencedaily.com/releases/2026/10/261027063708.htm",
-   "orig": "Smaller EV batteries, longer range? Scientists may have found a way"
-  },
-  {
-   "date": "2026-10-30",
-   "cat": "phys",
-   "t": "新型3D熱隱形斗篷使物件從紅外線攝影機消失",
-   "x": "研究人員開發了一種突破性的 3D 隱形斗篷，可以隱藏紅外線攝影機發現的複雜物體，同時保護...",
-   "src": "ScienceDaily（譯）",
-   "url": "https://www.sciencedaily.com/releases/2026/10/261025073051.htm",
-   "orig": "New 3D thermal invisibility cloak makes objects disappear from infrared cameras"
-  },
-  {
-   "date": "2026-10-30",
-   "cat": "chem",
-   "t": "人工智慧揭示了一種隱藏的化學捷徑，可以將二氧化碳轉化為燃料",
-   "x": "科學家利用人工智慧發現了近 10,000 個將二氧化碳轉化為氣體的化學反應…",
-   "src": "ScienceDaily（譯）",
-   "url": "https://www.sciencedaily.com/releases/2026/10/261013015758.htm",
-   "orig": "AI reveals a hidden chemical shortcut that could turn CO2 into fuel"
-  },
-  {
-   "date": "2026-10-30",
-   "cat": "chem",
-   "t": "科學家發現了一個可以引發或破壞化學反應的隱藏因素",
-   "x": "研究人員發現了一個可以決定化學反應成功或失敗的隱藏因素，然後用它來促進…",
-   "src": "ScienceDaily（譯）",
-   "url": "https://www.sciencedaily.com/releases/2026/10/261008005244.htm",
-   "orig": "Scientists discover a hidden factor that can make or break chemical reactions"
-  },
-  {
-   "date": "2026-10-30",
-   "cat": "bio",
-   "t": "蜘蛛會做夢嗎？科學家剛剛發現了一個令人驚訝的線索",
-   "x": "科學家發現蜘蛛的睡眠方式可能與人類驚人地相似，具有不同的睡眠階段...",
-   "src": "ScienceDaily（譯）",
-   "url": "https://www.sciencedaily.com/releases/2026/10/261026225555.htm",
-   "orig": "Do spiders dream? Scientists just found a surprising clue"
-  },
-  {
-   "date": "2026-10-30",
-   "cat": "bio",
-   "t": "中國科學家發現「D-rex」巨型真菌，其根系可追溯到6500萬年前",
-   "x": "科學家在中國發現了一種巨大的新真菌，它可以長到 20 英寸高，重近 5 磅，使其成為...",
-   "src": "ScienceDaily（譯）",
-   "url": "https://www.sciencedaily.com/releases/2026/10/261025073034.htm",
-   "orig": "Chinese scientists discover “D-rex,” a giant fungus with roots stretching back 65 million years"
-  },
-  {
-   "date": "2026-10-29",
-   "cat": "phys",
-   "t": "愛因斯坦方程式可以解釋沒有暗能量的宇宙",
-   "x": "數學家發現了他們認為宇宙標準模型中的一個根本缺陷，這可能會挑戰對暗能量的需求。他們的計算表明，用於描述宇宙膨脹的數學框架本質上是不穩定的，並且宇宙可能",
-   "src": "ScienceDaily（譯）",
-   "url": "https://www.sciencedaily.com/releases/2026/10/261028232719.htm",
-   "orig": "Einstein's equations may explain the universe without dark e"
-  },
-  {
-   "date": "2026-10-29",
-   "cat": "chem",
-   "t": "晶體中的微小缺陷揭示了巨大的量子驚喜",
-   "x": "研究人員解決了一個長期存在的挑戰，即了解鑽石和碳化矽等材料中的微小缺陷在光照下如何表現。他們的新計算方法揭示了碳化矽中令人驚訝的重要能量損失機制，科學家之前已經發現了這個機制",
-   "src": "ScienceDaily（譯）",
-   "url": "https://www.sciencedaily.com/releases/2026/10/261022081302.htm",
-   "orig": "A tiny defect in a crystal reveals a big quantum surprise"
-  },
-  {
-   "date": "2026-10-29",
-   "cat": "bio",
-   "t": "科學家發現有毒火蠑螈的秘密發光",
-   "x": "研究人員在歐洲常見的黑黃火蠑螈中發現了一種令人驚訝的隱藏能力：它們在紫外線下發出綠色和青色的光。這種神秘的螢光主要來自於它們皮膚的腺體和有毒的分泌物，可以持續發光24小時以上",
-   "src": "ScienceDaily（譯）",
-   "url": "https://www.sciencedaily.com/releases/2026/10/261027063707.htm",
-   "orig": "Scientists discover a secret glow in toxic fire salamanders"
-  }
- ]
+  "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。本檔由 scripts/fetch_news.py 自動抓取泛科學 RSS 產生，可手動補充。",
+  "items": [
+    {
+      "date": "2026-10-31",
+      "cat": "phys",
+      "t": "科學家剛剛打破了物理學教科書的規則",
+      "x": "科學家們透過產生比傳統理論預測的能量高得多的 X 射線來挑戰雷射物理學的長期規則。這項令人驚訝的發現揭示了兩個電子如何協同工作可以克服先前公認的極限，為量子研究開闢新的可能性。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261027063713.htm",
+      "orig": "Scientists just broke a textbook rule of physics",
+      "origX": "Scientists have defied a long-standing rule of laser physics by generating X-rays with much higher energies than conventional theory predicts. The surprising discovery reveals how two electrons working together can overcome a previously accepted limit, opening new possibilities for quantum research."
+    },
+    {
+      "date": "2026-10-31",
+      "cat": "phys",
+      "t": "微小的雷射光束可以使電腦記憶體速度提高 1000 倍",
+      "x": "加州大學聖地牙哥分校的科學家們開發了一種令人驚訝的新方法，使用光而不是磁鐵來儲存數位訊息，這可能為更小、更快、更節能的儲存設備鋪平道路。透過精確地塑造和縮小超快雷射光束，研究人員證明他們可以切換材料中的磁性狀態，這是用於寫入數位資料的基本流程。時間",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261025073046.htm",
+      "orig": "A tiny laser beam could make computer memory 1,000 times faster",
+      "origX": "Scientists at UC San Diego have developed a surprising new way to store digital information using light instead of magnets, potentially paving the way for smaller, faster, and more energy-efficient memory devices. By precisely shaping and shrinking an ultrafast laser beam, researchers demonstrated that they could switch magnetic states in a material, the basic process used to write digital data. The technique could potentially operate more than 1,000 times faster than conventional magnetic switching methods."
+    },
+    {
+      "date": "2026-10-31",
+      "cat": "chem",
+      "t": "革命性的新型顯微鏡可以揭示隱藏的生命機制",
+      "x": "研究人員開發了一種革命性的顯微鏡，它使用極其強大的激光，使以前看不見的細胞結構變得更容易看到。該技術極大地提高了影像清晰度，使科學家能夠檢查傳統電子顯微鏡難以捕捉的小蛋白質。它最終可能揭示微小的分子機器如何在細胞內相互作用，前提是",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261021231230.htm",
+      "orig": "A revolutionary new microscope could reveal the hidden machinery of life",
+      "origX": "Researchers have developed a revolutionary microscope that uses an incredibly powerful laser to make previously invisible cellular structures easier to see. The technology dramatically improves image clarity, allowing scientists to examine small proteins that conventional electron microscopes struggle to capture. It could eventually reveal how tiny molecular machines interact inside cells, providing an unprecedented look at the hidden workings of life."
+    },
+    {
+      "date": "2026-10-31",
+      "cat": "chem",
+      "t": "科學家可能找到了聚變能源的捷徑",
+      "x": "普林斯頓等離子體物理實驗室可能已經透過扭轉傳統方法找到了更有效的聚變能途徑：首先加熱等離子體，然後增加其密度。他們的計算可以幫助未來的反應器以少得多的能量實現自我維持聚變，同時避免導致點火更加困難的隱藏問題。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261008005242.htm",
+      "orig": "Scientists may have found a shortcut to fusion energy",
+      "origX": "Princeton Plasma Physics Laboratory may have found a dramatically more efficient route to fusion energy by reversing the traditional approach: heating plasma first, then increasing its density. Their calculations could help future reactors reach self-sustaining fusion with far less energy while avoiding hidden problems that make ignition harder."
+    },
+    {
+      "date": "2026-10-31",
+      "cat": "bio",
+      "t": "小行星殺死了恐龍。鱷魚為何能存活？",
+      "x": "科學家可能已經解開了一個 6600 萬年前的謎團：鱷魚如何在滅絕恐龍的小行星中倖存下來。對化石和古代氣候的全面分析表明，它們對溫暖環境的偏好使它們處於熱帶避難所，即使在災難性影響之後，這些避難所仍然適合居住。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261030002922.htm",
+      "orig": "The asteroid killed the dinosaurs. Why did crocodiles survive?",
+      "origX": "Scientists may have solved a 66-million-year-old mystery: how crocodiles survived the asteroid that wiped out the dinosaurs. A sweeping analysis of fossils and ancient climates suggests that their preference for warm environments placed them in tropical refuges that remained habitable even after the catastrophic impact."
+    },
+    {
+      "date": "2026-10-31",
+      "cat": "bio",
+      "t": "科學家發現神祕海馬，無人看過活生生的海馬",
+      "x": "科學家發現，三種看起來與海馬一模一樣的奇異深海魚實際上屬於一個獨立的進化群體，證明大自然不只一次創造了同樣不尋常的體型。這些難以捉摸的生物綽號“海布偶”，人們僅從七個標本中了解到這些生物，而且沒有人見過活著的生物。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261029072119.htm",
+      "orig": "Scientists discover mysterious seahorse lookalikes that no one has ever seen alive",
+      "origX": "Scientists have discovered that three bizarre deep-sea fish that look exactly like seahorses actually belong to a separate evolutionary group, proving that nature created the same unusual body shape more than once. Nicknamed \"sea muppets,\" these elusive creatures are known from just seven specimens, and no one has ever seen one alive."
+    },
+    {
+      "date": "2026-10-30",
+      "cat": "phys",
+      "t": "電動車電池更小，續航里程更長？科學家可能找到了方法",
+      "x": "科學家們開發出了一種新技術，可以讓電動車電池變得更小、更輕、更持久、更強大…",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261027063708.htm",
+      "orig": "Smaller EV batteries, longer range? Scientists may have found a way"
+    },
+    {
+      "date": "2026-10-30",
+      "cat": "chem",
+      "t": "人工智慧揭示了一種隱藏的化學捷徑，可以將二氧化碳轉化為燃料",
+      "x": "科學家利用人工智慧發現了近 10,000 個將二氧化碳轉化為氣體的化學反應…",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261013015758.htm",
+      "orig": "AI reveals a hidden chemical shortcut that could turn CO2 into fuel"
+    },
+    {
+      "date": "2026-10-30",
+      "cat": "bio",
+      "t": "蜘蛛會做夢嗎？科學家剛剛發現了一個令人驚訝的線索",
+      "x": "科學家發現蜘蛛的睡眠方式可能與人類驚人地相似，具有不同的睡眠階段...",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261026225555.htm",
+      "orig": "Do spiders dream? Scientists just found a surprising clue"
+    }
+  ]
 }
