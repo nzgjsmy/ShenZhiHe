@@ -4,7 +4,7 @@
 > 本文件**随 git 同步**：改完 commit & push，别人 `git pull` 就能看到。
 > 工作区里 `default-workspace/SHARED-MEMORY.md` 只是指向本文件的存根。
 > 改动前先读，改完必须追加记录。
-> 建立时间：2026-10-25 22:30 ｜ 最后更新：2026-11-01 17:15 ｜ 当前站点版本：**V0.25.13**
+> 建立时间：2026-10-25 22:30 ｜ 最后更新：2026-11-01 18:05 ｜ 当前站点版本：**V0.25.14**
 
 ---
 
@@ -266,6 +266,7 @@ grep -nE "color:#[0-9a-f]{6}" site/template.html | grep -v "^[0-9]*:  --"
 - 新增 CSS `.tf`（上下兩行 + 分數線，`currentColor` 自動適配深色）。
 - 驗證：7 個頁面遍歷 DOM 文本節點，`chem 4a/6/8`、`bio LQ`、`chem graph` 殘留 **0**；
   `phys energy2/elec3` 各 3 處**全是貨幣**（正確）。verify 12 項全綠。
+- **版本 V0.25.14，已部署**（source `dea6e76` / main `d172bcf`）。
 - 詳見 `docs/journal/2026-11-01-latex-render.md`。
 
 ### [2026-11-01 17:05] WorkBuddy · V0.25.13：卷二 LQ 原卷頁圖上線（120 張）
