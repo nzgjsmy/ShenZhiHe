@@ -489,6 +489,13 @@ pre.mdcodewrap[data-lang]::before{content:attr(data-lang);position:absolute;top:
 .md blockquote.mdquote{margin:10px 0;padding:2px 12px;border-left:3px solid var(--line);background:var(--paper-soft);border-radius:0 8px 8px 0}
 .md blockquote.mdquote table{margin:6px 0;background:var(--paper)}
 .md blockquote.mdquote th{background:var(--paper-alt)}
+/* 行內 LaTeX 轉出來的分式（\frac / \dfrac）：上下兩行 + 一條分數線。
+   vertical-align 用負值把整塊往下壓，讓分數線落在文字的中線上。 */
+.tf{display:inline-flex;flex-direction:column;vertical-align:-.45em;
+  text-align:center;font-size:.9em;line-height:1.2;margin:0 .2em}
+.tf-n{border-bottom:1px solid currentColor;padding:0 .22em}
+.tf-d{padding:0 .22em}
+.md sup,.md sub,.lq-q sup,.lq-q sub,.lq-stem sup,.lq-stem sub{font-size:.72em;line-height:0}
 /* 行內代碼 */
 .md code,.pipbody code{background:#f1efe8;border:1px solid var(--line);border-radius:4px;padding:0 4px;font-size:.94em;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 .tags{margin-top:8px}
@@ -2925,8 +2932,88 @@ function subify(html){
   });
   return out;
 }
+/* ---------- 行內 LaTeX → HTML ----------
+   站內原本沒有 LaTeX 渲染器：資料裡的 `$ 34^{\circ} $C`、`$ 5 \mu g L^{-1} $`
+   會原樣印出來（2026-11-01 用戶截圖反映）。全站只有 20 處公式（全在卷二 LQ），
+   命令集也很小 —— 引入 KaTeX 要多載約 300KB 字體，而本站是離線 PWA，
+   為 20 個公式付這個代價不划算。所以只覆蓋實際用到的子集：
+   \, \  \; \circ \mu \times \mathrm{~mm} 與 ^{} _{}
+   不認識的命令原樣保留（寧可少轉，也不要轉壞）。 */
+const TEX_SYM={
+  '\\circ':'°','\\degree':'°','\\mu':'μ','\\times':'×','\\div':'÷',
+  '\\pm':'±','\\cdot':'·','\\le':'≤','\\leq':'≤','\\ge':'≥','\\geq':'≥',
+  '\\ne':'≠','\\neq':'≠','\\approx':'≈','\\to':'→','\\rightarrow':'→',
+  '\\alpha':'α','\\beta':'β','\\gamma':'γ','\\delta':'δ','\\Delta':'Δ',
+  '\\theta':'θ','\\lambda':'λ','\\pi':'π','\\sigma':'σ','\\rho':'ρ',
+  '\\omega':'ω','\\Omega':'Ω','\\%':'%','\\&':'&','\\#':'#'
+};
+/* 二元運算符：LaTeX 裡命令後的空白一律被吃掉，但運算符兩側本來就該留空，
+   所以這裡分兩類 —— \mu 後面吃空格（\mu g → μg），\times 後面留一個（\times 1 → × 1）。 */
+const TEX_OP={'\\times':1,'\\div':1,'\\pm':1,'\\cdot':1,'\\le':1,'\\leq':1,'\\ge':1,
+              '\\geq':1,'\\ne':1,'\\neq':1,'\\approx':1,'\\to':1,'\\rightarrow':1};
+/* mhchem 的 \ce{}：不追求完美化學排版，只做「元素後數字變下標、-> 變箭頭、+ 兩側留空」，
+   其餘原樣。實測這三條就能把 $\ce{CaCO3(s) + HNO3(aq)}$ 讀成人話。 */
+function chemify(x){
+  // esc() 已經把 > 轉成 &gt;，先還原，否則後面的箭頭規則全部匹配不到
+  return String(x).replace(/-&gt;/g,'->')
+    .replace(/->\s*\[([^\]]*)\]\s*\[([^\]]*)\]/g,'→<small>[$2]</small>')
+    .replace(/->/g,'→')
+    .replace(/\^(\d*[+-])/g,'<sup>$1</sup>')
+    .replace(/([A-Za-z)\]])(\d+)/g,'$1<sub>$2</sub>')
+    // 不再對 + 做空格化：資料裡的「 + 」本來就有空格，
+    // 強加反而會把電荷 16H+(aq) 拆成 16H + (aq)（實測踩過）。
+    .replace(/\s+/g,' ').trim();
+}
+function tex2html(s){
+  let t=String(s==null?'':s);
+  // ① 化學式（要在 \mathrm 之前，因為 \ce 內容常含 H2SO4 這種寫法）
+  t=t.replace(/\\ce\s*\{([^{}]*)\}/g,function(_,x){return chemify(x);});
+  // ② 正體字命令：去掉命令、留下內容
+  t=t.replace(/\\(?:mathrm|text|mathbf|mathit|textrm)\s*\{([^{}]*)\}/g,'$1');
+  // ③ 符號類的單字元命令（\% \& \#）—— 不是字母，希臘字母正則吃不到
+  t=t.replace(/\\([%&#])/g,function(m,ch){return TEX_SYM['\\'+ch]||m;});
+  // ④ 希臘字母與符號（必須早於 ^{} 處理，否則 ^{\circ} 抓不到）
+  t=t.replace(/\\([a-zA-Z]+)[ ]?/g,function(m,name){
+    const key='\\'+name;
+    if(TEX_SYM[key]===undefined) return m;
+    return TEX_SYM[key]+(TEX_OP[key]?' ':'');
+  });
+  // ⑤ 空白命令：\, \; \: \! 以及「反斜杠+空格」
+  t=t.replace(/\\[,;:!]/g,' ').replace(/\\ /g,' ');
+  // ⑥ 上標 / 下標（先大括號寫法，再單字元寫法）
+  //    ⚠️ 必須排在 \frac 之前：\frac{體積}{24\ dm^3 mol^{-1}} 的第二個參數裡有 ^{-1}，
+  //    不先把它的花括號消掉，frac 的 [^{}]* 會在 ^{-1} 的 { 處斷開，整條分式就不轉了。
+  t=t.replace(/\^\{([^{}]*)\}/g,'<sup>$1</sup>').replace(/\^([A-Za-z0-9])/g,'<sup>$1</sup>');
+  t=t.replace(/_\{([^{}]*)\}/g,'<sub>$1</sub>').replace(/_([A-Za-z0-9])/g,'<sub>$1</sub>');
+  // ⑦ 分式 \dfrac / \tfrac / \frac —— 排成上下兩行（CSS .tf），比斜杠好讀
+  t=t.replace(/\\[dt]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g,
+    '<span class="tf"><span class="tf-n">$1</span><span class="tf-d">$2</span></span>');
+  // ⑧ \left( \right) → 括號本身
+  t=t.replace(/\\left\s*([()\[\]|.])/g,'$1').replace(/\\right\s*([()\[\]|.])/g,'$1');
+  // ⑨ 函數名：\log \ln \exp …
+  t=t.replace(/\\(log|ln|exp|sin|cos|tan|max|min)\b/g,'$1');
+  t=t.replace(/~/g,' ').replace(/\s+/g,' ').trim();
+  return t;
+}
+/* $...$ 該不該當公式？
+   ⚠️ 站內有兩種 $：LaTeX 定界符，以及**美元**（物理電費題「電費 = $0.374」）。
+   判據：
+     · 內容含 LaTeX 特徵（\ ^ _） → 一定是公式
+     · 去掉空白後以數字開頭（$0.066、$ 12 W） → 當貨幣，原樣保留
+     · 其餘（$t = 0$、$ Cb/Cp $） → 公式 */
+function looksLikeTex(inner){
+  if(/[\\^_]/.test(inner)) return true;
+  return !/^\s*[\d$]/.test(inner);
+}
 function inline(s){
   var t=esc(s)
+    // $$...$$ 塊級公式：**必須排在單 $ 之前**。否則 `$$速率 = ...$$` 會被拆成
+    // 「$ + 內容 + $」，首尾各剩一個 $ 露在畫面上（化學筆記 7 條公式全是這樣漏掉的）。
+    .replace(/\$\$([^$\n]{1,300})\$\$/g,function(m,x){return tex2html(x);})
+    // $...$ 行內公式：限制單行、200 字內，避免兩個不相關的 $ 之間被整段吞掉
+    .replace(/\$([^$\n]{1,200})\$/g,function(m,x){
+      return looksLikeTex(x)?tex2html(x):m;
+    })
     .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
     .replace(/`([^`]+)`/g,'<code>$1</code>')
     .replace(/\*([^*]+)\*/g,'<em>$1</em>');
@@ -4377,7 +4464,7 @@ function ptCard(p,t){
     const items=[...cross,...inner].map(x=>{
       const o=PMAP[x.to]; if(!o)return '';
       const same=o.t.id===t.id;
-      return `<span class="xl">🔗 <b>${same?'同課題':'跨課題 '+esc(o.t.title)}</b> · <span class="jump" onclick="jumpPoint('${o.p.id}')">${esc(o.s.title)} → ${esc(o.p.title)}</span>${x.label?'<br><span style="color:var(--muted);font-size:13px">'+esc(x.label)+'</span>':''}</span>`;
+      return `<span class="xl">🔗 <b>${same?'同課題':'跨課題 '+esc(o.t.title)}</b> · <span class="jump" onclick="jumpPoint('${o.p.id}')">${esc(o.s.title)} → ${inline(o.p.title)}</span>${x.label?'<br><span style="color:var(--muted);font-size:13px">'+esc(x.label)+'</span>':''}</span>`;
     }).join('');
     xl=`<div class="xlinks">${cross.length?'<div style="font-size:13px;color:var(--amber);margin-bottom:2px">這個知識點還與……相連</div>':''}${items}</div>`;
   }
@@ -4390,7 +4477,7 @@ function ptCard(p,t){
   if(st[1])mbadge=`<span class="badge ${mp>=85?'ok':mp>=30?'mid':''}" style="${mp>=85||mp>=30?'':'background:var(--code-bg);color:var(--muted)'}">${masteryLabel(m)} ${mp}%</span>`;
   const exLv=(p.exam&&p.exam.level)||0;
   return `<div class="pcard" id="pt-${p.id}" data-pid="${p.id}"${exLv?' data-exam="'+exLv+'"':''}>
-    <h4>${esc(p.title)}${p.page?'<span class="pg">📄 第 '+p.page+' 頁</span>':''}${st[1]?'<span class="pg">'+st[0]+'/'+st[1]+' 答對</span>':''}${mbadge}${due?'<span class="badge due">該複習了</span>':''}
+    <h4>${inline(p.title)}${p.page?'<span class="pg">📄 第 '+p.page+' 頁</span>':''}${st[1]?'<span class="pg">'+st[0]+'/'+st[1]+' 答對</span>':''}${mbadge}${due?'<span class="badge due">該複習了</span>':''}
       <button class="qbtn" onclick="startQuiz({mode:'point',id:'${p.id}'})">測驗</button></h4>
     <div class="md">${mdLite(p.body,(p.exam&&p.exam.years&&p.exam.years.length)?(p.exam.keywords||[]):null)}</div>
     ${(p.tags||[]).length?'<div class="tags">'+p.tags.map(g=>'<span class="tag">'+esc(g)+'</span>').join('')+'</div>':''}
@@ -4454,7 +4541,7 @@ function renderPip(){
   el.innerHTML=
     '<div class="piphead"><div class="pipgrip" title="按住可拖動，雙擊歸位">⋮⋮</div><div class="pipt">'
     +'<span class="pipk">'+esc(t.title)+' · '+esc(sec.title)+'</span>'
-    +'<b>'+esc(p.title)+'</b>'
+    +'<b>'+inline(p.title)+'</b>'
     +'<span class="pipp">'+(p.page?'📄 第 '+p.page+' 頁':'')+(st[1]?(p.page?' · ':'')+st[0]+'/'+st[1]+' 答對':'')+'</span>'
     +'</div><div class="pipbtns">'
     +'<button class="pipbtn" onclick="pipBack()">'+(PIP_HIST.length?'← 上一步':'✕ 關閉')+'</button>'
@@ -4662,7 +4749,7 @@ function topicPairs(){
 function lkPointBtn(pid){
   const o = PMAP[pid];
   if(!o) return esc(String(pid));
-  return '<button class="lk-go" onclick="go(\'#/'+SUB.id+'/t/'+o.t.id+'@'+o.p.id+'\')">'+esc(o.p.title)+'</button>';
+  return '<button class="lk-go" onclick="go(\'#/'+SUB.id+'/t/'+o.t.id+'@'+o.p.id+'\')">'+inline(o.p.title)+'</button>';
 }
 
 function lkItemHTML(l){
