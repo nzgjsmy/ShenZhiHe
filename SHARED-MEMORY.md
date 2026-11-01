@@ -267,6 +267,11 @@ grep -nE "color:#[0-9a-f]{6}" site/template.html | grep -v "^[0-9]*:  --"
 - ⚠️ `scratch/_lq_pages/` 是 gitignore 的（約 500MB），**別人 clone 後無法重跑腳本**，
   只能用已入庫的 `site/img/lq/`。
 - **版本号 V0.25.13**（用戶裁定；原本用戶說「0.25.1」，但該號已在「回退翻頁轉場 + LQ 首批答案」那次用過，確認後改為 0.25.13 續排）。
+- **已部署**：source `c46cca2`、main `578324e`。順帶補上 **25 張線上缺失的 PP 配圖**
+  （source 有 208 張、origin/main 只有 180 張，V0.25.1～V0.25.12 期間新增的圖一直沒推上線）。
+- ⚠️ **部署時 `git worktree` 的坑**：worktree 裡的 `.git` 是一個**文件**（指向主倉庫），
+  `robocopy /MIR /XD .git` 只排除同名**目錄**，會把這個文件和 `.github/` 一起鏡像刪掉。
+  正確做法是 `/XD .git .github` 或先排除再用 `git checkout -- .github` 補回。
 - 同批記錄：用戶報「提示詞增強 400 request illegal」，查日誌確認是**客戶端↔服務端接口不匹配**
   （`oneid/utoken` 404 共 30 次、多個 MCP 403/405），最早 10-29 就有，**本地改不了**。
 
