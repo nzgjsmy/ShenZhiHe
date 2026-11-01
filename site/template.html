@@ -1840,6 +1840,54 @@ html[data-theme="dark"] .dse-lq .go{color:#b19c78}
 }
 .lq-figs-note{display:block;opacity:.75;margin-top:2px}
 
+/* 原卷頁圖（2026-11-01）：預設收起，點開才載入 —— 110 題全帶圖，
+   不收起會讓 LQ 頁長到沒法讀；img 用 loading=lazy，展開時才真的抓檔 */
+.lq-figbar{
+  display:flex;align-items:center;gap:9px;width:100%;
+  font:inherit;font-size:12px;line-height:1.4;text-align:left;
+  color:var(--accent);background:var(--accent-soft);
+  border:1px solid var(--line);border-radius:2px;
+  padding:8px 11px;margin:0 0 12px;cursor:pointer;
+  transition:background calc(.2s * var(--anim-k)) var(--ease-ios),
+             border-color calc(.2s * var(--anim-k)) var(--ease-ios);
+}
+.lq-figbar:hover{background:var(--accent-tint);border-color:var(--accent)}
+.lq-figbar .lq-figbar-t{flex:1;min-width:0}
+.lq-figbar .lq-figbar-i{flex:0 0 auto;font-size:10px;opacity:.75;
+  transition:transform calc(.3s * var(--anim-k)) var(--ease-ios)}
+.lq-figbar.open .lq-figbar-i{transform:rotate(180deg)}
+/* 折疊照 §4.12 的規矩：grid-template-rows 0fr→1fr，不用 hidden */
+.lq-figbox{display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows calc(.36s * var(--anim-k)) var(--ease-ios)}
+.lq-figbox.open{grid-template-rows:1fr}
+.lq-figbox-in{overflow:hidden;min-height:0}
+.lq-figlist{display:flex;flex-direction:column;gap:12px;padding-bottom:14px}
+.lq-figlist figure{margin:0}
+.lq-figlist img{
+  width:100%;height:auto;display:block;cursor:zoom-in;
+  border:1px solid var(--line);border-radius:2px;background:#fff;
+}
+.lq-figlist figcaption{
+  font-size:11px;color:var(--muted);margin-top:5px;text-align:center;
+}
+/* 點圖放大：手機上原卷頁縮到 286px 根本看不清座標軸，必須能放大 */
+.lq-zoom{
+  position:fixed;inset:0;z-index:9999;background:rgba(12,12,12,.9);
+  display:flex;align-items:center;justify-content:center;padding:10px;
+  overflow:auto;cursor:zoom-out;
+  opacity:0;transition:opacity calc(.22s * var(--anim-k)) var(--ease-ios);
+}
+.lq-zoom.on{opacity:1}
+.lq-zoom img{display:block;background:#fff;box-shadow:0 10px 44px rgba(0,0,0,.55)}
+@media(max-width:860px){
+  /* 手機：撐滿寬、可上下滾動看整頁（比縮進一屏清楚得多） */
+  .lq-zoom{align-items:flex-start;padding:0}
+  .lq-zoom img{width:100%;height:auto}
+}
+@media(min-width:861px){
+  .lq-zoom img{max-width:100%;max-height:calc(100vh - 20px)}
+}
+
 .lq-subs{display:flex;flex-direction:column;gap:10px}
 .lq-sub{
   display:flex;align-items:flex-start;gap:8px;
@@ -5310,8 +5358,31 @@ function lqCard(q){
   if(q.ocr) flags.push('<span class="lq-flag" title="此題由 OCR 從原卷還原，文字可能仍有錯字，重要處請對照原卷">OCR</span>');
   if(q.needsReview) flags.push('<span class="lq-flag lq-flag-warn" title="子題或分值可能與原卷不符，待人工核對">待核對</span>');
   const stem=q.stem?`<div class="lq-stem md">${mdLite(q.stem)}</div>`:'';
-  const figs=(q.figRefs||[]).length
-    ? `<div class="lq-figs">本題涉及原卷附圖 ${q.figRefs.map(f=>'圖 '+esc(f)).join('、')}<span class="lq-figs-note">配圖裁切中，暫請對照原卷</span></div>`:'';
+  // 原卷頁圖：110 題現在全部帶圖（scripts/pastpaper/lq_figures.py 生成）。
+  // 圖是「整頁原卷」而不是單獨裁出的圖 —— 自動裁單圖在曲線圖／表格上會互誤判，
+  // 裁錯比沒圖更糟（學生會照着錯的圖作答），所以只裁掉頁邊空白，內容一字不動。
+  const figPages=(q.imgs||[]).map(s=>{const m=/p(\d+)\.webp$/.exec(s);return m?+m[1]:0;});
+  let figs='';
+  if(figPages.length){
+    const refs=(q.figRefs||[]).length?'（本題涉及 圖 '+q.figRefs.map(f=>esc(f)).join('、')+'）':'';
+    figs=`<button class="lq-figbar" onclick="lqToggleFig(this)">
+        <span class="lq-figbar-i">▾</span>
+        <span class="lq-figbar-t">📄 對照原卷 · 第 ${figPages.join('、')} 頁${refs}</span>
+      </button>
+      <div class="lq-figbox"><div class="lq-figbox-in"><div class="lq-figlist">
+        ${q.imgs.map((src,i)=>`<figure>
+          <img loading="lazy" src="${esc(src)}" alt="${esc(q.year)} 原卷第 ${figPages[i]} 頁"
+               onclick="lqZoom(this)">
+          <figcaption>${esc(q.year)} 原卷 · 第 ${figPages[i]} 頁（點圖放大）</figcaption>
+        </figure>`).join('')}
+      </div></div></div>`;
+  }else if(q.imgMissing){
+    figs=`<div class="lq-figs">本題原卷頁圖缺失（原卷掃描件本身缺這幾頁，如 2014 丁部）
+      <span class="lq-figs-note">請對照紙本或學校提供的英文版原卷</span></div>`;
+  }else if((q.figRefs||[]).length){
+    figs=`<div class="lq-figs">本題涉及原卷附圖 ${q.figRefs.map(f=>'圖 '+esc(f)).join('、')}
+      <span class="lq-figs-note">此題原卷頁圖暫缺，請對照紙本</span></div>`;
+  }
   const nPrac=(q.subqs||[]).filter(s=>s.points&&s.points.length).length;
   return `<div class="lq-card" data-id="${esc(q.id)}">
     <div class="lq-head">
@@ -5376,6 +5447,32 @@ function lqToggle(btn){
   const lbl=btn.dataset.lbl||'評分指引';
   btn.querySelector('.lq-btn-t').textContent=open?'收起':lbl;
   btn.querySelector('.lq-btn-i').textContent=open?'▴':'▾';
+}
+function lqZoom(img){
+  const d=document.createElement('div');
+  d.className='lq-zoom';
+  const im=new Image();
+  im.src=img.currentSrc||img.src;
+  im.alt=img.alt||'原卷';
+  d.appendChild(im);
+  const close=()=>{ d.classList.remove('on'); setTimeout(()=>d.remove(),260); };
+  d.addEventListener('click',close);
+  document.addEventListener('keydown',function esc(e){
+    if(e.key==='Escape'){ close(); document.removeEventListener('keydown',esc); }
+  });
+  document.body.appendChild(d);
+  requestAnimationFrame(()=>d.classList.add('on'));
+}
+function lqToggleFig(btn){
+  const box=btn.nextElementSibling;            // .lq-figbox
+  const open=!box.classList.contains('open');
+  box.classList.toggle('open',open);
+  btn.classList.toggle('open',open);
+  // 展開時才讓圖片真的去抓檔（img 是 loading=lazy，收起時在 0fr 容器裡不會載入）
+  if(open){
+    const first=box.querySelector('img');
+    if(first&&!first.complete) first.loading='eager';
+  }
 }
 function lqToggleNote(btn){
   const card=btn.closest('.lq-card');
