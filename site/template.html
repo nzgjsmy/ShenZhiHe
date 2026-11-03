@@ -275,13 +275,16 @@ main{max-width:1120px;margin:0 auto;padding:26px 20px 80px}
 
   /* ---------- 導航 → 紙緣書籤 ---------- */
   /* 跟隨滾動：原本是 absolute + top:104px，頁面一往下滾書籤就留在原地看不見了。
-     改 fixed 貼住視口；right 用 calc 補償「紙張居中」——
-     紙張 max-width:1180，右緣距視口右 = 50vw - 590px，
-     再減去書籤要露出紙緣的 73px；窄視口用 max() 兜底，不會跑出畫面。
+     改 fixed 貼住視口，位置用 calc 補償「紙張居中」：
+       · 紙張 max-width:1180，視口夠寬時右緣距視口右 = (100vw - 1180)/2 = 50vw - 590
+       · 視口 < 1272 時紙張撐滿（body 左右各 46px padding），右緣距視口右固定 46px
+     所以紙緣距右 = max(50vw - 590px, 46px)，書籤寬 27px 要**左緣貼住紙緣**，
+     再減 27。先前多減了 46px 的 padding，書籤整片懸空在紙外一大截。
      ⚠️ .sheet 及其祖先都不能有 transform/filter/backdrop-filter，
         否則 fixed 會退化成相對該祖先定位（移動端頂欄踩過同一個坑）。 */
   nav#nav{
-    position:fixed;top:104px;right:max(12px,calc(50vw - 663px));
+    position:fixed;top:104px;
+    right:calc(max(50vw - 590px,46px) - 27px);
     flex-direction:column;flex-wrap:nowrap;
     gap:9px;margin:0;padding:0;width:27px;
     background:transparent;border:none;z-index:10;
