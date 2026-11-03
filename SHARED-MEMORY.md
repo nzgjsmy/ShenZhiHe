@@ -262,9 +262,13 @@ grep -nE "color:#[0-9a-f]{6}" site/template.html | grep -v "^[0-9]*:  --"
   q2／q6／q11 补不回 → 同题号去重（2013 由 9 道含两道 q3 变 8 道）。新增 `scratch/_chk_pageorder.py`。
 - **分值落在题干上被丢弃**：无小问的配对题／短文题（如 2014 q1「…(3分)」）此前显示「—」，现回填。
 - 空题干 7 道（题干直接印在原卷图里）补一句指引 `.lq-stem-empty`，避免以为页面坏了。
-- **识别会卡死**：PaddleOCR-VL 个别页 CPU 满载但 20–60 分钟不出结果，`ProcessPoolExecutor`
-  无法中断运行中的任务 → 新增 `scripts/pastpaper/lq_vl_wd.py`（`multiprocessing.Pool` + 停滞检测，
-  卡住就 terminate 重启，同页连续卡 2 次跳过并记进 `_skipped.json`）。
+- **识别卡死的根因找到了**：PaddleOCR-VL 在个别页上**不肯输出 EOS**，会一直生成下去
+  （CPU 满载 20–60 分钟不出结果，2018 p021、2022 p022 之后各踩一次）。
+  `PaddleOCRVL.predict()` **支持 `max_new_tokens` 和 `repetition_penalty`** —— 现在传
+  `max_new_tokens=1280, repetition_penalty=1.12`：正常页只需 500–800 token（130–230 秒），
+  1280 足够覆盖，异常页 4–5 分钟兜底截断。1.05 压不住重复输出，1.25 会把表格的 `|` 惩罚成空白。
+  另新增 `scripts/pastpaper/lq_vl_wd.py`：`multiprocessing.Pool` + 停滞检测（`ProcessPoolExecutor`
+  无法中断运行中的任务，只能整批等死），卡住就 terminate 重启，同页连续卡 2 次跳过并记进 `_skipped.json`。
 - 已部署 V0.25.22（source `34fd46f` / main `39623a4`），verify 12 项全绿，线上新图抽检全 200。
 - 详见 `docs/journal/2026-11-03-lq-paper1.md`。
 

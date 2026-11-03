@@ -77,7 +77,14 @@ def _do_page(task):
     src = os.path.join(PAGES, key, "p%03d.jpg" % n)
     t0 = time.time()
     try:
-        out = _pipe_for_worker().predict(src)
+        # max_new_tokens：个别页上模型不肯输出 EOS，会一直生成下去
+        # （实测 CPU 满载 20~60 分钟不出结果，2018 p021、2022 p022 之后都踩过）。
+        # 正常页只需 130~230 秒（约 500~800 token），所以 1280 足够覆盖正常页，
+        # 又能在 4~5 分钟内给异常页兜底（超了截断，宁可少内容也不让整批卡死）。
+        # repetition_penalty：1.05 压不住重复输出；1.25 会把表格的 `|` 惩罚掉变空白。
+        out = _pipe_for_worker().predict(
+            src, max_new_tokens=1280, repetition_penalty=1.12
+        )
     except Exception as e:  # 识别异常不应拖垮整批
         return (key, n, "err:%s" % e, 0, time.time() - t0)
     payload = None
