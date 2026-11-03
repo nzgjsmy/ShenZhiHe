@@ -1860,6 +1860,7 @@ html[data-theme="dark"] .dse-lq .tx span{color:#b19c78}
 .lq-flag-warn{background:var(--amber-soft);color:var(--amber);border-color:color-mix(in srgb,var(--amber) 35%,transparent)}
 
 .lq-stem{font-size:14px;line-height:1.75;color:var(--ink);margin-bottom:12px}
+.lq-stem-empty{color:var(--muted);font-style:italic}
 .lq-figs{
   font-size:11.5px;color:var(--muted);background:var(--accent-soft);
   border-left:3px solid var(--accent);padding:6px 10px;border-radius:2px;
@@ -5505,7 +5506,10 @@ function lqCard(q){
   const flags=[];
   if(q.ocr) flags.push('<span class="lq-flag" title="此題由 OCR 從原卷還原，文字可能仍有錯字，重要處請對照原卷">OCR</span>');
   if(q.needsReview) flags.push('<span class="lq-flag lq-flag-warn" title="子題或分值可能與原卷不符，待人工核對">待核對</span>');
-  const stem=q.stem?`<div class="lq-stem md">${mdLite(q.stem)}</div>`:'';
+  // 題幹空白不是解析丟了：這幾題的題幹直接印在原卷圖上（「對頁顯微照片…」），
+  // 空白會讓學生以為頁面壞了，補一句指引。
+  const stem=q.stem?`<div class="lq-stem md">${mdLite(q.stem)}</div>`
+    :((q.imgs||[]).length?`<div class="lq-stem md lq-stem-empty">本題題幹直接印在原卷圖上，請展開下方「對照原卷」查看。</div>`:'');
   // 原卷頁圖：110 題現在全部帶圖（scripts/pastpaper/lq_figures.py 生成）。
   // 圖是「整頁原卷」而不是單獨裁出的圖 —— 自動裁單圖在曲線圖／表格上會互誤判，
   // 裁錯比沒圖更糟（學生會照着錯的圖作答），所以只裁掉頁邊空白，內容一字不動。

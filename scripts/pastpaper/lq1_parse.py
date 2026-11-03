@@ -172,6 +172,10 @@ def parse(year, first, last):
                 cur_sub["q"] = (cur_sub["q"] + "\n" + body).strip() if cur_sub["q"] else body
             elif cur is not None:
                 cur["stem"].append(body)
+        # 分值落在「大題題幹」上（沒有小問的配對題／短文題，分值就印在題幹行末）：
+        # 先記下來，收尾時若整題沒有任何小題分值就回填成總分。
+        if mk is not None and cur_sub is None and cur is not None:
+            cur["stemMark"] = mk
         if mk is not None and cur_sub is not None and cur_sub.get("marks") is None:
             cur_sub["marks"] = mk
 
@@ -227,11 +231,43 @@ def parse(year, first, last):
         if cur is not None:
             add_text(t)
 
+    # 切掉甲部（MC）尾巴：甲部最後一頁的 34–36 題會被一起收進來，
+    # 之後乙部再從 1 重新編號。用「題號回落」當斷點，不必人工傳 --first
+    # （每年甲部佔幾頁不同：2012 到 p11、2014 之後到 p11 但仍要跨頁判斷）。
+    def _n(q):
+        s = str(q.get("qnum") or "")
+        return int(s) if s.isdigit() else None
+
+    cut = 0
+    for i in range(1, len(bigs)):
+        prev, cur = _n(bigs[i - 1]), _n(bigs[i])
+        if cur == 1 and prev and prev > 1:
+            cut = i
+            break
+    if cut:
+        print("    （自動切掉甲部殘留 %d 道，從乙部第 1 題起算）" % cut)
+        bigs = bigs[cut:]
+
+    # 同一題號出現兩次：頁圖重複造成的（2013 的 1B-3 被放了兩份），
+    # 保留第一次出現的那個，後面重複的丟掉 —— 否則前端會顯示兩道一樣的題。
+    seen, uniq = set(), []
+    for q in bigs:
+        if q["qnum"] in seen:
+            print("    （題號 %s 重複出現，已丟棄後者 p%s）" % (q["qnum"], q.get("page")))
+            continue
+        seen.add(q["qnum"])
+        uniq.append(q)
+    bigs = uniq
+
     # 收尾：算總分、去重、標記
     for q in bigs:
         q["stem"] = "\n".join(x for x in q["stem"] if x).strip()
         q["subs"] = [s for s in q["subs"] if (s.get("q") or "").strip()]
-        q["marksTotal"] = sum((s.get("marks") or 0) for s in q["subs"]) or None
+        total = sum((s.get("marks") or 0) for s in q["subs"])
+        if not total and q.get("stemMark"):
+            total = q["stemMark"]
+        q["marksTotal"] = total or None
+        q.pop("stemMark", None)
         q["part"] = "B"
         q["partName"] = "乙部"
     return bigs
