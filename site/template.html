@@ -274,11 +274,14 @@ main{max-width:1120px;margin:0 auto;padding:26px 20px 80px}
   footer{max-width:none;padding:16px 0 0;border-top:1px solid var(--line)}
 
   /* ---------- 導航 → 紙緣書籤 ---------- */
-  /* ⚠️ absolute 的包含块是 .sheet 的 **padding box**，不是 border box。
-     .sheet 有 padding-right:46px，所以 right:-27px 只会让书签停在纸内。
-     要让书签「露出纸缘」，得补偿 padding：right = -(46 + 27) = -73px。 */
+  /* 跟隨滾動：原本是 absolute + top:104px，頁面一往下滾書籤就留在原地看不見了。
+     改 fixed 貼住視口；right 用 calc 補償「紙張居中」——
+     紙張 max-width:1180，右緣距視口右 = 50vw - 590px，
+     再減去書籤要露出紙緣的 73px；窄視口用 max() 兜底，不會跑出畫面。
+     ⚠️ .sheet 及其祖先都不能有 transform/filter/backdrop-filter，
+        否則 fixed 會退化成相對該祖先定位（移動端頂欄踩過同一個坑）。 */
   nav#nav{
-    position:absolute;right:-73px;top:104px;
+    position:fixed;top:104px;right:max(12px,calc(50vw - 663px));
     flex-direction:column;flex-wrap:nowrap;
     gap:9px;margin:0;padding:0;width:27px;
     background:transparent;border:none;z-index:10;
@@ -431,6 +434,9 @@ html[data-theme="dark"] .quick button.on{background:var(--accent);color:#fff;bor
   font-family:"Long Cang","Noto Serif TC",serif}
 .back{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:5px 14px;cursor:pointer;font-size:14px}
 .back:hover{border-color:var(--accent);color:var(--accent)}
+/* 「看知識點」按鈕在浮窗打開時變「收起知識點」，用實心底標示狀態 */
+[data-pipbtn].on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+[data-pipbtn].on:hover{color:var(--on-accent);opacity:.92}
 .tmeta{color:var(--muted);font-size:13.5px;margin-bottom:18px}
 .tlayout{display:grid;grid-template-columns:220px 1fr;gap:24px;align-items:start}
 .rail{position:-webkit-sticky;position:sticky;top:70px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:12px 8px;max-height:78vh;max-height:78dvh;overflow:auto;-webkit-overflow-scrolling:touch}
@@ -4510,8 +4516,25 @@ function ptCard(p,t){
 let PIP_CUR='', PIP_HIST=[];
 function pipEl(){return document.getElementById('pip');}
 function pipQuizRunning(){return !!(QZ&&(location.hash||'').indexOf('/run')>=0);}
+/* 測驗頁那顆「📖 看知識點」按鈕要跟著浮窗開關改字 —— 不然使用者不知道
+   同一顆按鈕現在是「再點一次就收起」。 */
+function syncPipBtn(){
+  const b=document.querySelector('[data-pipbtn]');
+  if(!b) return;
+  const el=pipEl();
+  const on=!!(PIP_CUR && el && el.classList.contains('on'));
+  b.textContent = on ? '✕ 收起知識點' : '📖 看知識點';
+  b.classList.toggle('on', on);
+}
 function openPip(pid,keepHist){
   const o=PMAP[pid]; if(!o)return;
+  // 再點同一個知識點 → 關閉。用戶要求「按鈕能再點一次收起來」，
+  // 不用特地去找浮窗右上角的 ✕（手機上那個角不好點）。
+  // keepHist=true 是浮窗內部跳轉（例如「跨課題」連結），不能 toggle。
+  if(!keepHist && PIP_CUR===pid){
+    const el0=pipEl();
+    if(el0 && el0.classList.contains('on')){ closePip(); return; }
+  }
   if(!keepHist)PIP_HIST=[];
   if(PIP_CUR&&PIP_CUR!==pid)PIP_HIST.push(PIP_CUR);
   PIP_CUR=pid;
@@ -4522,6 +4545,7 @@ function openPip(pid,keepHist){
   bindPipDrag();
   const saved=loadPipPos();
   if(saved)placePip(saved.left,saved.top,false);
+  syncPipBtn();
 }
 function pipBack(){
   if(PIP_HIST.length){PIP_CUR=PIP_HIST.pop();renderPip();}
@@ -4529,6 +4553,7 @@ function pipBack(){
 }
 function closePip(){
   PIP_CUR='';PIP_HIST=[];
+  syncPipBtn();
   const el=pipEl();
   if(!el) return;
   // 先移除 .on 讓過渡播放（Safari 下用 visibility 過渡，元素不會瞬間消失）
@@ -5175,7 +5200,7 @@ function renderQ(){
     <div class="qfoot">
       <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="back" onclick="endQuiz()">結束測驗</button>
-      ${pid&&PMAP[pid]?`<button class="back" onclick="openPip('${pid}')">📖 看知識點</button>`:''}
+      ${pid&&PMAP[pid]?`<button class="back" data-pipbtn onclick="openPip('${pid}')">📖 看知識點</button>`:''}
       </div>
       <button class="nextbtn" id="nextbtn" style="display:none" onclick="QZ.i++;renderQ()">${QZ.i+1<total?'下一題 →':'看結果 🎉'}</button>
     </div>
