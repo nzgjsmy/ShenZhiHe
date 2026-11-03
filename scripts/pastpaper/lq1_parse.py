@@ -47,7 +47,70 @@ DROP_LABELS = {"footer", "header", "footnote", "number", "aside_text",
                "figure_title", "vision_footnote"}
 # 答題簿的印刷提示，不是題目內容（VLM 會把它當正文塊讀出來）
 NOISE = re.compile(r"(?:請\s*)?在此貼上電腦條碼|將不予評閱|寫於邊界以外|寫於遙界以外|"
-                   r"答案寫在預留的空位內|全部試題均須作答")
+                   r"[寫写]?[於于]\s*[邊边]界以外|答案寫在預留的空位內|全部試題均須作答")
+# 原卷的答題橫線被讀成 `—` / `____`，不是題目內容
+RULE_LINE = re.compile(r"^\s*[—–\-_＿]{2,}\s*$")
+# 幻覺碎片：VLM 把答題格附近的空白／手寫痕跡讀成短句，常以「，。」這種語法上不成立的組合收尾
+JUNK_TAIL = re.compile(r"^.{0,24}[，,]\s*[。.]?\s*$")
+
+
+def html_table_to_md(html):
+    """保留 VLM 的 <table> HTML，只做清理。
+
+    為什麼不轉 markdown 表格：原卷的表格大量用 colspan/rowspan（例如
+    「植物物種數目」橫跨兩欄），markdown 表格不支援合併單元格，轉過去會變成
+    表頭 3 欄、資料 4 欄的錯位表格（實測 2019 Q7 就是這樣）。
+    保留 HTML 由瀏覽器按原結構排版，前端 `mdLite` 認得 `<table>` 就原樣輸出。
+    """
+    html = re.sub(r"<img[^>]*/?>", "", html)      # 圖引用指向不存在的本機路徑
+    html = re.sub(r"\s+", " ", html)
+    return html.strip()
+
+
+def clean_text(t):
+    """清洗一段 VLM 文本：清理表格 HTML、去重複行、刪答題線與幻覺碎片。"""
+    if "<table" in t:
+        t = re.sub(r"<table[\s\S]*?</table>",
+                   lambda m: "\n" + html_table_to_md(m.group(0)) + "\n", t)
+    # VLM 把 LaTeX 的花括號多轉義了一層：`$ ^{{-1}} $` → 站內的 tex2html 只認單層
+    t = t.replace("{{", "{").replace("}}", "}")
+    lines, out = [l.rstrip() for l in t.split("\n")], []
+    for l in lines:
+        s = l.strip()
+        if not s:
+            out.append("")
+            continue
+        if RULE_LINE.match(s):          # 答題橫線
+            continue
+        # 只剩「的答案」「答案」的殘行：原本是「寫於邊界以外的答案，將不予評閱。」
+        # 被 NOISE 切掉前後半段後留下的尾巴
+        if re.fullmatch(r"[的之]?\s*答案[，,。.]?", s):
+            continue
+        if JUNK_TAIL.match(s) and len(s) <= 26:   # 「進田內外的笈安，。」這類幻覺碎片
+            continue
+        # 純漢字、無任何標點、8–24 字的獨立塊 —— VLM 把答題格附近的手寫痕跡／污漬
+        # 讀成「句子」（實測「福建一任官堂竹府下的另苑」）。正常的題目短句一定帶標點。
+        if re.fullmatch(r"[\u4e00-\u9fff]{8,24}", s):
+            continue
+        if NOISE.search(s):
+            s = NOISE.sub("", s).strip(" ，,。")
+            if not s or re.fullmatch(r"[的之]?\s*答案", s):
+                continue
+        # 去重：VLM 偶爾把同一句連輸出兩遍（2019 Q8 (b)(i) 整句重複），
+        # 比對時先剝掉 `(i) ` 這種小題前綴，否則看起來不相等而漏掉。
+        core = re.sub(r"^[（(]\s*[a-z0-9ivxIVX]+\s*[)）]\s*", "", s).strip()
+        dup = False
+        for o in out:
+            oc = re.sub(r"^[（(]\s*[a-z0-9ivxIVX]+\s*[)）]\s*", "", o).strip()
+            if core and core == oc:
+                dup = True
+                break
+        if dup:
+            continue
+        out.append(s)
+    # 壓掉多餘空行
+    txt = "\n".join(out)
+    return re.sub(r"\n{3,}", "\n\n", txt).strip()
 
 
 def page_json(year, n):
@@ -98,11 +161,9 @@ def parse(year, first, last):
 
     def add_text(t):
         nonlocal pending_mark
-        if NOISE.search(t):
-            # 整塊都是印刷提示就整塊丟；只有一部分是就切掉那一句
-            t = NOISE.sub("", t).strip()
-            if not t:
-                return
+        t = clean_text(t)
+        if not t:
+            return
         body, mk = split_marks(t)
         if mk is not None:
             pending_mark = mk

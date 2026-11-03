@@ -482,6 +482,8 @@ pre.mdcodewrap[data-lang]::before{content:attr(data-lang);position:absolute;top:
 .md table{border-collapse:collapse;margin:10px 0;font-size:14px;width:100%;background:var(--paper-soft)}
 .md th,.md td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
 .md th{background:var(--paper-alt);font-weight:700}
+/* 原卷表格（VLM 給的 HTML）第一列是 <td> 不是 <th>，補一樣的表頭樣式 */
+.md table tr:first-child td{background:var(--paper-alt);font-weight:700}
 .md tr:nth-child(even) td{background:var(--paper)}
 .md ul,.md ol{margin:8px 0;padding-left:24px}
 .md li{margin:4px 0}
@@ -3095,6 +3097,23 @@ function mdLite(src,keywords){
         continue;
       }
     }
+    // 原卷表格（VLM 直接給 HTML）：原樣輸出，不走 inline()。
+    // 走 inline() 會被 esc() 轉義成 &lt;table&gt;，整串標籤印在畫面上（2026-11-03 用戶截圖）。
+    // 保留 HTML 才能帶上 colspan/rowspan —— 轉 markdown 表格會變成表頭 3 欄、資料 4 欄的錯位。
+    if(/^\s*<table/i.test(line)){
+      let h='';
+      while(i<lines.length){
+        h+=lines[i];
+        const closed=/<\/table>/i.test(lines[i]);
+        i++;
+        if(closed)break;
+      }
+      // 表格內的 $...$ 還是要渲染（例：`mg g $ ^{-1} $`）
+      h=h.replace(/\$([^$\n]{1,160})\$/g,function(m,x){
+        return looksLikeTex(x)?tex2html(x):m;
+      });
+      html+=h; continue;
+    }
     if(/^```/.test(line)){
       let code='';
       const lang=line.slice(3).trim();
@@ -3141,7 +3160,7 @@ function mdLite(src,keywords){
       html+='<p style="color:var(--muted)">'+inline(inner)+'</p>';i++;continue;
     }
     let para=[];
-    while(i<lines.length&&lines[i].trim()&&!isTableRow(lines[i])&&!IMG_LINE_RE.test(lines[i])&&!/^```/.test(lines[i].trim())&&!/^\s*[-*]\s+/.test(lines[i])&&!/^\s*\d+[.)]\s+/.test(lines[i])&&!/^\s*#{1,4}\s+/.test(lines[i])&&!/^\s*>\s?/.test(lines[i])){para.push(lines[i]);i++;}
+    while(i<lines.length&&lines[i].trim()&&!isTableRow(lines[i])&&!IMG_LINE_RE.test(lines[i])&&!/^```/.test(lines[i].trim())&&!/^\s*<table/i.test(lines[i])&&!/^\s*[-*]\s+/.test(lines[i])&&!/^\s*\d+[.)]\s+/.test(lines[i])&&!/^\s*#{1,4}\s+/.test(lines[i])&&!/^\s*>\s?/.test(lines[i])){para.push(lines[i]);i++;}
     html+='<p>'+para.map(inline).join('<br>')+'</p>';
   }
   return keywords ? markKeywords(html,keywords) : html;
