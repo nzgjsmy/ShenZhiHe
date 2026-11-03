@@ -241,7 +241,10 @@ def parse(year, first, last):
     cut = 0
     for i in range(1, len(bigs)):
         prev, cur = _n(bigs[i - 1]), _n(bigs[i])
-        if cur == 1 and prev and prev > 1:
+        # 只有「甲部題號（34–36）》乙部第 1 題」才算斷點。
+        # ⚠️ 不能只判 cur==1 且 prev>1：乙部內部的表格行也會被讀成「1.」，
+        #    2021 就因此把 Q1–Q7 整段當成甲部殘留切掉了（prev=7）。
+        if cur == 1 and prev is not None and prev >= 20:
             cut = i
             break
     if cut:
