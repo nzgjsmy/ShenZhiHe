@@ -22,6 +22,41 @@ _ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__
 RAW_DIR = os.path.join(_ROOT, "scratch", "_p1_raw")
 DST = os.path.join(_ROOT, "data", "bio", "_lq_p1.json")
 
+# ── 人工修正表 ──────────────────────────────────────────────────────────
+# VLM 對「兩欄對照表」這種版式會整張讀成線性文字：欄標題黏在題幹末尾，
+# 右欄的 A/B/C/D 選項混進左欄的填空項裡（實測 2019 Q1）。
+# 按題目 id 打補丁，**重跑 parse 不會丟** —— 比直接手改 _lq_p1.json 安全，
+# 後者下次 parse→build 就被覆蓋了。
+#   patch: {小題號: {要覆蓋的欄位}}
+#   drop : 要刪掉的小題號（內容已併進別的小題）
+FIXES = {
+    "lq1_2019_q1": {
+        "patch": {
+            "a": {"q": "物理屏障和化學屏障是人體的第一道防線。由欄Ⅱ選擇屬於欄Ⅰ內兩種屏障的"
+                        "所有正確例子，然後將英文字母寫在所提供的空位內。\n"
+                        "<table><tr><td>欄 I</td><td>欄 II</td></tr>"
+                        "<tr><td>(i) 物理屏障 ____</td><td>A. 皮膚<br>B. 眼淚</td></tr>"
+                        "<tr><td>(ii) 化學屏障 ____</td><td>C. 抗體<br>D. 血凝塊<br>E. 胃液</td></tr>"
+                        "</table>"},
+        },
+        "drop": ["i", "ii"],   # 兩者本來就沒有獨立分值，已併進 (a) 的表格
+    },
+}
+
+
+def apply_fixes(qs):
+    for q in qs:
+        fx = FIXES.get(q["id"])
+        if not fx:
+            continue
+        for s in q.get("subqs") or []:
+            p = (fx.get("patch") or {}).get(s.get("no"))
+            if p:
+                s.update(p)
+        if fx.get("drop"):
+            q["subqs"] = [s for s in q["subqs"] if s.get("no") not in fx["drop"]]
+    return qs
+
 
 def convert(year, qs):
     out = []
@@ -68,7 +103,7 @@ def main():
             print("  跳过 %s：找不到 %s（先跑 lq1_parse.py）" % (y, raw))
             continue
         src = json.load(io.open(raw, encoding="utf-8"))
-        qs = convert(y, src.get("questions") or [])
+        qs = apply_fixes(convert(y, src.get("questions") or []))
         if not qs:
             print("  跳过 %s：解析结果为空" % y)
             continue
