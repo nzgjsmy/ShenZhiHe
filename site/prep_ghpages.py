@@ -369,9 +369,9 @@ def copy_note_images():
     #    只寫 [0-9]{4} 會漏掉 PP（練習卷）與 SP（樣本試卷）的全部配圖（39 張），
     #    這正是 V0.20.0～V0.24.0 期間線上 PP／SP 題目配圖全 404 的原因。
     refs_pp = sorted(set(re.findall(r"img/(pp/(?:[0-9]{4}|PP|SP)/[A-Za-z0-9_]+\.webp)", html)))
-    # 卷二 LQ 的原卷頁圖放在 img/lq/<年份>/p<NNN>.webp（2026-11-01 新增）。
+    # 長題目的原卷頁圖：img/lq/<年份>/（卷二）與 img/lq1/<年份>/（卷一乙部）。
     # 同樣是「payload JSON 裡的引用」，不寫這條線上會整批 404。
-    refs_lq = sorted(set(re.findall(r"img/(lq/(?:[0-9]{4}|PP|SP)/p[0-9]{3}\.webp)", html)))
+    refs_lq = sorted(set(re.findall(r"img/(lq1?/(?:[0-9]{4}|PP|SP)/p[0-9]{3}\.webp)", html)))
     all_refs = refs + refs_gen + refs_pp + refs_lq
     if not all_refs:
         print("  note: index.html 未引用任何 img/*.webp（圖片外置未啟用？）")

@@ -26,9 +26,13 @@ import numpy as np
 sys.stdout.reconfigure(encoding='utf-8')
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-LQ_JSON = os.path.join(ROOT, 'data', 'bio', '_lq.json')
-PAGES_DIR = os.path.join(ROOT, 'scratch', '_lq_pages')
-OUT_DIR = os.path.join(ROOT, 'site', 'img', 'lq')
+# 這三個路徑可以用環境變數覆蓋，讓同一支腳本同時服務卷二（預設）與卷一乙部：
+#   LQ_JSON=data/bio/_lq_p1.json LQ_PAGES_DIR=scratch/_pp_pages LQ_IMG_REL=img/lq1 \
+#       python scripts/pastpaper/lq_figures.py 2019
+LQ_JSON = os.environ.get('LQ_JSON') or os.path.join(ROOT, 'data', 'bio', '_lq.json')
+PAGES_DIR = os.environ.get('LQ_PAGES_DIR') or os.path.join(ROOT, 'scratch', '_lq_pages')
+IMG_REL = os.environ.get('LQ_IMG_REL') or 'img/lq'
+OUT_DIR = os.path.join(ROOT, 'site', *IMG_REL.split('/'))
 
 MAX_W = 1000        # 输出宽度上限
 WEBP_Q = 78
@@ -136,7 +140,7 @@ def build_year(year, dry=False):
         for p in range(start, end + 1):
             if p not in pgs:
                 continue
-            rel = 'img/lq/%s/p%03d.webp' % (year, p)
+            rel = '%s/%s/p%03d.webp' % (IMG_REL, year, p)
             if dry:
                 imgs.append(rel); continue
             w, h, kb = trim_page(pgs[p], os.path.join(ROOT, 'site', rel))

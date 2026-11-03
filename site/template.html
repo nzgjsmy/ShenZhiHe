@@ -5421,14 +5421,19 @@ function ppSetTopic(k){ PP_TOPIC=k; viewPastPaper(); }
    由本站依題目與 DSE 生物科評分慣例整理，**不是考評局的官方評分指引**。
    所以按鈕文字用「參考答案」而不是「評分指引」，展開後底部另附來源聲明。
    沒有 `guide` 的題目照舊顯示待整提示，不假裝有答案。 */
-let LQ_YEAR='', LQ_PART='';
-function lqAll(){
-  const yrs=(SUB&&SUB._lq&&SUB._lq.years)||{}, out=[];
+let LQ_YEAR='', LQ_PART='', LQ_PAPER=1;   // LQ_PAPER：1 = 卷一乙部，2 = 卷二（甲–丁部）
+/* 兩份長題目資料完全分開：SUB._lq_p1（卷一乙部）與 SUB._lq（卷二）。
+   不分開的話「N 道大題」這個數字會失真，題號體系也對不上（卷一 1–11、卷二 1–4）。 */
+function lqData(p){ const k=((p||LQ_PAPER)===1)?'_lq_p1':'_lq'; return (SUB&&SUB[k])||null; }
+function lqAll(p){
+  const yrs=(lqData(p)&&lqData(p).years)||{}, out=[];
   Object.keys(yrs).sort().forEach(y=>(yrs[y]||[]).forEach(q=>out.push(q)));
   return out;
 }
-function lqYearList(){ return Object.keys((SUB&&SUB._lq&&SUB._lq.years)||{}).sort(); }
-function lqPartName(p){
+function lqYearList(p){ return Object.keys((lqData(p)&&lqData(p).years)||{}).sort(); }
+function lqPartName(p,paper){
+  if(((paper===undefined?LQ_PAPER:paper))===1)
+    return ({B:'乙部 · 結構式題目'})[p]||p||'';
   return ({A:'甲部 · 人體生理學',B:'乙部 · 應用生態學',
            C:'丙部 · 微生物與人類',D:'丁部 · 生物工程'})[p]||p||'';
 }
@@ -5775,20 +5780,36 @@ function lqHint(btn){
 }
 function lqSetYear(y){ LQ_YEAR=y; viewLQ(); }
 function lqSetPart(p){ LQ_PART=(LQ_PART===p?'':p); viewLQ(); }
+/* 卷一／卷二切換：年份與分部篩選一律重置 —— 兩卷的年份範圍與分部都不一樣，
+   沿用舊篩選會出現「選了 2019 乙部卻在看卷二」這種空畫面。 */
+function lqSetPaper(p){ LQ_PAPER=p; LQ_YEAR=''; LQ_PART=''; viewLQ(); }
 function viewLQ(){
   navOn('pastpaper');
   if(needsContent())return;
   const all=lqAll();
+  const n1=lqAll(1).length, n2=lqAll(2).length;
+  const title=LQ_PAPER===1?'✍️ DSE 卷一 · 長題目（乙部）':'✍️ DSE 卷二 · 長題目';
+  /* 二層結構：頂層是真題頁的「長題目」，進來之後再分卷一／卷二。
+     兩份卷題號體系不同（卷一 1–11 每題 1–4 分；卷二 1–4 分甲乙丙丁每部 20 分），
+     所以切換時年份與分部篩選一律重置，避免出現「選了乙部卻在看卷二」這種錯亂。 */
+  const paperTabs=`<div class="ppchips" style="margin:12px 0 4px">
+      <button class="ppchip${LQ_PAPER===1?' on':''}" onclick="lqSetPaper(1)">📄 卷一 · 乙部 <span>${n1}</span></button>
+      <button class="ppchip${LQ_PAPER===2?' on':''}" onclick="lqSetPaper(2)">📚 卷二 · 甲–丁部 <span>${n2}</span></button>
+    </div>`;
+  const backBtn=`<button class="back" onclick="go('#/pastpaper')">← 返回真題</button>`;
   if(!all.length){
     app.innerHTML=`<div class="view">
-      <div class="thead"><button class="back" onclick="go('#/home')">← 返回首頁</button><h2>✍️ DSE 卷二 · 長題目</h2></div>
-      <div class="emptybox"><p>卷二的長題目還在整理中。</p>
+      <div class="thead">${backBtn}<h2>${title}</h2></div>
+      ${paperTabs}
+      <div class="emptybox">
+        <p>${LQ_PAPER===1?'卷一的長題目還在整理中（每年約 10–11 道，先做 2019 樣本）。':'卷二的長題目還在整理中。'}</p>
         <p>卷一選擇題已可正常使用：<button class="go" onclick="go('#/pastpaper')">去看卷一 MC</button></p></div>
     </div>`;
     return;
   }
   const years=lqYearList();
-  const parts=['A','B','C','D'];
+  // 分部從資料實際有的取，不寫死 A–D：卷一乙部只有 B，寫死會多出三個空 chip
+  const parts=[...new Set(all.map(q=>q.part).filter(Boolean))].sort();
   const pool=all.filter(q=>(!LQ_YEAR||String(q.year)===LQ_YEAR)&&(!LQ_PART||q.part===LQ_PART));
   const yrChips=years.map(y=>{
     const n=all.filter(q=>String(q.year)===y).length;
@@ -5812,13 +5833,17 @@ function viewLQ(){
 
   const nRev=all.filter(q=>q.needsReview).length;
   const nGuide=all.filter(q=>q.guide).length;
+  const lead=LQ_PAPER===1
+    ? `共 ${years.length} 個年份 · <b>${all.length}</b> 道大題（乙部結構式題目）。
+       卷一的長題目每題分數較小、小題較多，與卷二的四部制不同，故分開收錄。`
+    : `共 ${years.length} 個年份 · <b>${all.length}</b> 道大題。
+       長題目需自行書寫，與卷一選擇題<b>分開收錄</b>。`;
   app.innerHTML=`
   <div class="view">
-    <div class="thead"><button class="back" onclick="go('#/home')">← 返回首頁</button>
-      <h2>✍️ DSE 卷二 · 長題目</h2></div>
+    <div class="thead">${backBtn}<h2>${title}</h2></div>
+    ${paperTabs}
     <div class="tmeta">
-      共 ${years.length} 個年份 · <b>${all.length}</b> 道大題。
-      長題目需自行書寫，與卷一選擇題<b>分開收錄</b>。
+      ${lead}
       ${nRev?`其中 <b>${nRev}</b> 道的子題或分值待人工核對（卡片上有「待核對」標記）。`:''}
       ${nGuide
         ? (all.length-nGuide > 0
@@ -5826,14 +5851,11 @@ function viewLQ(){
           : `<b>全部 ${all.length} 道大題均已附上參考答案</b>（本站依題目與 DSE 生物科評分慣例整理，非官方評分指引）。`)
         : '評分指引尚未收錄。'}
     </div>
-    <div class="quick" style="margin:12px 0 6px">
-      <button onclick="go('#/pastpaper')">📝 切到卷一 MC</button>
-    </div>
     <div class="ppchips">
       <button class="ppchip${LQ_YEAR===''?' on':''}" onclick="lqSetYear('')">全部年份 <span>${all.length}</span></button>
       ${yrChips}
     </div>
-    <div class="ppchips" style="margin-top:6px">${partChips}</div>
+    ${parts.length>1?`<div class="ppchips" style="margin-top:6px">${partChips}</div>`:''}
     <div id="lq-body" style="margin-top:10px">${groups||'<div class="emptybox"><p>此篩選條件下沒有題目。</p></div>'}</div>
   </div>`;
   // 回填筆記
@@ -5911,6 +5933,7 @@ function viewPastPaper(){
     <div class="quick" style="margin:10px 0 4px">
       <button onclick="showPPView('bytopic')">🏷️ 按話題</button>
       <button onclick="showPPView('byyear')">📅 按年份</button>
+      <button onclick="go('#/lq')">📖 長題目</button>
     </div>
     <div id="pp-bytopic">${cards}</div>
     <div id="pp-byyear" style="display:none">${yearList}</div>

@@ -233,6 +233,22 @@ def load_subject(sid):
         else:
             print("  warning: %s/_lq.json 格式不是物件，已跳過" % sid)
 
+    # DSE 卷一乙部長題目（_lq_p1.json）：與卷二長題目同一個 schema，
+    # 只是 paper=1、每題分數較小、每年題數較多（約 10–11 道）。
+    # 分開存檔而不是塞進 _lq.json：兩者題號體系不同（卷一 1–11、卷二 1–4 分甲乙丙丁），
+    # 混在一起「N 道大題」這個數字會失真，前端也不好分層。
+    lq1 = None
+    lq1_path = os.path.join(sdir, "_lq_p1.json")
+    if os.path.exists(lq1_path):
+        d = load(lq1_path, None)
+        if isinstance(d, dict):
+            lq1 = d
+            n_lq1 = sum(len(v) for v in (d.get("years") or {}).values())
+            print("  note: %s 載入卷一長題 %d 個年份 · %d 道大題" % (
+                sid, len(d.get("years") or {}), n_lq1))
+        else:
+            print("  warning: %s/_lq_p1.json 格式不是物件，已跳過" % sid)
+
     # 每日小知識（_daily.json）：可選檔，沒有就不顯示。
     # 科目首頁獨立一格「今日小知識」，按日期輪換一條。
     daily = None
@@ -334,6 +350,7 @@ def load_subject(sid):
         "extras": extras,
         "_pastpaper": pastpaper,
         "_lq": lq,
+        "_lq_p1": lq1,
         "_daily": daily,
         "stats": {
             "topics": len(topics),

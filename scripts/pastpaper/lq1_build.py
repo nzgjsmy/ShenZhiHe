@@ -1,0 +1,92 @@
+# -*- coding: utf-8 -*-
+"""把卷一乙部的解析結果（scratch/_p1_raw/<year>.json）併進正式資料檔。
+
+用法
+----
+    python scripts/pastpaper/lq1_build.py 2019          # 併入某一年（覆蓋該年）
+    python scripts/pastpaper/lq1_build.py 2019 --dry    # 只看不寫
+
+設計
+----
+· **按年份覆蓋**：同一年重跑就整年替換，不會留下半新半舊的題目。
+· 新併入的題目一律 `needsReview: true` —— 這是 OCR 結構化結果，還沒人工核對過，
+  前端會顯示「待核對」標記，提醒使用者重要處要對照原卷。
+· `imgs` 由 `lq_figures.py` 事後補（它要讀 page 字段算頁範圍），這一步先留空。
+"""
+import io
+import json
+import os
+import sys
+
+_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+RAW_DIR = os.path.join(_ROOT, "scratch", "_p1_raw")
+DST = os.path.join(_ROOT, "data", "bio", "_lq_p1.json")
+
+
+def convert(year, qs):
+    out = []
+    for q in qs:
+        subs = []
+        for s in q.get("subs") or []:
+            subs.append({
+                "no": s.get("no"),
+                "level": s.get("level") or 1,
+                "q": s.get("q") or "",
+                "marks": s.get("marks"),
+            })
+        out.append({
+            "id": "lq1_%s_q%s" % (year, q["qnum"]),
+            "year": year,
+            "paper": 1,
+            "qnum": q["qnum"],
+            "part": "B",
+            "partName": "乙部",
+            "chapter": "",
+            "stem": q.get("stem") or "",
+            "imgs": [],
+            "figRefs": [],
+            "subqs": subs,
+            "marksTotal": q.get("marksTotal"),
+            "page": q.get("page"),
+            "needsReview": True,      # OCR 結構化，尚未人工核對
+            "hasFig": bool(q.get("hasFig")),
+        })
+    return out
+
+
+def main():
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    dry = "--dry" in sys.argv
+    if not args:
+        print("用法: python scripts/pastpaper/lq1_build.py 2019 [2018 ...]")
+        return
+    data = json.load(io.open(DST, encoding="utf-8"))
+    years = data.setdefault("years", {})
+    for y in args:
+        raw = os.path.join(RAW_DIR, "%s.json" % y)
+        if not os.path.exists(raw):
+            print("  跳过 %s：找不到 %s（先跑 lq1_parse.py）" % (y, raw))
+            continue
+        src = json.load(io.open(raw, encoding="utf-8"))
+        qs = convert(y, src.get("questions") or [])
+        if not qs:
+            print("  跳过 %s：解析结果为空" % y)
+            continue
+        years[y] = qs
+        tot = sum((q.get("marksTotal") or 0) for q in qs)
+        print("  %-5s 併入 %2d 道大題 · %3d 小題 · %s 分"
+              % (y, len(qs), sum(len(q["subqs"]) for q in qs), tot or "?"))
+    if dry:
+        print("  （--dry：未寫入）")
+        return
+    # 年份按字串排序，PP/SP 放最後
+    order = sorted(years.keys(), key=lambda k: (k in ("PP", "SP"), k))
+    data["years"] = {k: years[k] for k in order}
+    io.open(DST, "w", encoding="utf-8", newline="\n").write(
+        json.dumps(data, ensure_ascii=False, indent=1))
+    n = sum(len(v) for v in data["years"].values())
+    print("  → %s  共 %d 年 · %d 道大題" % (DST, len(data["years"]), n))
+
+
+if __name__ == "__main__":
+    main()
