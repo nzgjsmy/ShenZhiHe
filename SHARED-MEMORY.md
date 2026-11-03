@@ -256,6 +256,7 @@ grep -nE "color:#[0-9a-f]{6}" site/template.html | grep -v "^[0-9]*:  --"
   **解法：GitHub release 有 zip 免安裝版**（`ollama-windows-amd64.zip` 1.6GB +
   `ollama-windows-amd64-rocm.zip` 246MB 增量），解壓即用，完全繞過安裝程序。
   裝在 `D://ollama-app`，模型 `OLLAMA_MODELS=D://ollama-models`（不佔 C 盤）。
+  **最終只保留 `qwen3-vl:4b`**（3.2GB），其餘三個已 `ollama rm` 刪除（18GB → 3.2GB）。
 - **GPU 狀態**：ROCm 被驅動版本卡住（`AMD driver is too old`），但 Ollama 自動走 **Vulkan**，
   `offloaded 29/29 layers to GPU`、`CLIP using Vulkan0` —— 顯卡確實在工作。
 - **四模型實測（2019 p023，911 字 + 2 表格）**：

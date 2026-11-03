@@ -57,8 +57,11 @@ ollama-windows-amd64-rocm.zip   246MB   ROCm 增量包（解压到同一目录�
 
 ```
 D:\ollama-app\          3.1GB   主程序 + ROCm 7.1 库（85 个 dll）
-D:\ollama-models\        18GB   模型（OLLAMA_MODELS 指到这里，不占 C 盘）
+D:\ollama-models\       3.2GB   只保留 qwen3-vl:4b（OLLAMA_MODELS 指到这里，不占 C 盘）
 ```
+
+> 实测完四个模型后，用户决定只留 `qwen3-vl:4b`，其余三个已 `ollama rm` 删除
+> （模型目录 18GB → 3.2GB，释放 14.8GB）。想复现对比随时可重新 `ollama pull`。
 
 ## GPU 识别：ROCm 不可用，但 Vulkan 可以
 
