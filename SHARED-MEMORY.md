@@ -4,7 +4,7 @@
 > 本文件**随 git 同步**：改完 commit & push，别人 `git pull` 就能看到。
 > 工作区里 `default-workspace/SHARED-MEMORY.md` 只是指向本文件的存根。
 > 改动前先读，改完必须追加记录。
-> 建立时间：2026-10-25 22:30 ｜ 最后更新：2026-11-03 12:25 ｜ 当前站点版本：**V0.25.21**
+> 建立时间：2026-10-25 22:30 ｜ 最后更新：2026-11-03 16:40 ｜ 当前站点版本：**V0.25.21**
 
 ---
 
@@ -245,6 +245,45 @@ grep -nE "color:#[0-9a-f]{6}" site/template.html | grep -v "^[0-9]*:  --"
 > **多人协作时**：不要都往这一节追加（会 git 冲突）。
 > 每人/每个 AI 在 `docs/journal/<日期>-<名字>.md` 写自己的详细日志，
 > 只在这里留**一行摘要 + 文件名**。单人时可直接写在这里。
+
+### [2026-11-03 16:40] WorkBuddy · AMD 顯卡跑本地 OCR（Ollama + Qwen-VL）實測
+- 用戶想試「方案 B」。環境：RX 6600 XT 8GB / 20 核 / Win11。**結論：這次不換**，理由見下。
+- **安裝踩三個坑**：
+  ① winget 裝 Ollama 卡死（7.5 分鐘 0 字節）；
+  ② 官方 OllamaSetup.exe（Inno Setup 6.7.1）在 `cuda_v12\msvcp140.dll` 報 `MoveFile code 5`
+     —— 該 dll 被系統大量進程加載，非管理員無法加 Defender 排除，直接回滾；
+  ③ `innoextract 1.9` 只支持到 Inno 6.0.5，解不開。
+  **解法：GitHub release 有 zip 免安裝版**（`ollama-windows-amd64.zip` 1.6GB +
+  `ollama-windows-amd64-rocm.zip` 246MB 增量），解壓即用，完全繞過安裝程序。
+  裝在 `D://ollama-app`，模型 `OLLAMA_MODELS=D://ollama-models`（不佔 C 盤）。
+- **GPU 狀態**：ROCm 被驅動版本卡住（`AMD driver is too old`），但 Ollama 自動走 **Vulkan**，
+  `offloaded 29/29 layers to GPU`、`CLIP using Vulkan0` —— 顯卡確實在工作。
+- **四模型實測（2019 p023，911 字 + 2 表格）**：
+  | 模型 | 耗時 | 表格 | 分值 | 幻覺 |
+  |---|---|---|---|---|
+  | PaddleOCR-VL（CPU 基準） | ~300s | HTML+rowspan | ✓ | 無 |
+  | qwen3-vl:8b | 329s | 6 行全對 | ✓ | 無 |
+  | **qwen3-vl:4b** | **139s** | 6 行全對 | ✓ | 無 |
+  | qwen2.5vl:7b | 127s | 缺 1 行 | ✓ | 輕微 |
+  | qwen2.5vl:3b | 59s | 行錯位 | ✗ | **嚴重** |
+- **qwen2.5vl:3b 會編造答案提示**（原卷是空白答題格，它寫出「使用量子計算模型進行仿真研究」），
+  比漏字危險得多。3B 以下不可用於正式數據。
+- **五個參數坑**（已寫進測試腳本註釋）：
+  ① `repeat_penalty=1.25` 會讓模型輸出空白（表格的 `|` 被懲罰掉）→ 用 **1.05**；
+  ② **Qwen3-VL 的 thinking 關不掉**（`think:false` 無效，響應仍有 944 字 thinking），
+     `num_predict` 必須 **8192**，2048 會被思考吃光導致答案全空；
+  ③ **整頁 1700×2200 一次送會讓 Vulkan 崩潰**（`device lost`，HTTP 500）→ 必須切 3 段；
+  ④ 切片 overlap 80px 會造成段間重複（`(i)` 輸出兩遍）→ 加 `strip_overlap()`；
+  ⑤ 分辨率不能縮，1400 寬會漏表格行和分值 → 保持原卷 1700。
+- **不換的四個理由**：
+  ① 4B 只比 CPU 版快 1.2–2 倍，不是數量級；
+  ② 8GB 顯存卡住模型規模，8B 要部分 CPU offload，速度和 CPU 版一樣；
+  ③ **輸出沒有結構信息**（無 block_label、無座標），現有 `lq1_parse.py` 全靠 `block_label`
+     過濾 aside_text/footer/圖內標註，換模型等於重寫解析層；
+  ④ PaddleOCR-VL 已在跑，剩 9 份卷 4 小時完成，中途換不划算。
+- **什麼時候值得用**：化學／物理卷二（300+ 頁）時，可用 qwen3-vl:4b 初篩（快 2 倍）+
+  PaddleOCR-VL 精修。真正提速只有換 N 卡或租雲 GPU。
+- 詳見 `docs/journal/2026-11-03-amd-ollama-ocr.md`。
 
 ### [2026-11-03 12:42] WorkBuddy · V0.25.21：卷一乙部新增 2013 + VLM 併發實測
 - **2013 上線**（9 道大題 · 24 小題 · 58 分 · 15 張圖）。p021／p023 兩頁識別逾時未完成，
