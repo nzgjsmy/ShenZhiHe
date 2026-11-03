@@ -2,6 +2,66 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。本檔由 scripts/fetch_news.py 自動抓取泛科學 RSS 產生，可手動補充。",
   "items": [
     {
+      "date": "2026-11-03",
+      "cat": "phys",
+      "t": "IceCube偵測到的幽靈粒子能量是太陽中微子的100億倍",
+      "x": "被稱為中微子的神秘粒子不斷地流經我們的身體，科學家現在正在使用埋在南極冰層中的大型天文台來探測來自遙遠宇宙源的極其強大的中微子。這些難以捉摸的「幽靈粒子」可能蘊藏著有關大爆炸、極端宇宙事件以及宇宙中一些最大奧秘的非凡線索。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261101010533.htm",
+      "orig": "IceCube detects ghost particles with 10 billion times the energy of solar neutrinos",
+      "origX": "Mysterious particles called neutrinos constantly stream through our bodies, and scientists are now detecting incredibly powerful versions arriving from distant cosmic sources using a massive observatory buried in Antarctic ice. These elusive “ghost particles” could hold extraordinary clues about the Big Bang, extreme cosmic events, and some of the universe’s greatest mysteries."
+    },
+    {
+      "date": "2026-11-03",
+      "cat": "phys",
+      "t": "科學家發現金屬可以抵抗 -424°F 的深度冷凍",
+      "x": "科學家發現了一種令人驚訝的機制，可以使某些金屬在低至 -253°C (-424°F) 的溫度下抵抗開裂，而此時類似的材料通常會變得非常脆弱。兩種實驗合金沒有斷裂，而是重新組織了內部結構，創造了吸收壓力和保持靈活性的新方法。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261029072127.htm",
+      "orig": "Scientists discover metals that defy the deep freeze at -424°F",
+      "origX": "Scientists have discovered a surprising mechanism that allows certain metals to resist cracking at temperatures as low as -253°C (-424°F), when similar materials typically become dangerously brittle. Instead of breaking, two experimental alloys reorganize their internal structures, creating new ways to absorb stress and remain flexible."
+    },
+    {
+      "date": "2026-11-03",
+      "cat": "chem",
+      "t": "革命性的新型顯微鏡可以揭示隱藏的生命機制",
+      "x": "研究人員開發了一種革命性的顯微鏡，它使用極其強大的激光，使以前看不見的細胞結構變得更容易看到。該技術極大地提高了影像清晰度，使科學家能夠檢查傳統電子顯微鏡難以捕捉的小蛋白質。它最終可能揭示微小的分子機器如何在細胞內相互作用，前提是",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261021231230.htm",
+      "orig": "A revolutionary new microscope could reveal the hidden machinery of life",
+      "origX": "Researchers have developed a revolutionary microscope that uses an incredibly powerful laser to make previously invisible cellular structures easier to see. The technology dramatically improves image clarity, allowing scientists to examine small proteins that conventional electron microscopes struggle to capture. It could eventually reveal how tiny molecular machines interact inside cells, providing an unprecedented look at the hidden workings of life."
+    },
+    {
+      "date": "2026-11-03",
+      "cat": "chem",
+      "t": "科學家發現了一個可以引發或破壞化學反應的隱藏因素",
+      "x": "研究人員發現了一個可以決定化學反應成功或失敗的隱藏因素，然後利用它將所需產物的比例從 16% 提高到 97%。透過控制電極附近的酸度，他們開發了一種很有前途的方法，使用氧氣和電力而不是添加危險的氧化劑來製造塑膠、藥品和其他產品的化學物質。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261008005244.htm",
+      "orig": "Scientists discover a hidden factor that can make or break chemical reactions",
+      "origX": "Researchers discovered a hidden factor that can determine whether chemical reactions succeed or fail, and then used it to boost the proportion of the desired product from 16% to 97%. By controlling acidity near electrodes, they developed a promising way to manufacture chemicals for plastics, medicines, and other products using oxygen and electricity instead of hazardous added oxidants."
+    },
+    {
+      "date": "2026-11-03",
+      "cat": "bio",
+      "t": "大堡礁最臭名昭著的珊瑚殺手可能實際上正在幫助它",
+      "x": "荆棘冠海星因吞噬珊瑚礁而臭名昭著，但令人惊讶的新研究表明，当这些多刺的捕食者的数量受到控制时，它们实际上可能有助于珊瑚礁的繁荣。研究澳大利亚大堡礁的科学家发现，观察到的海星摄食事件中近 75% 留下了活珊瑚组织，而不是摧毁整个珊瑚群。以 fa 為食",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261030002957.htm",
+      "orig": "The Great Barrier Reef's most notorious coral killer may actually be helping it",
+      "origX": "Crown-of-thorns starfish are notorious for devouring coral reefs, but surprising new research reveals these spiny predators may actually help reefs thrive when their populations are kept in check. Scientists studying Australia's Great Barrier Reef discovered that nearly 75% of observed starfish feeding events left behind living coral tissue, rather than destroying entire colonies. By feeding on fast-growing, dominant corals, the starfish create opportunities for slower-growing species to survive, potentially increasing coral biodiversity."
+    },
+    {
+      "date": "2026-11-03",
+      "cat": "bio",
+      "t": "小行星杀死了恐龙。鱷魚為何能存活？",
+      "x": "科學家可能已經解開了一個 6600 萬年前的謎團：鱷魚如何在滅絕恐龍的小行星中倖存下來。對化石和古代氣候的全面分析表明，它們對溫暖環境的偏好使它們處於熱帶避難所，即使在災難性影響之後，這些避難所仍然適合居住。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261030002922.htm",
+      "orig": "The asteroid killed the dinosaurs. Why did crocodiles survive?",
+      "origX": "Scientists may have solved a 66-million-year-old mystery: how crocodiles survived the asteroid that wiped out the dinosaurs. A sweeping analysis of fossils and ancient climates suggests that their preference for warm environments placed them in tropical refuges that remained habitable even after the catastrophic impact."
+    },
+    {
       "date": "2026-11-02",
       "cat": "phys",
       "t": "科學家表示，一個被遺忘的粒子可能會解釋宇宙存在的原因",
@@ -10,16 +70,6 @@
       "url": "https://www.sciencedaily.com/releases/2026/10/261031221201.htm",
       "orig": "Scientists say a forgotten particle may explain why the universe exists",
       "origX": "A mysterious particle overlooked for decades may hold the key to why matter survived the Big Bang, allowing stars, planets, and life to exist. Scientists believe this forgotten neutrino reshaped the early universe and may have left detectable gravitational wave signals that could help unlock the cosmos’s deepest mysteries."
-    },
-    {
-      "date": "2026-11-02",
-      "cat": "phys",
-      "t": "科學家將阿基米德螺旋縮小到單一分子的大小",
-      "x": "受 2000 多年前發明的機器的啟發，科學家們建造了一種突破性的分子馬達，可以利用電力雙向旋轉。更值得注意的是，它的旋轉可以將電導率提高多達 100 倍，有可能改變分子電子學的未來。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261030002940.htm",
-      "orig": "Scientists shrink Archimedes’ screw to the size of a single molecule",
-      "origX": "Scientists have built a groundbreaking molecular motor that spins in either direction using electricity, inspired by a machine invented more than 2,000 years ago. Even more remarkably, its rotation can boost electrical conductivity by up to 100 times, potentially transforming the future of molecular electronics."
     },
     {
       "date": "2026-11-02",
@@ -33,16 +83,6 @@
     },
     {
       "date": "2026-11-02",
-      "cat": "chem",
-      "t": "科學家可能找到了聚變能源的捷徑",
-      "x": "普林斯頓等離子體物理實驗室可能已經透過扭轉傳統方法找到了更有效的聚變能途徑：首先加熱等離子體，然後增加其密度。他們的計算可以幫助未來的反應器以少得多的能量實現自我維持聚變，同時避免導致點火更加困難的隱藏問題。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261008005242.htm",
-      "orig": "Scientists may have found a shortcut to fusion energy",
-      "origX": "Princeton Plasma Physics Laboratory may have found a dramatically more efficient route to fusion energy by reversing the traditional approach: heating plasma first, then increasing its density. Their calculations could help future reactors reach self-sustaining fusion with far less energy while avoiding hidden problems that make ignition harder."
-    },
-    {
-      "date": "2026-11-02",
       "cat": "bio",
       "t": "埃及的古猿化石可能改寫人類起源的故事",
       "x": "在埃及發現的一個 1700 至 1800 萬年前的猿類化石正在挑戰人們長期以來對人類和其他現代猿類祖先最初進化地點的看法。科學家現在懷疑北非和中東，而不是東非，可能是現代猿類進化的搖籃。",
@@ -50,46 +90,6 @@
       "url": "https://www.sciencedaily.com/releases/2026/10/261031011638.htm",
       "orig": "Ancient ape fossil in Egypt could rewrite the story of human origins",
       "origX": "A 17- to 18-million-year-old ape fossil discovered in Egypt is challenging long-held beliefs about where the ancestors of humans and other modern apes first evolved. Scientists now suspect that North Africa and the Middle East, rather than East Africa, may have been the cradle of modern ape evolution."
-    },
-    {
-      "date": "2026-11-02",
-      "cat": "bio",
-      "t": "科學家發現樹木用來挺直自己的隱藏“肌肉”",
-      "x": "科學家發現，樹木可以感知自己的形狀，並利用特殊的木材來拉直樹幹，這些木材的作用就像相反的肌肉。這種非凡的能力可以幫助樹木保持其姿態，並可能帶來更強大的森林、更好的木材和更有彈性的作物。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261030003006.htm",
-      "orig": "Scientists discover the hidden “muscles” trees use to straighten themselves",
-      "origX": "Scientists have discovered that trees can sense their own shape and straighten their trunks using specialized wood that acts like opposing muscles. This remarkable ability helps trees maintain their posture and could lead to stronger forests, better timber, and more resilient crops."
-    },
-    {
-      "date": "2026-11-01",
-      "cat": "phys",
-      "t": "科學家粉碎氧核以重建大爆炸中的物質",
-      "x": "科學家以接近光速的速度碰撞氧原子核，重建了宇宙誕生之初物質的原始狀態。令人驚訝的結果表明，這種奇異物質可以在比之前證明的更小、能量更低的碰撞中形成，挑戰了早期宇宙物理學的已知界限。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261030002935.htm",
-      "orig": "Scientists smash oxygen nuclei to recreate matter from the Big Bang",
-      "origX": "Scientists have recreated a primordial state of matter from the dawn of the universe by colliding oxygen nuclei at nearly the speed of light. The surprising results show that this exotic substance can form in smaller, lower-energy collisions than previously demonstrated, challenging the known boundaries of early-universe physics."
-    },
-    {
-      "date": "2026-11-01",
-      "cat": "chem",
-      "t": "晶體中的微小缺陷揭示了巨大的量子驚喜",
-      "x": "研究人員解決了一個長期存在的挑戰，即了解鑽石和碳化矽等材料中的微小缺陷在光照下如何表現。他們的新計算方法揭示了碳化矽中一個令人驚訝的重要能量損失機制，而科學家之前卻低估了這個機制。這項發現有助於解釋多年來困擾研究人員的謎團，",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261022081302.htm",
-      "orig": "A tiny defect in a crystal reveals a big quantum surprise",
-      "origX": "Researchers have solved a long-standing challenge in understanding how tiny defects in materials like diamond and silicon carbide behave when exposed to light. Their new computational method revealed a surprisingly important energy-loss mechanism in silicon carbide that scientists had previously underestimated. The finding helps explain a mystery that has puzzled researchers for years and could improve the design of quantum computers and sensors."
-    },
-    {
-      "date": "2026-11-01",
-      "cat": "bio",
-      "t": "科學家揭示了隱藏的蛇咬傷危機，每年導致多達 513,000 人死亡",
-      "x": "一項令人震驚的新研究表明，全世界因毒蛇咬傷而死亡的人數遠遠多於官方統計數字，估計每年有 274,000 至 513,000 人死亡。研究人員發現，每年有多達 700 萬人遭受蛇毒攻擊，而超過 80 萬名倖存者會留下長期殘疾。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261029072117.htm",
-      "orig": "Scientists reveal a hidden snakebite crisis killing up to 513,000 people a year",
-      "origX": "A startling new study suggests that venomous snakebites are killing far more people worldwide than official statistics indicate, with an estimated 274,000 to 513,000 deaths every year. Researchers found that as many as 7 million people could suffer snake envenoming annually, while more than 800,000 survivors are left with long-term disabilities."
     }
   ]
 }
