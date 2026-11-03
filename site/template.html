@@ -1795,12 +1795,20 @@ html[data-theme="dark"] body{
   line-height:1.55;margin-bottom:2px}
 .dse-hero .tx span{display:block;font-size:12px;color:#3d6b62;opacity:.82;
   letter-spacing:.02em;line-height:1.6}
-.dse-hero .go{font-size:12px;color:#3d6b62;font-weight:700;flex:0 0 auto;
-  background:none;border:none;padding:0}
+/* 「開始」原本是裸文字（background:none），但繼承了 .go 的 box-shadow，
+   在淺青／淺黃便利貼上變成一塊「浮起來的白影」，淺色主題下尤其怪（用戶 2026-11-03 截圖）。
+   改成明確的實心膠囊：主色底 + --on-accent 文字，兩張卡上都清楚。 */
+.dse-hero .go{font-size:12px;font-weight:700;flex:0 0 auto;
+  background:var(--accent);color:var(--on-accent);
+  border:none;border-radius:999px;padding:6px 13px;
+  box-shadow:0 1px 4px rgba(43,42,38,.18);letter-spacing:.02em;
+  transition:filter .14s,transform .14s}
+.dse-hero:hover .go{filter:brightness(1.06)}
 html[data-theme="dark"] .dse-hero{background:#25332f;border-color:#33473f}
 html[data-theme="dark"] .dse-hero .tx b{color:#a8d5c8}
-html[data-theme="dark"] .dse-hero .tx span,
-html[data-theme="dark"] .dse-hero .go{color:#8fb8a8}
+/* .go 不再吃這條：它現在是實心主色膠囊，文字要走 --on-accent，
+   否則深色下會變成「亮青底 + 淺綠字」看不清楚 */
+html[data-theme="dark"] .dse-hero .tx span{color:#8fb8a8}
 
 /* ---- DSE 卷一 / 卷二 並列卡 ----
    用戶要求 MC 與 LQ「分開存放、不然會很亂」，所以首頁就分成兩張卡，
@@ -1814,13 +1822,14 @@ html[data-theme="dark"] .dse-hero .go{color:#8fb8a8}
 }
 .dse-lq:hover{box-shadow:0 4px 14px rgba(120,95,50,.16)}
 .dse-lq .tx b{color:#5d4726}
-.dse-lq .tx span,.dse-lq .go{color:#7a6240;opacity:.88}
+/* .go 不列進來：它是實心主色膠囊，文字必須走 --on-accent。
+   先前跟著副標題一起染成暖褐（#7a6240），在深綠底上幾乎看不清。 */
+.dse-lq .tx span{color:#7a6240;opacity:.88}
 html[data-theme="dark"] .dse-lq{
   background:#332c22;border-color:#4a3f30;
 }
 html[data-theme="dark"] .dse-lq .tx b{color:#d9c49b}
-html[data-theme="dark"] .dse-lq .tx span,
-html[data-theme="dark"] .dse-lq .go{color:#b19c78}
+html[data-theme="dark"] .dse-lq .tx span{color:#b19c78}
 
 /* ---- 卷二 LQ 題卡 ----
    與 mc 的 .ppq 刻意長得不一樣：LQ 是「一道大題 + 多級子題」的結構，
@@ -4084,14 +4093,14 @@ function viewHome(){
     <div class="dse-duo">
       <div class="dse-hero dse-mc" onclick="go('#/pastpaper')">
         <span class="ic">📝</span>
-        <span class="tx"><b>卷一 · 選擇題</b>
-          <span>2012–2023 · MC · 附逐題詳解與正確率</span></span>
+        <span class="tx"><b>卷一 · MC</b>
+          <span>2012–2023 · 選擇題 · 附逐題詳解與正確率</span></span>
         <span class="go">開始 →</span>
       </div>
       ${LQN>0?`
       <div class="dse-hero dse-lq" onclick="go('#/lq')">
         <span class="ic">✍️</span>
-        <span class="tx"><b>卷二 · 長題目</b>
+        <span class="tx"><b>卷二 · LQ</b>
           <span>${LQYRS} 個年份 · ${LQN} 道大題 · 原文與分項分值</span></span>
         <span class="go">開始 →</span>
       </div>`:''}
