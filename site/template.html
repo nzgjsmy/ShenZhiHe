@@ -5509,7 +5509,7 @@ function lqCard(q){
   // 題幹空白不是解析丟了：這幾題的題幹直接印在原卷圖上（「對頁顯微照片…」），
   // 空白會讓學生以為頁面壞了，補一句指引。
   const stem=q.stem?`<div class="lq-stem md">${mdLite(q.stem)}</div>`
-    :((q.imgs||[]).length?`<div class="lq-stem md lq-stem-empty">本題題幹直接印在原卷圖上，請展開下方「對照原卷」查看。</div>`:'');
+    :((q.imgs||[]).length?`<div class="lq-stem md lq-stem-empty">本題題幹直接印在原卷圖上，請展開上方「對照原卷」查看。</div>`:'');
   // 原卷頁圖：110 題現在全部帶圖（scripts/pastpaper/lq_figures.py 生成）。
   // 圖是「整頁原卷」而不是單獨裁出的圖 —— 自動裁單圖在曲線圖／表格上會互誤判，
   // 裁錯比沒圖更糟（學生會照着錯的圖作答），所以只裁掉頁邊空白，內容一字不動。
@@ -5545,8 +5545,8 @@ function lqCard(q){
       <span class="lq-pg">p${esc(q.page)}</span>
       ${flags.join('')}
     </div>
-    ${stem}
     ${figs}
+    ${stem}
     <div class="lq-subs">${subs}</div>
     <div class="lq-tools">
       <button class="lq-btn" data-lbl="${q.guide?'參考答案':'評分指引'}" onclick="lqToggle(this)"><span class="lq-btn-t">${q.guide?'參考答案':'評分指引'}</span><span class="lq-btn-i">▾</span></button>

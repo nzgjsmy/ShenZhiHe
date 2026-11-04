@@ -64,22 +64,28 @@ def page_q_ys(year, page):
     return sorted(out)
 
 
-def next_q_ylimit(year, page, qnum):
-    """同一页上排在本题之后、且够远的那道大题的起始 y；没有就 None。
+def crop_bounds(year, page, qnum):
+    """该页上本题需要裁掉的 (yTop, yBottom)，不需要裁就 None。
 
-    不裁的话，前一题的页图会把下一题的题干和表格一起带进来 —— 2012 Q1 就是这样，
-    图底部露出「2. 登革熱是由蚊子作媒介來傳播的疾病…」。
+    · yBottom：同一页还有下一道大题 → 裁到它的题号块之前
+      （不裁的话前一题的图会把下一题的题干和表格一起带进来，2012 Q1 就是这样）
+    · yTop：同一页还有上一道大题 → 从本题题号块之前开始
+      （对称问题：2012 Q2 的整页图里也会露出 Q1 的配对表）
+    · 本页没有本题题号（跨页题的延续页）→ 裁到本页第一个题号之前，那是别人的题
     """
     ys = page_q_ys(year, page)
     if not ys:
-        return None
+        return (None, None)
     mine = [y for y, n in ys if n == qnum]
     if not mine:
-        return None
-    base = mine[0]
-    later = [y for y, n in ys if y > base + NEXT_Q_MIN_GAP and n != qnum]
-    # 多留 34px：识别框（bbox）顶边比实际字形略低，只减 12 会留下半行字
-    return (min(later) - 34) if later else None
+        # 跨页的延续页：页上出现的题号全是别的题
+        return (None, min(y for y, n in ys) - 34)
+    top = mine[0]
+    later = [y for y, n in ys if y > top + NEXT_Q_MIN_GAP and n != qnum]
+    y_bottom = (min(later) - 34) if later else None   # 多留 34px：bbox 顶边比字形略低
+    earlier = [y for y, n in ys if y < top - 40]
+    y_top = (top - 12) if earlier else None
+    return (y_top, y_bottom)
 
 
 def qkey(q):
@@ -90,11 +96,11 @@ def qkey(q):
     return (int(m.group(1)), (m.group(2) or 'a').lower())
 
 
-def trim_page(src, dst, y_limit=None):
+def trim_page(src, dst, y_limit=None, y_top=None):
     """裁掉页面四周空白边，缩到 MAX_W 宽，存 webp。返回 (w, h, kb)。
 
-    y_limit（原图尺度像素）给定时只保留 y < y_limit 的内容，
-    用来把「同一页里的下一道大题」裁掉。
+    y_limit / y_top（原图尺度像素）：只保留 y_top ≤ y < y_limit 的内容，
+    用来把同一页里相邻的另一道大题裁掉。
     """
     import cv2
     img = cv2.imread(src)
@@ -124,7 +130,9 @@ def trim_page(src, dst, y_limit=None):
         if last_s > H * 0.86 and (last_s - prev_e) > 40:
             bw[last_s:, :] = 0
 
-    # 把「下一道大题」整块抹掉，包围盒自然就只包住本题
+    # 把相邻的另一道大题整块抹掉，包围盒自然就只包住本题
+    if y_top is not None:
+        bw[:max(0, int(y_top)), :] = 0
     if y_limit is not None:
         bw[max(0, int(y_limit)):, :] = 0
 
@@ -191,20 +199,20 @@ def build_year(year, dry=False):
         for p in range(start, end + 1):
             if p not in pgs:
                 continue
-            # 起始页若同页还有下一道大题，裁到下一题之前 —— 否则图里会露出下一题。
-            # 这种「裁过的版本」必须单独命名：同一页的另一题还要用整页图，
-            # 否则两者共用一个文件名，后写的会把前面的覆盖掉（2012 p012 踩过）。
-            ylim = None
-            if p == start:
-                try:
-                    ylim = next_q_ylimit(year, p, int(q['qnum']))
-                except (TypeError, ValueError):
-                    ylim = None
-            name = ('p%03d_q%s.webp' % (p, q['qnum'])) if ylim is not None else ('p%03d.webp' % p)
+            # 同一页里若有相邻的另一道大题，就裁掉它 —— 两个方向都要。
+            # 裁过的版本必须单独命名，否则同一页的另一题（用整页图）会把文件覆盖掉。
+            y_top = y_bot = None
+            try:
+                y_top, y_bot = crop_bounds(year, p, int(q['qnum']))
+            except (TypeError, ValueError):
+                pass
+            cropped = (y_top is not None) or (y_bot is not None)
+            name = ('p%03d_q%s.webp' % (p, q['qnum'])) if cropped else ('p%03d.webp' % p)
             rel = '%s/%s/%s' % (IMG_REL, year, name)
             if dry:
                 imgs.append(rel); continue
-            w, h, kb = trim_page(pgs[p], os.path.join(ROOT, 'site', rel), y_limit=ylim)
+            w, h, kb = trim_page(pgs[p], os.path.join(ROOT, 'site', rel),
+                                 y_limit=y_bot, y_top=y_top)
             total_kb += kb; n_img += 1
             imgs.append(rel)
         q['imgs'] = imgs
