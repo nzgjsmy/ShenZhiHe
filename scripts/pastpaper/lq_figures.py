@@ -44,6 +44,10 @@ RE_QNUM = re.compile(r'^\s*(\d{1,2})\s*[\.．、]\s*\S')
 # 两个题号块至少隔这么远才认定是「下一题」，否则可能是表格里的「1.」这类误判
 NEXT_Q_MIN_GAP = 300
 
+# 只裁「页面中间那张彩色照」的页：整页图对这类题太杂（一页只有一张照片 + 大片空白答题格）。
+# 2012 Q3（顯微照片，含 P/Q 箭嘴）与 Q4（生物 X 標本照），用户点名要求。
+FOCUS_PAGES = {("2012", 13), ("2012", 14)}
+
 
 def page_q_ys(year, page):
     """该页所有「大题题号块」的 (y, 题号)，按 y 升序。读不到就返回空。"""
@@ -94,6 +98,42 @@ def qkey(q):
     if not m:
         return (999, '')
     return (int(m.group(1)), (m.group(2) or 'a').lower())
+
+
+def crop_color_region(src, dst):
+    """只裁出页面里的彩色图片（顯微照片／標本照），四周留少量边。
+
+    整页图对这类「一页只有一张照片、其余全是空白答题格」的题太杂（2012 Q3／Q4 就是），
+    用户要求只保留中间那张彩色图。照片是彩色的、正文是黑白的，用饱和度找连通块即可。
+    留 8% 页宽的左右余量：P/Q 的箭嘴标注常压在照片边缘，裁太紧会切掉。
+    """
+    import cv2
+    import numpy as np
+    img = cv2.imread(src)
+    if img is None:
+        raise RuntimeError('读不到 ' + src)
+    H, W = img.shape[:2]
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    mask = (hsv[:, :, 1] > 60).astype(np.uint8)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, np.ones((25, 25), np.uint8))
+    n, _lab, stats, _c = cv2.connectedComponentsWithStats(mask, 8)
+    if n <= 1:
+        return None
+    i = 1 + int(np.argmax(stats[1:, 4]))
+    x, y, w, h, _a = stats[i]
+    if w * h < H * W * 0.01:      # 太小，不像照片
+        return None
+    px = int(W * 0.08)
+    x0 = max(0, x - px); x1 = min(W, x + w + px)
+    y0 = max(0, y - 6);  y1 = min(H, y + h + 44)
+    crop = img[y0:y1, x0:x1]
+    ch, cw = crop.shape[:2]
+    if cw > MAX_W:
+        crop = cv2.resize(crop, (MAX_W, int(ch * MAX_W / cw)), interpolation=cv2.INTER_AREA)
+        ch, cw = crop.shape[:2]
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    cv2.imwrite(dst, crop, [cv2.IMWRITE_WEBP_QUALITY, WEBP_Q])
+    return cw, ch, os.path.getsize(dst) / 1024.0
 
 
 def trim_page(src, dst, y_limit=None, y_top=None):
@@ -199,7 +239,19 @@ def build_year(year, dry=False):
         for p in range(start, end + 1):
             if p not in pgs:
                 continue
-            # 同一页里若有相邻的另一道大题，就裁掉它 —— 两个方向都要。
+            # ① 用户点名「只留中间那张照片」的页
+            if (year, p) in FOCUS_PAGES:
+                rel = '%s/%s/p%03d_img.webp' % (IMG_REL, year, p)
+                if dry:
+                    imgs.append(rel); continue
+                r = crop_color_region(pgs[p], os.path.join(ROOT, 'site', rel))
+                if r:
+                    w, h, kb = r
+                    total_kb += kb; n_img += 1
+                    imgs.append(rel)
+                    continue
+                # 检测失败就落回整页裁，不要因此没图
+            # ② 同一页里若有相邻的另一道大题，就裁掉它 —— 两个方向都要。
             # 裁过的版本必须单独命名，否则同一页的另一题（用整页图）会把文件覆盖掉。
             y_top = y_bot = None
             try:

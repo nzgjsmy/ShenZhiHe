@@ -16,6 +16,7 @@
 import io
 import json
 import os
+import re
 import sys
 
 _ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -55,6 +56,22 @@ FIXES = {
                     "<tr><td></td><td>E. 涉及運輸激素</td></tr></table>",
         },
     },
+    # 2012 Q3／Q4：p14 的「4.」題號 VLM 沒讀到（頁首第一個塊直接是「以下檢索表…」），
+    # 跨頁累積把第 4 題的整段檢索表吞進了 Q3 的 (b)，Q4 反而沒有題幹。按原卷拆開。
+    "lq1_2012_q3": {
+        "patch": {"b": {"q": "描述这些细胞如何对植物的支持作出贡献。"}},
+    },
+    "lq1_2012_q4": {
+        "qpatch": {
+            "stem": "以下檢索表用以鑑定在同一門內的生物：\n"
+                    "1a 沒有眼睛 …… 2\n"
+                    "1b 具一雙眼睛 …… 3\n"
+                    "2a 具六足 …… 綱 A\n"
+                    "2b 多於六足 …… 綱 B\n"
+                    "3a 具六足 …… 綱 C\n"
+                    "3b 多於六足 …… 綱 D",
+        },
+    },
 }
 
 
@@ -75,6 +92,24 @@ def apply_fixes(qs):
     return qs
 
 
+RE_UL_DOLLAR = re.compile(r'\$\s*\\+underline\{\\+text\{([^{}$]{1,80})\}\s*\$')
+RE_UL_PLAIN = re.compile(r'\\+underline\{([^{}$]{1,80})\}')
+
+
+def fix_underline(t):
+    """VLM 把原卷的下划線讀成殘缺 LaTeX：`$ \\underline{\\text{氧} $`（缺右括號、又被 $ 包住），
+    交給公式渲染必然失敗，結果原樣露在題幹裡（2012 Q5／2020 Q9／2021 Q6，共 14 處）。
+    在資料層先還原成 <u>，前端就不用再猜。
+    """
+    if not t or 'underline' not in t:
+        return t
+    t = RE_UL_DOLLAR.sub(r'<u>\1</u>', t)
+    t = RE_UL_PLAIN.sub(r'<u>\1</u>', t)
+    # VLM 還常把字重複一次：`氧 $ \underline{\text{氧} $生` → 「氧 <u>氧</u>生」，
+    # 下劃線版前面那個同字要去掉，否則讀起來像結巴
+    return re.sub(r'(.)\s*<u>\1</u>', r'<u>\1</u>', t)
+
+
 def convert(year, qs):
     out = []
     for q in qs:
@@ -83,7 +118,7 @@ def convert(year, qs):
             subs.append({
                 "no": s.get("no"),
                 "level": s.get("level") or 1,
-                "q": s.get("q") or "",
+                "q": fix_underline(s.get("q") or ""),
                 "marks": s.get("marks"),
             })
         out.append({
@@ -94,7 +129,7 @@ def convert(year, qs):
             "part": "B",
             "partName": "乙部",
             "chapter": "",
-            "stem": q.get("stem") or "",
+            "stem": fix_underline(q.get("stem") or ""),
             "imgs": [],
             "figRefs": [],
             "subqs": subs,

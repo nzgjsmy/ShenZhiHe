@@ -3028,6 +3028,15 @@ function looksLikeTex(inner){
 }
 function inline(s){
   var t=esc(s)
+    // 資料層（lq1_build.py 的 fix_underline）已把殘缺的 \underline{…} 清洗成 <u>…</u>，
+    // 但 esc() 會把標籤轉義掉，這裡還原回來（與 <table> 同樣視為「可信的資料層 HTML」）
+    .replace(/&lt;u&gt;/g,'<u>')
+    .replace(/&lt;\/u&gt;/g,'</u>')
+    // VLM 把原卷的下劃線讀成**殘缺 LaTeX**：`$ \underline{\text{氧} $`（缺右括號、又被 $ 包住），
+    // 交給公式渲染必然失敗，結果原樣露在題幹裡（2012 Q5、2021 Q6）。先就地還原成 <u>。
+    .replace(/\$\s*\\+underline\{\\+text\{([^{}$]{1,80})}\}\s*\$/g,'<u>$1</u>')
+    // 形態正常的 `\underline{…}` 也一併處理（不帶 $ 的情況）
+    .replace(/\\+underline\{([^{}$]{1,80})\}/g,'<u>$1</u>')
     // $$...$$ 塊級公式：**必須排在單 $ 之前**。否則 `$$速率 = ...$$` 會被拆成
     // 「$ + 內容 + $」，首尾各剩一個 $ 露在畫面上（化學筆記 7 條公式全是這樣漏掉的）。
     .replace(/\$\$([^$\n]{1,300})\$\$/g,function(m,x){return tex2html(x);})
