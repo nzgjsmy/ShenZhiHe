@@ -41,6 +41,20 @@ FIXES = {
         },
         "drop": ["i", "ii"],   # 兩者本來就沒有獨立分值，已併進 (a) 的表格
     },
+    # 2012 Q1：VLM 把「欄 1／欄 2」整片配對表判成空白（y 348–956 那塊），
+    # 題幹只剩一句引導語，卡片上看不到任何選項。按原卷補回。
+    "lq1_2012_q1": {
+        "qpatch": {
+            "stem": "因應欄 1 所列的每一種血細胞，從欄 2 選出一項有關其功能的正確描述，"
+                    "並把字母填寫在預留的空位內。\n"
+                    "<table><tr><td>欄 1</td><td>欄 2</td></tr>"
+                    "<tr><td>淋巴細胞 &nbsp;____</td><td>A. 涉及血液凝固</td></tr>"
+                    "<tr><td>血小板 &nbsp;____</td><td>B. 涉及運輸氧氣</td></tr>"
+                    "<tr><td>紅血細胞 &nbsp;____</td><td>C. 涉及產生抗體</td></tr>"
+                    "<tr><td></td><td>D. 涉及吞噬作用</td></tr>"
+                    "<tr><td></td><td>E. 涉及運輸激素</td></tr></table>",
+        },
+    },
 }
 
 
@@ -49,6 +63,9 @@ def apply_fixes(qs):
         fx = FIXES.get(q["id"])
         if not fx:
             continue
+        # 大題層級的覆蓋（例如整段題幹被 OCR 漏掉）
+        if fx.get("qpatch"):
+            q.update(fx["qpatch"])
         for s in q.get("subqs") or []:
             p = (fx.get("patch") or {}).get(s.get("no"))
             if p:

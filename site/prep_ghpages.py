@@ -371,7 +371,7 @@ def copy_note_images():
     refs_pp = sorted(set(re.findall(r"img/(pp/(?:[0-9]{4}|PP|SP)/[A-Za-z0-9_]+\.webp)", html)))
     # 長題目的原卷頁圖：img/lq/<年份>/（卷二）與 img/lq1/<年份>/（卷一乙部）。
     # 同樣是「payload JSON 裡的引用」，不寫這條線上會整批 404。
-    refs_lq = sorted(set(re.findall(r"img/(lq1?/(?:[0-9]{4}|PP|SP)/p[0-9]{3}\.webp)", html)))
+    refs_lq = sorted(set(re.findall(r"img/(lq1?/(?:[0-9]{4}|PP|SP)/p[0-9]{3}[A-Za-z0-9_\-]*\.webp)", html)))
     all_refs = refs + refs_gen + refs_pp + refs_lq
     if not all_refs:
         print("  note: index.html 未引用任何 img/*.webp（圖片外置未啟用？）")

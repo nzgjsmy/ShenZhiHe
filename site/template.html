@@ -5513,7 +5513,8 @@ function lqCard(q){
   // 原卷頁圖：110 題現在全部帶圖（scripts/pastpaper/lq_figures.py 生成）。
   // 圖是「整頁原卷」而不是單獨裁出的圖 —— 自動裁單圖在曲線圖／表格上會互誤判，
   // 裁錯比沒圖更糟（學生會照着錯的圖作答），所以只裁掉頁邊空白，內容一字不動。
-  const figPages=(q.imgs||[]).map(s=>{const m=/p(\d+)\.webp$/.exec(s);return m?+m[1]:0;});
+  // 檔名可能是 p012.webp，也可能是 p012_q1.webp（同頁兩題時前一題要裁到下一題之前）
+  const figPages=(q.imgs||[]).map(s=>{const m=/p(\d+)[^/]*\.webp$/.exec(s);return m?+m[1]:0;});
   let figs='';
   if(figPages.length){
     const refs=(q.figRefs||[]).length?'（本題涉及 圖 '+q.figRefs.map(f=>esc(f)).join('、')+'）':'';
