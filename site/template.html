@@ -1795,19 +1795,12 @@ html[data-theme="dark"] body{
   line-height:1.55;margin-bottom:2px}
 .dse-hero .tx span{display:block;font-size:12px;color:#3d6b62;opacity:.82;
   letter-spacing:.02em;line-height:1.6}
-/* 「開始」原本是裸文字（background:none），但繼承了 .go 的 box-shadow，
-   在淺青／淺黃便利貼上變成一塊「浮起來的白影」，淺色主題下尤其怪（用戶 2026-11-03 截圖）。
-   改成明確的實心膠囊：主色底 + --on-accent 文字，兩張卡上都清楚。 */
-.dse-hero .go{font-size:12px;font-weight:700;flex:0 0 auto;
-  background:var(--accent);color:var(--on-accent);
-  border:none;border-radius:999px;padding:6px 13px;
-  box-shadow:0 1px 4px rgba(43,42,38,.18);letter-spacing:.02em;
-  transition:filter .14s,transform .14s}
-.dse-hero:hover .go{filter:brightness(1.06)}
+/* 整張卡就是進入分頁的入口：「開始」膠囊與右側箭頭都拿掉（用戶 2026-11-06），
+   卡面只留圖示＋標題＋說明。可點的提示交給 cursor:pointer、hover 上浮、
+   :active 縮放與鍵盤焦點框，不再用任何按鈕／箭頭元素。 */
+.dse-hero:focus-visible,.dse-hero:focus{outline:2px solid var(--accent);outline-offset:3px}
 html[data-theme="dark"] .dse-hero{background:#25332f;border-color:#33473f}
 html[data-theme="dark"] .dse-hero .tx b{color:#a8d5c8}
-/* .go 不再吃這條：它現在是實心主色膠囊，文字要走 --on-accent，
-   否則深色下會變成「亮青底 + 淺綠字」看不清楚 */
 html[data-theme="dark"] .dse-hero .tx span{color:#8fb8a8}
 
 /* ---- DSE 卷一 / 卷二 並列卡 ----
@@ -1822,8 +1815,6 @@ html[data-theme="dark"] .dse-hero .tx span{color:#8fb8a8}
 }
 .dse-lq:hover{box-shadow:0 4px 14px rgba(120,95,50,.16)}
 .dse-lq .tx b{color:#5d4726}
-/* .go 不列進來：它是實心主色膠囊，文字必須走 --on-accent。
-   先前跟著副標題一起染成暖褐（#7a6240），在深綠底上幾乎看不清。 */
 .dse-lq .tx span{color:#7a6240;opacity:.88}
 html[data-theme="dark"] .dse-lq{
   background:#332c22;border-color:#4a3f30;
@@ -3275,6 +3266,12 @@ function normalizeHash(h){
   return '#/'+sid+rest;
 }
 function go(h){location.hash=normalizeHash(h);}
+/* 首頁兩張 DSE 大卡整張可點（不再有「開始」按鈕），鍵盤也要能進：
+   Enter／空白觸發同一個 click，空白鍵同時擋掉頁面捲動。2026-11-06 */
+function dseCardKey(e){
+  if(e.key!=='Enter'&&e.key!==' '&&e.key!=='Spacebar') return;
+  e.preventDefault(); e.currentTarget.click();
+}
 function goBack(){ if(history.length>1) history.back(); else go('#/home'); }
 function navOn(r){
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.r===r));
@@ -4101,18 +4098,18 @@ function viewHome(){
          兩者題型、題號體系、答題方式都不同，混在一張卡裡用戶會以為是同一套。
          2026-10-30 */''}
     <div class="dse-duo">
-      <div class="dse-hero dse-mc" onclick="go('#/pastpaper')">
+      <div class="dse-hero dse-mc" role="button" tabindex="0" aria-label="進入卷一 · MC 真題"
+           onclick="go('#/pastpaper')" onkeydown="dseCardKey(event)">
         <span class="ic">📝</span>
         <span class="tx"><b>卷一 · MC</b>
           <span>2012–2023 · 選擇題 · 附逐題詳解與正確率</span></span>
-        <span class="go">開始 →</span>
       </div>
       ${LQN>0?`
-      <div class="dse-hero dse-lq" onclick="go('#/lq')">
+      <div class="dse-hero dse-lq" role="button" tabindex="0" aria-label="進入卷二 · LQ 真題"
+           onclick="go('#/lq')" onkeydown="dseCardKey(event)">
         <span class="ic">✍️</span>
         <span class="tx"><b>卷二 · LQ</b>
           <span>${LQYRS} 個年份 · ${LQN} 道大題 · 原文與分項分值</span></span>
-        <span class="go">開始 →</span>
       </div>`:''}
     </div>`:''}
     <div class="quick">
