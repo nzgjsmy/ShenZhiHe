@@ -151,7 +151,7 @@ html[data-anim="off"] .pip.on{animation:none!important}
   .lkpair[open] .lklist{animation:none}
 }
 /* ---------- 通用按壓回饋（滑鼠 + 觸屏；iOS 無 hover 靠 :active） ---------- */
-button,.tcard,.subcard,.extracard,.sres,.hchip,.scope,.opt,.ptcell,.ptlegend span,.chip,.subbar button,.rrow .go{
+button,.tcard,.subcard,.extracard,.dse-hero,.sres,.hchip,.scope,.opt,.ptcell,.ptlegend span,.chip,.subbar button,.rrow .go{
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
@@ -171,7 +171,7 @@ button{transition:transform calc(.3s * var(--anim-k)) var(--ease-ios),
        filter var(--dur-fast),background-color var(--dur-base),
        color var(--dur-base),border-color var(--dur-base)}
 button:active:not([disabled]),
-.tcard:active,.subcard:active,.extracard:active,.sres:active,.qpick:active,
+.tcard:active,.subcard:active,.extracard:active,.dse-hero:active,.sres:active,.qpick:active,
 .opt:active:not([disabled]),.hchip:active,.scope:active,.ptcell:active,
 .ptlegend span:active,.chip:active,.subbar button:active,.rrow .go:active{
   transition-duration:calc(.09s * var(--anim-k));
@@ -907,8 +907,8 @@ footer{max-width:1120px;margin:0 auto;padding:18px 20px 40px;color:var(--muted);
   .rail .rsec{padding:10px 11px;font-size:15px;min-width:170px;flex:0 0 auto}
   /* 入力框字體必須 ≥16px，否則 iOS 聚焦時會自動放大整頁 */
   .fillrow input{font-size:16px;padding:12px 14px}
-  /* iOS 不支援 hover，補上 :active 觸覺回饋 */
-  .tcard:active,.scope:active,.chip:active,.opt:active{transform:scale(.985);opacity:.92}
+  /* iOS 不支援 hover，補上 :active 觸覺回饋（DSE 兩卡跟課題卡同一套） */
+  .tcard:active,.dse-hero:active,.scope:active,.chip:active,.opt:active{transform:scale(.985);opacity:.92}
   .quick button:active,.back:active,.nextbtn:active,.qbtn:active{opacity:.75}
   /* 避免 iOS 長按選取時彈出放大鏡，影響題目閱讀 */
   .pcard,.qpanel,nav,.gwrap{-webkit-user-select:none;user-select:none}
@@ -1782,10 +1782,13 @@ html[data-theme="dark"] body{
   display:flex;align-items:center;gap:16px;
   background:#eaf3ef;border:1px solid rgba(61,107,98,.18);
   border-radius:3px;padding:20px 22px;margin:14px 0;cursor:pointer;
-  transition:transform .25s var(--ease-ios),box-shadow .25s var(--ease-ios);
+  transition:transform .25s var(--ease-ios),box-shadow .25s var(--ease-ios),
+             opacity .25s var(--ease-ios);
 }
 .dse-hero:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(53,99,91,.14)}
-.dse-hero:active{transform:scale(.99)}
+/* 按壓回饋跟課題卡 .tcard 完全一致（scale .985 + opacity .94），
+   不再用 scale(.99) 這種只有自己一套的手感。2026-11-06 */
+.dse-hero:active{transform:scale(.985);opacity:.94}
 .dse-hero .ic{font-size:26px;flex:0 0 auto}
 .dse-hero .tx{flex:1;min-width:0}
 /* ⚠️ 手写体（Long Cang）的 ascent/descent 比常规字体大，line-height:1.3 会让
@@ -1796,9 +1799,12 @@ html[data-theme="dark"] body{
 .dse-hero .tx span{display:block;font-size:12px;color:#3d6b62;opacity:.82;
   letter-spacing:.02em;line-height:1.6}
 /* 整張卡就是進入分頁的入口：「開始」膠囊與右側箭頭都拿掉（用戶 2026-11-06），
-   卡面只留圖示＋標題＋說明。可點的提示交給 cursor:pointer、hover 上浮、
-   :active 縮放與鍵盤焦點框，不再用任何按鈕／箭頭元素。 */
-.dse-hero:focus-visible,.dse-hero:focus{outline:2px solid var(--accent);outline-offset:3px}
+   卡面只留圖示＋標題＋說明。可點的提示交給 cursor:pointer、hover 上浮與
+   :active 縮放（與 .tcard 同款），不再用任何按鈕／箭頭元素。 */
+/* ⚠️ 只能寫 :focus-visible，**不能帶 :focus**：帶了 :focus 時滑鼠／觸屏按下去
+   會立刻畫出一圈主色外框，頁面跳走前閃 0.x 秒，看起來像「邊框發光」
+   （用戶 2026-11-06 回報）。鍵盤 Tab 仍需要焦點提示，故保留 focus-visible。 */
+.dse-hero:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 html[data-theme="dark"] .dse-hero{background:#25332f;border-color:#33473f}
 html[data-theme="dark"] .dse-hero .tx b{color:#a8d5c8}
 html[data-theme="dark"] .dse-hero .tx span{color:#8fb8a8}
@@ -2133,6 +2139,10 @@ html[data-theme="dark"] .hn-btn.ghost:hover{color:var(--hn-accent);border-color:
 .dse-lq{background:var(--hn-note-y);transform:rotate(var(--tilt,.8deg))}
 .dse-duo .dse-hero:hover{transform:translateY(-3px) rotate(0deg) !important;
   box-shadow:0 6px 12px rgba(70,60,40,.14),0 20px 42px rgba(70,60,40,.14)}
+/* hover 那條帶 !important，會把 :active 的 transform 壓掉 → 補同級 active，
+   按下去才真的有「縮一下」，不是只停在 hover 上浮。opacity 故意不寫在這裡，
+   交給前面的 :active（.94）／iOS 段的 :active（.92），跟課題卡完全同步。 */
+.dse-duo .dse-hero:active{transform:scale(.985) rotate(0deg) !important}
 .dse-duo .dse-hero::before{
   content:"";position:absolute;left:26px;top:-8px;width:16px;height:16px;
   border-radius:50%;z-index:8;pointer-events:none;
