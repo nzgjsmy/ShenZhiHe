@@ -4287,7 +4287,8 @@
     "optImg": "img/pp/2018/o36.webp",
     "qImg": "img/pp/2018/q36.webp",
     "ocrBroken": true,
-    "explSource": "notes"
+    "explSource": "notes",
+    "img": "img/pp/2018/f36.webp"
    }
   ],
   "2019": [
@@ -9311,7 +9312,8 @@
     "optImg": "img/pp/2020/o32.webp",
     "qImg": "img/pp/2020/q32.webp",
     "ocrBroken": true,
-    "explSource": "notes"
+    "explSource": "notes",
+    "img": "img/pp/2020/f32.webp"
    },
    {
     "id": "pp_2020_q35",
@@ -11210,7 +11212,8 @@
     "optImg": "img/pp/2021/o32.webp",
     "qImg": "img/pp/2021/q32.webp",
     "ocrBroken": true,
-    "explSource": "notes"
+    "explSource": "notes",
+    "img": "img/pp/2021/f32.webp"
    },
    {
     "id": "pp_2021_q34",
