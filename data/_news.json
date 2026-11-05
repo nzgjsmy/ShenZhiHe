@@ -2,6 +2,74 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。本檔由 scripts/fetch_news.py 自動抓取泛科學 RSS 產生，可手動補充。",
   "items": [
     {
+      "date": "2026-11-05",
+      "cat": "bio",
+      "t": "不是癌症卻同樣致命！耳朵痛癢伴隨臉歪嘴斜，當心致死率極高的「惡性外耳炎」",
+      "x": "「惡性外耳炎」並非癌症，而是致死率極高的嚴重耳道感染，細菌恐侵犯顱底與腦神經導致臉歪嘴斜。此病好發於高齡糖尿病患等免疫低下族群，若出現異常耳痛癢應盡速就醫。",
+      "src": "泛科學",
+      "url": "https://pansci.asia/archives/382488"
+    },
+    {
+      "date": "2026-11-05",
+      "cat": "phys",
+      "t": "SLAC 科學家發現了神秘的第三種磁性的確鑿證據",
+      "x": "近 90 年來，科學家一直認為磁性只分為兩類，但研究人員現在證實了第三種引人注目的類型，稱為交變磁性。他們利用專門的 X 射線發現了獨特的磁性特徵，證明這些材料的行為與傳統磁鐵不同。交變磁鐵將穩定性與有效攜帶訊息的能力結合在一起，有潛力",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261104012256.htm",
+      "orig": "SLAC scientists find conclusive proof of a mysterious third type of magnetism",
+      "origX": "For nearly 90 years, scientists believed magnetism fell into just two categories, but researchers have now confirmed a remarkable third type called altermagnetism. Using specialized X-rays, they uncovered a unique magnetic signature that proves these materials behave differently from conventional magnets. Altermagnets combine stability with the ability to efficiently carry information, potentially overcoming major limitations in today's electronics. The discovery could lead to faster computers, more efficient data centers, and breakthroughs in quantum technology."
+    },
+    {
+      "date": "2026-11-05",
+      "cat": "phys",
+      "t": "麻省理工學院的科學家打破了 20 年的規則並解鎖了前所未見的晶體結構",
+      "x": "麻省理工学院的科学家挑战了二十年来的传统思维，发现灵活的分子连接，而不是刚性的分子连接，可以解锁排列纳米颗粒的全新方法。這項突破可能會催生出具有不同尋常特性的新一代設計材料，並在電子、醫學和能源領域得到應用。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261104012248.htm",
+      "orig": "MIT scientists break a 20-year rule and unlock never-before-seen crystal structures",
+      "origX": "MIT scientists have challenged two decades of conventional thinking by discovering that flexible molecular connections, rather than rigid ones, can unlock entirely new ways to arrange nanoparticles. The breakthrough could lead to a new generation of designer materials with unusual properties and applications in electronics, medicine, and energy."
+    },
+    {
+      "date": "2026-11-05",
+      "cat": "chem",
+      "t": "人工智慧揭示了一種隱藏的化學捷徑，可以將二氧化碳轉化為燃料",
+      "x": "科學家利用人工智慧發現了近 10,000 個將二氧化碳轉化為燃料和化學品的化學反應，揭示了傳統模型遺漏的關鍵途徑。這項發現極大地改善了對二氧化碳轉化的預測，並揭示了一種令人驚訝的氫反應，可以激發更高效的催化劑。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261013015758.htm",
+      "orig": "AI reveals a hidden chemical shortcut that could turn CO2 into fuel",
+      "origX": "Scientists used artificial intelligence to uncover nearly 10,000 chemical reactions involved in transforming carbon dioxide into fuels and chemicals, revealing crucial pathways that traditional models had missed. The discovery dramatically improved predictions of CO2 conversion and uncovered a surprising hydrogen reaction that could inspire more efficient catalysts."
+    },
+    {
+      "date": "2026-11-05",
+      "cat": "chem",
+      "t": "科學家發現了一個可以引發或破壞化學反應的隱藏因素",
+      "x": "研究人員發現了一個可以決定化學反應成功或失敗的隱藏因素，然後利用它將所需產物的比例從 16% 提高到 97%。透過控制電極附近的酸度，他們開發了一種很有前途的方法，使用氧氣和電力而不是添加危險的氧化劑來製造塑膠、藥品和其他產品的化學物質。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261008005244.htm",
+      "orig": "Scientists discover a hidden factor that can make or break chemical reactions",
+      "origX": "Researchers discovered a hidden factor that can determine whether chemical reactions succeed or fail, and then used it to boost the proportion of the desired product from 16% to 97%. By controlling acidity near electrodes, they developed a promising way to manufacture chemicals for plastics, medicines, and other products using oxygen and electricity instead of hazardous added oxidants."
+    },
+    {
+      "date": "2026-11-05",
+      "cat": "bio",
+      "t": "科學家可能終於解釋了為什麼我們的大腦和身體是交叉連結的",
+      "x": "科學家提出，大腦的神秘交叉線路（將每個半球與身體的另一側連接起來）可能起源於 5 億多年前的古代魚類的視覺系統。這種不尋常的安排可能只是在古老的基礎上建立新的大腦迴路的進化遺產，而不是為了特定的優勢而進化。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261103003146.htm",
+      "orig": "Scientists may have finally explained why our brains and bodies are cross-wired",
+      "origX": "Scientists propose that the brain’s mysterious cross-wiring, which connects each hemisphere to the opposite side of the body, may have originated more than 500 million years ago in the visual systems of ancient fish. Rather than evolving for a specific advantage, this unusual arrangement may simply be a legacy of evolution building new brain circuits on an ancient foundation."
+    },
+    {
+      "date": "2026-11-05",
+      "cat": "bio",
+      "t": "埃及的古猿化石可能改寫人類起源的故事",
+      "x": "在埃及發現的一個 1700 至 1800 萬年前的猿類化石正在挑戰人們長期以來對人類和其他現代猿類祖先最初進化地點的看法。科學家現在懷疑北非和中東，而不是東非，可能是現代猿類進化的搖籃。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261031011638.htm",
+      "orig": "Ancient ape fossil in Egypt could rewrite the story of human origins",
+      "origX": "A 17- to 18-million-year-old ape fossil discovered in Egypt is challenging long-held beliefs about where the ancestors of humans and other modern apes first evolved. Scientists now suspect that North Africa and the Middle East, rather than East Africa, may have been the cradle of modern ape evolution."
+    },
+    {
       "date": "2026-11-04",
       "cat": "phys",
       "t": "科學家剛發現了一個可以讓黑洞一分為二的漏洞",
@@ -13,16 +81,6 @@
     },
     {
       "date": "2026-11-04",
-      "cat": "phys",
-      "t": "大型強子對撞機在令人驚訝的小碰撞中揭示了大爆炸物質的證據",
-      "x": "歐洲核子研究中心大型強子對撞機的科學家發現了令人信服的新證據，表明即使是相對較小的原子碰撞也可以重現大爆炸後充滿宇宙的非凡物質狀態。這種奇異物質被稱為夸克-膠子等離子體，其形成溫度比太陽中心高 100,000 倍以上，導致普通粒子分裂",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261031221211.htm",
-      "orig": "Large Hadron Collider reveals evidence of Big Bang matter in surprisingly small collisions",
-      "origX": "Scientists at CERN's Large Hadron Collider have uncovered compelling new evidence that even relatively small atomic collisions can recreate the extraordinary state of matter that filled the universe moments after the Big Bang. Known as quark-gluon plasma, this exotic substance forms at temperatures more than 100,000 times hotter than the center of the Sun, causing ordinary particles to break apart into their fundamental building blocks."
-    },
-    {
-      "date": "2026-11-04",
       "cat": "chem",
       "t": "晶體中的微小缺陷揭示了巨大的量子驚喜",
       "x": "研究人員解決了一個長期存在的挑戰，即了解鑽石和碳化矽等材料中的微小缺陷在光照下如何表現。他們的新計算方法揭示了碳化矽中一個令人驚訝的重要能量損失機制，而科學家之前卻低估了這個機制。這項發現有助於解釋多年來困擾研究人員的謎團，",
@@ -30,64 +88,6 @@
       "url": "https://www.sciencedaily.com/releases/2026/10/261022081302.htm",
       "orig": "A tiny defect in a crystal reveals a big quantum surprise",
       "origX": "Researchers have solved a long-standing challenge in understanding how tiny defects in materials like diamond and silicon carbide behave when exposed to light. Their new computational method revealed a surprisingly important energy-loss mechanism in silicon carbide that scientists had previously underestimated. The finding helps explain a mystery that has puzzled researchers for years and could improve the design of quantum computers and sensors."
-    },
-    {
-      "date": "2026-11-04",
-      "cat": "chem",
-      "t": "科學家可能找到了聚變能源的捷徑",
-      "x": "普林斯頓等離子體物理實驗室可能已經透過扭轉傳統方法找到了更有效的聚變能途徑：首先加熱等離子體，然後增加其密度。他們的計算可以幫助未來的反應器以少得多的能量實現自我維持聚變，同時避免導致點火更加困難的隱藏問題。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261008005242.htm",
-      "orig": "Scientists may have found a shortcut to fusion energy",
-      "origX": "Princeton Plasma Physics Laboratory may have found a dramatically more efficient route to fusion energy by reversing the traditional approach: heating plasma first, then increasing its density. Their calculations could help future reactors reach self-sustaining fusion with far less energy while avoiding hidden problems that make ignition harder."
-    },
-    {
-      "date": "2026-11-04",
-      "cat": "bio",
-      "t": "50年前的青蛙消失之謎揭露了隱藏的殺手",
-      "x": "隨著科學家發現的證據表明一種致命的真菌席捲了該地區並摧毀了脆弱的物種，一個涉及巴西青蛙消失的近 50 年之謎可能最終會得到解決。值得注意的是，許多青蛙數量此後出現反彈，這表明它們對曾經威脅其生存的疾病產生了更強的耐受性。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261102202838.htm",
-      "orig": "A 50-year-old mystery of vanishing frogs reveals a hidden killer",
-      "origX": "A nearly 50-year-old mystery involving disappearing frogs in Brazil may finally be solved, with scientists uncovering evidence that a deadly fungus swept through the region and devastated vulnerable species. Remarkably, many frog populations have since rebounded, suggesting they developed greater tolerance to the disease that once threatened their survival."
-    },
-    {
-      "date": "2026-11-04",
-      "cat": "bio",
-      "t": "科學家發現樹木用來挺直自己的隱藏“肌肉”",
-      "x": "科學家發現，樹木可以感知自己的形狀，並利用特殊的木材來拉直樹幹，這些木材的作用就像相反的肌肉。這種非凡的能力可以幫助樹木保持其姿態，並可能帶來更強大的森林、更好的木材和更有彈性的作物。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261030003006.htm",
-      "orig": "Scientists discover the hidden “muscles” trees use to straighten themselves",
-      "origX": "Scientists have discovered that trees can sense their own shape and straighten their trunks using specialized wood that acts like opposing muscles. This remarkable ability helps trees maintain their posture and could lead to stronger forests, better timber, and more resilient crops."
-    },
-    {
-      "date": "2026-11-03",
-      "cat": "bio",
-      "t": "中期肝癌無法開刀？「降階治療」縮小腫瘤，免疫合併療法逆轉生機",
-      "x": "中期肝癌若因腫瘤過大無法手術，可透過「免疫合併抗血管新生療法」進行降階治療。此法能有效縮小腫瘤，讓病灶轉為可開刀狀態，助患者化被動為主動，大幅提升長期存活率！",
-      "src": "泛科學",
-      "url": "https://pansci.asia/archives/382467"
-    },
-    {
-      "date": "2026-11-03",
-      "cat": "phys",
-      "t": "IceCube偵測到的幽靈粒子能量是太陽中微子的100億倍",
-      "x": "被稱為中微子的神秘粒子不斷地流經我們的身體，科學家現在正在使用埋在南極冰層中的大型天文台來探測來自遙遠宇宙源的極其強大的中微子。這些難以捉摸的「幽靈粒子」可能蘊藏著有關大爆炸、極端宇宙事件以及宇宙中一些最大奧秘的非凡線索。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261101010533.htm",
-      "orig": "IceCube detects ghost particles with 10 billion times the energy of solar neutrinos",
-      "origX": "Mysterious particles called neutrinos constantly stream through our bodies, and scientists are now detecting incredibly powerful versions arriving from distant cosmic sources using a massive observatory buried in Antarctic ice. These elusive “ghost particles” could hold extraordinary clues about the Big Bang, extreme cosmic events, and some of the universe’s greatest mysteries."
-    },
-    {
-      "date": "2026-11-03",
-      "cat": "chem",
-      "t": "革命性的新型顯微鏡可以揭示隱藏的生命機制",
-      "x": "研究人員開發了一種革命性的顯微鏡，它使用極其強大的激光，使以前看不見的細胞結構變得更容易看到。該技術極大地提高了影像清晰度，使科學家能夠檢查傳統電子顯微鏡難以捕捉的小蛋白質。它最終可能揭示微小的分子機器如何在細胞內相互作用，前提是",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261021231230.htm",
-      "orig": "A revolutionary new microscope could reveal the hidden machinery of life",
-      "origX": "Researchers have developed a revolutionary microscope that uses an incredibly powerful laser to make previously invisible cellular structures easier to see. The technology dramatically improves image clarity, allowing scientists to examine small proteins that conventional electron microscopes struggle to capture. It could eventually reveal how tiny molecular machines interact inside cells, providing an unprecedented look at the hidden workings of life."
     }
   ]
 }
