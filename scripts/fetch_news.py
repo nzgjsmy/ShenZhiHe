@@ -3,22 +3,28 @@
 設計原則（重要）：
 1. **只抓有摘要的源**。Google News 只有標題和連結，卡片會空掉一半。
    中文用泛科學（pansci.asia，繁體、有摘要、科普向）；
-   英文用 ScienceDaily 分科 RSS（物理/化學/生物各有 60 條，品質穩定）。
+   英文用 ScienceDaily 分科 RSS（物理/化學/生物各有 60 條，品質穩定）
+   與 **Nature 主刊**（nature.rss，RSS 1.0/RDF 格式）。
+   ⚠️ Nature 的 `content:encoded` 只是「期刊名 + DOI」引用資訊、不是摘要，
+   所以要回文章頁抓 `og:description`；抓不到就跳過該條，不硬湊。
 
    **英文條目自動翻譯**（Google 免費接口，非官方）：
-   - 只翻「入選」的少數幾條，不是把 60 條全翻 —— 每天最多 6 次請求，避開限流
+   - 只翻「入選」的少數幾條（每個源 2–6 條），不是把 60 條全翻，避開限流
    - 翻譯失敗就保留英文原文，**不丟數據、不阻塞流程**
    - 原文另存 `orig` 欄位，src 標成「ScienceDaily（譯）」提醒是機翻
 2. **寧缺勿濫**。抓不到就保持原樣，不硬湊、不生成假內容。
    時事寫錯的代價遠高於少一條。
 3. **一律保留原文連結**。使用者能自己核對，不把我當唯一資訊源。
 4. **去重按連結**。同一篇重複抓到不會產生重複卡片。
+5. **每天只精選 4 篇進站**（用戶 2026-11-06）。抓到的是「候選」，精選時按來源輪轉，
+   單一來源最多 2 篇 —— 不然 ScienceDaily 三個分科源會把版面全占滿，Nature 永遠排不進來。
 
 用法：
   python scripts/fetch_news.py            # 抓取並寫入
   python scripts/fetch_news.py --dry-run  # 只看抓到什麼，不寫檔
 """
 
+import html
 import io
 import json
 import os
@@ -33,19 +39,31 @@ from datetime import datetime, timezone
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "data", "_news.json")
-KEEP = 9          # 保留最近 N 條（每科最多 3 條，前端 3×3 排得整齊）
+KEEP = 4          # 每天只精選 4 篇進站（用戶 2026-11-06：不要整批新聞都塞進神智核）
+PER_SRC = 2       # 同一來源最多 2 篇，避免 ScienceDaily 或 Nature 霸榜
+PER_CAT = 3       # 同一科目最多 3 篇（KEEP=4 時只是防極端，不該擋住來源輪轉）
 TIMEOUT = 20
 
 FEEDS = [
     # lang=zh：分類靠關鍵詞判斷；take：每個源最多取幾條（英文源要翻譯，取少一點）
-    {"name": "泛科學", "url": "https://pansci.asia/feed", "lang": "zh", "cat": None, "take": 6},
+    # take 只是「候選數」：抓進來後還會精選，最終只留 KEEP 篇。
+    # 別貪多 —— 英文源每條要兩次翻譯，抓 60 條全翻會被限流。
+    {"name": "泛科學", "url": "https://pansci.asia/feed", "lang": "zh", "cat": None, "take": 3},
     {"name": "ScienceDaily", "url": "https://www.sciencedaily.com/rss/matter_energy/physics.xml",
-     "lang": "en", "cat": "phys", "take": 2},
+     "lang": "en", "cat": "phys", "take": 1},
     {"name": "ScienceDaily", "url": "https://www.sciencedaily.com/rss/matter_energy/chemistry.xml",
-     "lang": "en", "cat": "chem", "take": 2},
+     "lang": "en", "cat": "chem", "take": 1},
     {"name": "ScienceDaily", "url": "https://www.sciencedaily.com/rss/plants_animals.xml",
-     "lang": "en", "cat": "bio", "take": 2},
+     "lang": "en", "cat": "bio", "take": 1},
+    # Nature 主刊：RSS 1.0/RDF，分科靠英文標題關鍵詞；摘要要回文章頁補。
+    # 主刊 RSS 有 75 條，這裡只取 2 條候選，不會整批進站。
+    {"name": "Nature", "url": "https://www.nature.com/nature.rss",
+     "lang": "en", "cat": None, "fmt": "rdf", "take": 2},
 ]
+
+# RSS 1.0 (RDF) 的命名空間 —— Nature 主刊用的就是這個，不是一般 RSS 2.0
+RDF = "{http://purl.org/rss/1.0/}"
+DC = "{http://purl.org/dc/elements/1.1/}"
 
 # 分類關鍵詞：命中越多越優先。泛科學偏醫療，所以 bio 的詞要收緊一點，
 # 免得所有健康文章都被歸到生物。
@@ -58,18 +76,38 @@ CATS = {
             "植物", "演化", "免疫", "生態", "癌", "疫苗", "生物", "腦"],
 }
 
+# 英文綜合源（Nature）的分類關鍵詞：命中越多越優先。
+# 主刊橫跨各科，不能像 ScienceDaily 那樣用分科 RSS 直接指定 cat。
+EN_CATS = {
+    "chem": ["chemistry", "chemical", "molecule", "molecular", "catalyst", "catalytic",
+             "synthesis", "compound", "crystal", "polymer", "reaction", "battery",
+             "electrolyte", "hydrogen", "isotope", "nanomaterial", "organic", "solute"],
+    "phys": ["physics", "quantum", "particle", "photon", "gravity", "laser", "neutrino",
+             "magnetic", "superconduct", "astronom", "cosmic", "universe", "satellite",
+             "phonon", "semiconductor", "optical", "plasma", "thermodynamic", "topological"],
+    "bio": ["cell", "gene", "genome", "genomic", "protein", "neuron", "neural",
+            "microb", "bacteri", "virus", "viral", "plant", "evolution", "immun",
+            "ecolog", "cancer", "vaccine", "biology", "brain", "dna", "species",
+            "clinical", "health", "disease", "enzyme", "tissue", "organ", "animal"],
+}
+
 # 明顯不是「科研」的內容，直接丟掉（產業、投資、活動公告）
 DROP = ["募資", "營收", "股價", "投資", "財報", "合作備忘錄", "簽署", "發表會",
         "優惠", "報名", "抽獎", "課程", "論壇報名", "徵才"]
+# Nature 主刊偶爾會混進更正／撤稿公告，那些不是新聞
+EN_DROP = ["author correction", "publisher correction", "correction to",
+           "retraction", "erratum", "editorial expression of concern"]
 
 
 def strip_html(s):
     s = re.sub(r"<[^>]+>", "", s or "")
+    # 先做原本的排版用字轉換（引號要轉成繁體「」），剩下的實體交給標準庫兜底。
+    # Nature 摘要常見 &#176;（°）、&#8211;、&amp;，不解會原樣印在卡片上。
     s = (s.replace("&nbsp;", " ").replace("&amp;", "&").replace("&lt;", "<")
          .replace("&gt;", ">").replace("&quot;", '"').replace("&#8217;", "’")
          .replace("&#8230;", "…").replace("&#8220;", "「").replace("&#8221;", "」")
          .replace("&#8212;", "—").replace("&#039;", "'"))
-    return re.sub(r"\s+", " ", s).strip()
+    return re.sub(r"\s+", " ", html.unescape(s)).strip()
 
 
 def classify(text):
@@ -82,8 +120,24 @@ def classify(text):
     return best, best_n
 
 
+def classify_en(text):
+    """英文綜合源（Nature）的分類，回傳 (cat, score)。"""
+    t = (text or "").lower()
+    best, best_n = "", 0
+    for cat, words in EN_CATS.items():
+        n = sum(1 for w in words if w in t)
+        if n > best_n:
+            best, best_n = cat, n
+    return best, best_n
+
+
 def parse_date(s):
     """RSS 的 pubDate → YYYY-MM-DD。失敗回今天。"""
+    s = (s or "").strip()
+    # Nature 的 dc:date 是純日期「2026-11-05」，沒有時區。
+    # 交給 strptime + astimezone 會被當成本地時間再轉 UTC，平白少一天（實測 11-05 → 11-04）。
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", s):
+        return s
     for fmt in ("%a, %d %b %Y %H:%M:%S %z", "%a, %d %b %Y %H:%M:%S %Z",
                 "%Y-%m-%dT%H:%M:%S%z"):
         try:
@@ -176,6 +230,56 @@ def fetch(url):
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (compatible; ShenZhiHe/1.0)"})
     with urllib.request.urlopen(req, timeout=TIMEOUT, context=ctx) as r:
         return r.read()
+
+
+def refetch_desc(url):
+    """Nature 文章頁的 og:description / meta description → 摘要。
+
+    nature.rss 的 content:encoded 只有「Nature, Published online: … doi:…」，
+    拿它當摘要會顯示一堆引用資訊。文章頁的 meta 才是真正的摘要。
+    抓不到就回空，呼叫端會跳過該條（寧缺勿濫）。
+    """
+    if not url:
+        return ""
+    try:
+        html = fetch(url).decode("utf-8", "ignore")
+    except Exception:
+        return ""
+    pats = (r'<meta[^>]+property=["\']og:description["\'][^>]+content=["\']([^"\']+)',
+            r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:description',
+            r'<meta[^>]+name=["\']description["\'][^>]+content=["\']([^"\']+)',
+            r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+name=["\']description')
+    for pat in pats:
+        m = re.search(pat, html, re.S | re.I)
+        if not m:
+            continue
+        t = strip_html(m.group(1)).strip()
+        if len(t) >= 40:
+            return t
+    return ""
+
+
+def feed_entries(feed, root):
+    """統一把 RSS 2.0 / RSS 1.0(RDF) 轉成 {title,desc,link,pub}。"""
+    if feed.get("fmt") == "rdf":
+        out = []
+        for it in root.findall(".//" + RDF + "item"):
+            link = (it.findtext(RDF + "link") or "").strip()
+            title = strip_html(it.findtext(RDF + "title") or "")
+            if not title or not link:
+                continue
+            out.append({"title": title, "desc": "", "link": link,
+                        "pub": (it.findtext(DC + "date") or "").strip()})
+        return out
+    out = []
+    for it in root.findall(".//item"):
+        out.append({
+            "title": strip_html(it.findtext("title") or ""),
+            "desc": strip_html(it.findtext("description") or ""),
+            "link": (it.findtext("link") or "").strip(),
+            "pub": (it.findtext("pubDate") or "").strip(),
+        })
+    return out
 
 
 def refetch_title(url):
@@ -297,38 +401,46 @@ def main():
             print("  ✗ %s 抓取失敗：%s" % (name, e))
             continue
 
-        items = root.findall(".//item")
-        print("  %s：抓到 %d 條（取前 %d）" % (name, len(items), take))
+        entries = feed_entries(feed, root)
+        print("  %s：抓到 %d 條（取前 %d）" % (name, len(entries), take))
 
         n = 0
-        for it in items:
+        for e in entries:
             if n >= take:
                 break
 
-            title = strip_html(it.findtext("title") or "")
-            desc = strip_html(it.findtext("description") or "")
-            link = (it.findtext("link") or "").strip()
+            title, desc, link, pub = e["title"], e["desc"], e["link"], e["pub"]
             if not title or not link:
                 continue
 
-            # 中文源要擋掉產業/投資類；英文源本身就是科研 RSS，不必擋
+            # 中文源要擋掉產業/投資類；Nature 要擋掉更正／撤稿公告
             if lang == "zh" and any(w in title for w in DROP):
+                continue
+            if lang == "en" and any(w in title.lower() for w in EN_DROP):
                 continue
 
             if link in seen:
                 continue
 
+            # Nature 主刊 RSS 沒摘要，回文章頁補；補不到就跳過（卡片會空一半）
+            if not desc and feed.get("fmt") == "rdf":
+                desc = refetch_desc(link)
+                if not desc:
+                    continue
+
             if fixed_cat:
                 cat = fixed_cat           # 分科 RSS 直接知道科目，不必猜
             else:
-                cat, score = classify(title + " " + desc)
+                # 中文源用中文關鍵詞，Nature 用英文關鍵詞
+                cls = classify_en if lang == "en" else classify
+                cat, score = cls(title + " " + desc)
                 if score == 0:
                     continue              # 分不出科目 → 不是學科內容
 
             seen.add(link)
 
             entry = {
-                "date": parse_date(it.findtext("pubDate")),
+                "date": parse_date(pub),
                 "cat": cat,
                 "t": title[:60],
                 "x": desc[:130].rstrip() + ("…" if len(desc) > 130 else ""),
@@ -371,16 +483,39 @@ def main():
     # 按日期新到舊，同日期保持原順序
     merged.sort(key=lambda x: x.get("date") or "", reverse=True)
 
-    # 科目平衡：每科最多 3 條。
-    # 不做這個的話中文源偏醫療，bio 會把物理化學全擠出去（實測過）。
-    picked, cnt = [], {}
+    # 精選：每天只留 KEEP 篇，且來源／科目都要多樣。
+    # 2026-11-06 用戶要求「每天精選 3–4 篇就行，不要整批 Nature 新聞都進站」。
+    # 只按日期取前幾名的話，ScienceDaily 三個分科源會把 4 個位置全占滿（實測過），
+    # 所以同一來源最多 PER_SRC 篇、同一科目最多 PER_CAT 篇。
+    # 按來源分桶、每桶內按日期排好，再一輪一輪地從每個來源各取一篇。
+    # 純按日期取會讓 ScienceDaily（三個分科源）把 4 個位置全占滿，Nature 一篇都進不來。
+    by_src = {}
     for it in merged:
-        c = it.get("cat") or "bio"
-        if cnt.get(c, 0) >= 3:
-            continue
-        cnt[c] = cnt.get(c, 0) + 1
-        picked.append(it)
-        if len(picked) >= KEEP:
+        s = (it.get("src") or "").replace("（譯）", "").strip() or "?"
+        by_src.setdefault(s, []).append(it)
+    for s in by_src:
+        by_src[s].sort(key=lambda x: x.get("date") or "", reverse=True)
+    order = sorted(by_src, key=lambda s: by_src[s][0].get("date") or "", reverse=True)
+
+    picked, per_src, per_cat = [], {}, {}
+    for _ in range(KEEP):
+        added = False
+        for s in order:
+            if per_src.get(s, 0) >= PER_SRC:
+                continue
+            while by_src[s]:
+                it = by_src[s].pop(0)
+                c = it.get("cat") or "bio"
+                if per_cat.get(c, 0) >= PER_CAT:
+                    continue
+                per_src[s] = per_src.get(s, 0) + 1
+                per_cat[c] = per_cat.get(c, 0) + 1
+                picked.append(it)
+                added = True
+                break
+            if len(picked) >= KEEP:
+                break
+        if not added or len(picked) >= KEEP:
             break
     merged = picked
 
@@ -388,7 +523,8 @@ def main():
         "_note": ("科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，"
                   "只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結"
                   "——時事不是常識，寧可少寫也不要編。"
-                  "本檔由 scripts/fetch_news.py 自動抓取泛科學 RSS 產生，可手動補充。"),
+                  "每天從泛科學、ScienceDaily、Nature 主刊只精選 4 篇（單一來源／科目各最多 2 篇），"
+                  "本檔由 scripts/fetch_news.py 自動產生，可手動補充。"),
         "items": merged,
     }
     io.open(OUT, "w", encoding="utf-8", newline="\n").write(

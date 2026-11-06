@@ -1,65 +1,15 @@
 {
-  "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。本檔由 scripts/fetch_news.py 自動抓取泛科學 RSS 產生，可手動補充。",
+  "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊只精選 4 篇（單一來源／科目各最多 2 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
       "date": "2026-11-06",
       "cat": "phys",
-      "t": "巧妙的分子技巧解鎖了玻璃中以前不可能的特性",
-      "x": "科學家發現如何使用一種特殊的分子重新編程玻璃的內部結構，該分子可以重新排列化學鍵，同時降低熔化溫度。這項突破可以解鎖具有精確控制的磁性和光學特性的全新玻璃材料，為先進電子、感測器和其他技術帶來可能性。",
+      "t": "SLAC 科學家發現了神秘的第三種磁性的確鑿證據",
+      "x": "近 90 年來，科學家一直認為磁性只分為兩類，但研究人員現在證實了第三種引人注目的類型，稱為交變磁性。他們利用專門的 X 射線發現了獨特的磁性特徵，證明這些材料的行為與傳統磁鐵不同。交變磁鐵將穩定性與有效攜帶訊息的能力結合在一起，有潛力",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261103003202.htm",
-      "orig": "A clever molecular trick unlocks previously impossible properties in glass",
-      "origX": "Scientists have discovered how to reprogram the internal structure of glass using a special molecule that rearranges chemical bonds while lowering the melting temperature. The breakthrough could unlock entirely new glass materials with precisely controlled magnetic and optical properties, opening possibilities for advanced electronics, sensors, and other technologies."
-    },
-    {
-      "date": "2026-11-06",
-      "cat": "phys",
-      "t": "IceCube探測到的幽靈粒子能量是太陽中微子的100億倍",
-      "x": "被稱為中微子的神秘粒子不斷地流經我們的身體，科學家現在正在使用埋在南極冰層中的大型天文台探測來自遙遠宇宙源的極其強大的中微子。這些難以捉摸的「幽靈粒子」可能蘊藏著有關大爆炸、極端宇宙事件以及宇宙中一些最大奧秘的非凡線索。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261101010533.htm",
-      "orig": "IceCube detects ghost particles with 10 billion times the energy of solar neutrinos",
-      "origX": "Mysterious particles called neutrinos constantly stream through our bodies, and scientists are now detecting incredibly powerful versions arriving from distant cosmic sources using a massive observatory buried in Antarctic ice. These elusive “ghost particles” could hold extraordinary clues about the Big Bang, extreme cosmic events, and some of the universe’s greatest mysteries."
-    },
-    {
-      "date": "2026-11-06",
-      "cat": "chem",
-      "t": "科學家發現堵塞的過濾器可以徹底改變煉油業",
-      "x": "科學家們開發出了一種非凡的新型薄膜，可以在室溫下分離原油，利用油本身創建微觀過濾通道。這項突破可以將煉油能源消耗減少近 32%，碳排放減少近 38%，營運成本減少 36%，有可能改變世界上能源最密集的產業之一。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261103003207.htm",
-      "orig": "Scientists discover that a clogged filter could revolutionize oil refining",
-      "origX": "Scientists have developed a remarkable new membrane that separates crude oil at room temperature, using the oil itself to create microscopic filtration channels. The breakthrough could cut refining energy consumption by nearly 32%, carbon emissions by almost 38%, and operating costs by 36%, potentially transforming one of the world's most energy-intensive industries."
-    },
-    {
-      "date": "2026-11-06",
-      "cat": "chem",
-      "t": "革命性的新型顯微鏡可以揭示隱藏的生命機制",
-      "x": "研究人員開發了一種革命性的顯微鏡，它使用極其強大的激光，使以前看不見的細胞結構變得更容易看到。該技術極大地提高了影像清晰度，使科學家能夠檢查傳統電子顯微鏡難以捕捉的小蛋白質。它最終可能揭示微小的分子機器如何在細胞內相互作用，前提是",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261021231230.htm",
-      "orig": "A revolutionary new microscope could reveal the hidden machinery of life",
-      "origX": "Researchers have developed a revolutionary microscope that uses an incredibly powerful laser to make previously invisible cellular structures easier to see. The technology dramatically improves image clarity, allowing scientists to examine small proteins that conventional electron microscopes struggle to capture. It could eventually reveal how tiny molecular machines interact inside cells, providing an unprecedented look at the hidden workings of life."
-    },
-    {
-      "date": "2026-11-06",
-      "cat": "bio",
-      "t": "50年前的青蛙消失之謎揭露了隱藏的殺手",
-      "x": "隨著科學家發現的證據表明一種致命的真菌席捲了該地區並摧毀了脆弱的物種，一個涉及巴西青蛙消失的近 50 年之謎可能最終會得到解決。值得注意的是，許多青蛙數量此後出現反彈，這表明它們對曾經威脅其生存的疾病產生了更強的耐受性。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261102202838.htm",
-      "orig": "A 50-year-old mystery of vanishing frogs reveals a hidden killer",
-      "origX": "A nearly 50-year-old mystery involving disappearing frogs in Brazil may finally be solved, with scientists uncovering evidence that a deadly fungus swept through the region and devastated vulnerable species. Remarkably, many frog populations have since rebounded, suggesting they developed greater tolerance to the disease that once threatened their survival."
-    },
-    {
-      "date": "2026-11-06",
-      "cat": "bio",
-      "t": "科學家發現樹木用來挺直自己的隱藏“肌肉”",
-      "x": "科學家發現，樹木可以感知自己的形狀，並利用特殊的木材來拉直樹幹，這些木材的作用就像相反的肌肉。這種非凡的能力可以幫助樹木保持其姿態，並可能帶來更強大的森林、更好的木材和更有彈性的作物。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261030003006.htm",
-      "orig": "Scientists discover the hidden “muscles” trees use to straighten themselves",
-      "origX": "Scientists have discovered that trees can sense their own shape and straighten their trunks using specialized wood that acts like opposing muscles. This remarkable ability helps trees maintain their posture and could lead to stronger forests, better timber, and more resilient crops."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261104012256.htm",
+      "orig": "SLAC scientists find conclusive proof of a mysterious third type of magnetism",
+      "origX": "For nearly 90 years, scientists believed magnetism fell into just two categories, but researchers have now confirmed a remarkable third type called altermagnetism. Using specialized X-rays, they uncovered a unique magnetic signature that proves these materials behave differently from conventional magnets. Altermagnets combine stability with the ability to efficiently carry information, potentially overcoming major limitations in today's electronics. The discovery could lead to faster computers, more efficient data centers, and breakthroughs in quantum technology."
     },
     {
       "date": "2026-11-05",
@@ -71,23 +21,23 @@
     },
     {
       "date": "2026-11-05",
-      "cat": "phys",
-      "t": "SLAC 科學家發現了神秘的第三種磁性的確鑿證據",
-      "x": "近 90 年來，科學家一直認為磁性只分為兩類，但研究人員現在證實了第三種引人注目的類型，稱為交變磁性。他們利用專門的 X 射線發現了獨特的磁性特徵，證明這些材料的行為與傳統磁鐵不同。交變磁鐵將穩定性與有效攜帶訊息的能力結合在一起，有潛力",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261104012256.htm",
-      "orig": "SLAC scientists find conclusive proof of a mysterious third type of magnetism",
-      "origX": "For nearly 90 years, scientists believed magnetism fell into just two categories, but researchers have now confirmed a remarkable third type called altermagnetism. Using specialized X-rays, they uncovered a unique magnetic signature that proves these materials behave differently from conventional magnets. Altermagnets combine stability with the ability to efficiently carry information, potentially overcoming major limitations in today's electronics. The discovery could lead to faster computers, more efficient data centers, and breakthroughs in quantum technology."
+      "cat": "bio",
+      "t": "在消費性智慧手錶上機會性地檢測高血壓跡象",
+      "x": "高血壓是個無聲的殺手，超過一半的受影響成年人不知道自己的病情1,2。這種認知的缺乏是一個主要問題，因為早期介入對於預防重大不良心血管事件至關重要3,4。在這裡，我們展示了將人工智慧 (AI) 應用於使用廣泛使用的消費者智慧型裝置記錄的多模態波形（光電體積描記法…",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/s41586-026-11336-3",
+      "orig": "Opportunistically Detecting Signs of Hypertension on a Consumer Smartwatch",
+      "origX": "Hypertension is a silent killer, with over half of affected adults unaware of their condition1,2. This lack of awareness is a major concern, as early intervention is critical for preventing major adverse cardiovascular events3,4. Here we show that applying artificial intelligence (AI) to multimodal waveforms (photoplethysmography and accelerometry) recorded using a widely available consumer smartwatch (AI-PPG-ACC-HTN), without any cuff calibration, can detect hypertension with accuracy levels comparable to traditional cuffed blood pressure (BP) devices in the existing clinical framework. We validated AI-PPG-ACC-HTN in a prospective, multicenter study of 196 diverse participants free from known cardiovascular disease and antihypertensive medication against gold-standard 24-hour ambulatory BP monitoring. Over seven days of real-world monitoring, AI-PPG-ACC-HTN detected hypertension with a sensitivity of 65.8% (95% CI, 54.0%-76.3%), specificity of 90.0% (95% CI, 83.2%-94.7%), and positive predictive value (PPV) of 80.6% (95% CI, 68.6%-89.6%). In comparison, initial office BP screening achieved a sensitivity of 55.3% (95% CI, 43.4%-66.7%), specificity of 90.0% (95% CI, 83.2%-94.7%) and PPV of 77.8% (95% CI, 64.4%-88.0%). These results highlight an opportunity for consumer smartwatches to facilitate population-level opportunistic hypertension screening by prompting at-risk individuals toward clinical assessment and confirmatory diagnosis using established cuff-based methodologies, offering an accessible tool to address this major public health challenge."
     },
     {
-      "date": "2026-11-05",
+      "date": "2026-11-06",
       "cat": "chem",
-      "t": "人工智慧揭示了一種隱藏的化學捷徑，可以將二氧化碳轉化為燃料",
-      "x": "科學家利用人工智慧發現了近 10,000 個將二氧化碳轉化為燃料和化學品的化學反應，揭示了傳統模型遺漏的關鍵途徑。這項發現極大地改善了對二氧化碳轉化的預測，並揭示了一種令人驚訝的氫反應，可以激發更高效的催化劑。",
+      "t": "革命性的新型顯微鏡可以揭示隱藏的生命機制",
+      "x": "研究人員開發了一種革命性的顯微鏡，它使用極其強大的激光，使以前看不見的細胞結構變得更容易看到。該技術極大地提高了影像清晰度，使科學家能夠檢查傳統電子顯微鏡難以捕捉的小蛋白質。它最終可能揭示微小的分子機器如何在細胞內相互作用，前提是",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261013015758.htm",
-      "orig": "AI reveals a hidden chemical shortcut that could turn CO2 into fuel",
-      "origX": "Scientists used artificial intelligence to uncover nearly 10,000 chemical reactions involved in transforming carbon dioxide into fuels and chemicals, revealing crucial pathways that traditional models had missed. The discovery dramatically improved predictions of CO2 conversion and uncovered a surprising hydrogen reaction that could inspire more efficient catalysts."
+      "url": "https://www.sciencedaily.com/releases/2026/10/261021231230.htm",
+      "orig": "A revolutionary new microscope could reveal the hidden machinery of life",
+      "origX": "Researchers have developed a revolutionary microscope that uses an incredibly powerful laser to make previously invisible cellular structures easier to see. The technology dramatically improves image clarity, allowing scientists to examine small proteins that conventional electron microscopes struggle to capture. It could eventually reveal how tiny molecular machines interact inside cells, providing an unprecedented look at the hidden workings of life."
     }
   ]
 }

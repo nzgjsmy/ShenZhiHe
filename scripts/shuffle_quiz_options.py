@@ -92,11 +92,65 @@ def plan_targets(items):
     return targets, counts
 
 
+def strip_prefixes():
+    """清掉選項文字自帶的 `A `／`B. ` 位置標籤。
+
+    ⚠️ 只能動「四個選項前綴剛好是 A/B/C/D 各一次」的題：
+    bio25-q31 的「A 與 T 配對，C 與 G 配對」四個選項都以 A 開頭，
+    那裡的 A 是腺嘌呤，剝掉就把題目毀了。
+    只刪除前綴那幾個字元，引號與其餘文字一個字都不動。
+    """
+    edits = collections.defaultdict(list)
+    n_q = 0
+    for f in sorted(glob.glob(os.path.join(ROOT, 'quiz', '*', '*.json'))):
+        if os.path.basename(os.path.dirname(f)) not in ('bio', 'chem', 'phys'):
+            continue
+        text = io.open(f, encoding='utf-8').read()
+        data = json.loads(text)
+        spans = question_spans(text, len(data['questions']))
+        for q, (s, e) in zip(data['questions'], spans):
+            if q.get('type') != 'mc':
+                continue
+            obj = text[s:e]
+            mo = re.search(r'"options"\s*:\s*\[', obj)
+            if not mo:
+                continue
+            opt_spans = array_spans(obj, mo.end() - 1)
+            vals, letters = [], []
+            for a, b in opt_spans:
+                try:
+                    v = json.loads(obj[a:b])
+                except Exception:
+                    v = None
+                vals.append(v)
+                m = PREFIX.match(v) if isinstance(v, str) else None
+                letters.append(v[0] if m else None)
+            if sorted(x for x in letters if x) != ['A', 'B', 'C', 'D']:
+                continue
+            for (a, b), v in zip(opt_spans, vals):
+                plen = len(PREFIX.match(v).group(0))
+                # s+a 是開頭引號的位置；+1 之後才是字串內容
+                edits[f].append((s + a + 1, s + a + 1 + plen, ''))
+            n_q += 1
+    for f, ops in edits.items():
+        text = io.open(f, encoding='utf-8').read()
+        for s, e, new in sorted(ops, key=lambda x: x[0], reverse=True):
+            text = text[:s] + new + text[e:]
+        io.open(f, 'w', encoding='utf-8', newline='').write(text)
+    print('清掉 %d 題的選項字母前綴（共 %d 處）' % (n_q, sum(len(v) for v in edits.values())))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--apply', action='store_true', help='真的寫回檔案')
     ap.add_argument('--force', action='store_true', help='即使已均勻也強制重排（換一批順序）')
+    ap.add_argument('--strip-prefix', action='store_true',
+                    help='清掉選項自帶的 A /B. 前綴（與重排分開執行）')
     args = ap.parse_args()
+
+    if args.strip_prefix:
+        strip_prefixes()
+        return
 
     files = sorted(glob.glob(os.path.join(ROOT, 'quiz', '*', '*.json')))
     by_sub = collections.defaultdict(list)
