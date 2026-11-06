@@ -1,6 +1,6 @@
 name: 科研時事更新
 
-# 每天抓一次科研 RSS（泛科學 / ScienceDaily / Nature 主刊），只精選 4 篇進站，
+# 每天抓一次科研 RSS（泛科學 / ScienceDaily / Nature 主刊），精選 8 篇進站，
 # 有新內容才重建並部署。來源清單在 scripts/fetch_news.py 的 FEEDS；
 # 新增/調整來源改那裡即可，本檔不用動。
 # Nature 主刊是 RSS 1.0(RDF) 且 RSS 本身沒摘要，腳本會回文章頁補 og:description。
