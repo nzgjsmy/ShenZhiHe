@@ -16,8 +16,8 @@
    時事寫錯的代價遠高於少一條。
 3. **一律保留原文連結**。使用者能自己核對，不把我當唯一資訊源。
 4. **去重按連結**。同一篇重複抓到不會產生重複卡片。
-5. **每天只精選 4 篇進站**（用戶 2026-11-06）。抓到的是「候選」，精選時按來源輪轉，
-   單一來源最多 2 篇 —— 不然 ScienceDaily 三個分科源會把版面全占滿，Nature 永遠排不進來。
+5. **每天精選 8 篇進站**（用戶 2026-11-06 定案）。抓到的是「候選」，精選時按來源輪轉，
+   單一來源最多 3 篇 —— 不然 ScienceDaily 三個分科源會把版面全占滿，Nature 永遠排不進來。
 
 用法：
   python scripts/fetch_news.py            # 抓取並寫入
@@ -39,9 +39,9 @@ from datetime import datetime, timezone
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "data", "_news.json")
-KEEP = 4          # 每天只精選 4 篇進站（用戶 2026-11-06：不要整批新聞都塞進神智核）
-PER_SRC = 2       # 同一來源最多 2 篇，避免 ScienceDaily 或 Nature 霸榜
-PER_CAT = 3       # 同一科目最多 3 篇（KEEP=4 時只是防極端，不該擋住來源輪轉）
+KEEP = 8          # 每天精選 8 篇進站（用戶 2026-11-06 由 4 篇改回 8 篇）
+PER_SRC = 3       # 同一來源最多 3 篇，避免 ScienceDaily 或 Nature 霸榜
+PER_CAT = 3       # 同一科目最多 3 篇
 TIMEOUT = 20
 
 FEEDS = [
@@ -484,8 +484,8 @@ def main():
     merged.sort(key=lambda x: x.get("date") or "", reverse=True)
 
     # 精選：每天只留 KEEP 篇，且來源／科目都要多樣。
-    # 2026-11-06 用戶要求「每天精選 3–4 篇就行，不要整批 Nature 新聞都進站」。
-    # 只按日期取前幾名的話，ScienceDaily 三個分科源會把 4 個位置全占滿（實測過），
+    # 2026-11-06 用戶定案「每天精選 8 篇，不要整批 Nature 新聞都進站」。
+    # 只按日期取前幾名的話，ScienceDaily 三個分科源會把位置全占滿（實測過），
     # 所以同一來源最多 PER_SRC 篇、同一科目最多 PER_CAT 篇。
     # 按來源分桶、每桶內按日期排好，再一輪一輪地從每個來源各取一篇。
     # 純按日期取會讓 ScienceDaily（三個分科源）把 4 個位置全占滿，Nature 一篇都進不來。
@@ -523,7 +523,7 @@ def main():
         "_note": ("科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，"
                   "只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結"
                   "——時事不是常識，寧可少寫也不要編。"
-                  "每天從泛科學、ScienceDaily、Nature 主刊只精選 4 篇（單一來源／科目各最多 2 篇），"
+                  "每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），"
                   "本檔由 scripts/fetch_news.py 自動產生，可手動補充。"),
         "items": merged,
     }

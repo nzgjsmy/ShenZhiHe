@@ -1,15 +1,25 @@
 {
-  "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊只精選 4 篇（單一來源／科目各最多 2 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
+  "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
       "date": "2026-11-06",
       "cat": "phys",
-      "t": "SLAC 科學家發現了神秘的第三種磁性的確鑿證據",
-      "x": "近 90 年來，科學家一直認為磁性只分為兩類，但研究人員現在證實了第三種引人注目的類型，稱為交變磁性。他們利用專門的 X 射線發現了獨特的磁性特徵，證明這些材料的行為與傳統磁鐵不同。交變磁鐵將穩定性與有效攜帶訊息的能力結合在一起，有潛力",
+      "t": "麻省理工學院的科學家打破了 20 年的規則並解鎖了前所未見的晶體結構",
+      "x": "麻省理工學院的科學家挑戰了二十年來的傳統思維，發現靈活的分子連接，而不是剛性的分子連接，可以解鎖排列奈米顆粒的全新方法。這項突破可能會催生出具有不同尋常特性的新一代設計材料，並在電子、醫學和能源領域得到應用。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261104012256.htm",
-      "orig": "SLAC scientists find conclusive proof of a mysterious third type of magnetism",
-      "origX": "For nearly 90 years, scientists believed magnetism fell into just two categories, but researchers have now confirmed a remarkable third type called altermagnetism. Using specialized X-rays, they uncovered a unique magnetic signature that proves these materials behave differently from conventional magnets. Altermagnets combine stability with the ability to efficiently carry information, potentially overcoming major limitations in today's electronics. The discovery could lead to faster computers, more efficient data centers, and breakthroughs in quantum technology."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261104012248.htm",
+      "orig": "MIT scientists break a 20-year rule and unlock never-before-seen crystal structures",
+      "origX": "MIT scientists have challenged two decades of conventional thinking by discovering that flexible molecular connections, rather than rigid ones, can unlock entirely new ways to arrange nanoparticles. The breakthrough could lead to a new generation of designer materials with unusual properties and applications in electronics, medicine, and energy."
+    },
+    {
+      "date": "2026-11-05",
+      "cat": "chem",
+      "t": "氫衍生物使中國實現具有成本效益的碳中和",
+      "x": "政府間氣候變遷專門委員會建議1.5℃的碳減量目標，需要主要經濟體強而有力的執行。中國作為最大的二氧化碳排放國，在可變再生能源調節和難以減排產業的脫碳方面都面臨嚴峻的困難。氫作為連接再生能源與最終用戶的重要綠色能源載體，在發展方面面臨重大障礙",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/s41586-026-11351-4",
+      "orig": "Hydrogen Derivatives Enable Cost-Effective Carbon Neutrality in China",
+      "origX": "The Intergovernmental Panel on Climate Change recommended 1.5°C carbon reduction target, requiring powerful enforcement from major economies. China, the largest CO2 emitter, is facing severe difficulties for both variable renewable accommodation and decarbonization of hard-to-abate sectors. Hydrogen, as a critical green energy carrier bridging renewable to end-users, faces significant obstacles in real-world deployment such as costly transportation, storage and fuel-cell adoption. Affordable and coordinated hydrogen deployment plan to accelerate the carbon-neutral transition remains ambiguous. Here, we present cost-effective carbon-neutral transition pathways for entire energy economy of China emphasizing the significant role of hydrogen and derivatives as green energy carriers, considering high-resolution renewable deployments, hourly power system operations in 29 provincial regions, over 46,000 rail/road/marine/pipeline transfer routing of hydrogen derivatives, process-level fuel adoption strategies in all end-use sectors. Results show that incorporating hydrogen and derivatives can reduce the overall transition cost by $ 10.7 trillion compared with renewable and electrification pathways, achieving negative carbon abatement costs ($-6.15/ton), eliminating external oil import expenses, equivalent to over 50% of China trade surplus (2023 level)1, significantly boosting employment and economic growth. Hydrogen derivative based transition pathway offers a vital direction for affordable and secure decarbonization for China and beyond under volatile international energy markets."
     },
     {
       "date": "2026-11-05",
@@ -18,6 +28,16 @@
       "x": "「惡性外耳炎」並非癌症，而是致死率極高的嚴重耳道感染，細菌恐侵犯顱底與腦神經導致臉歪嘴斜。此病好發於高齡糖尿病患等免疫低下族群，若出現異常耳痛癢應盡速就醫。",
       "src": "泛科學",
       "url": "https://pansci.asia/archives/382488"
+    },
+    {
+      "date": "2026-11-06",
+      "cat": "chem",
+      "t": "科學家發現堵塞的過濾器可以徹底改變煉油業",
+      "x": "科學家們開發出了一種非凡的新型薄膜，可以在室溫下分離原油，利用油本身創建微觀過濾通道。這項突破可以將煉油能源消耗減少近 32%，碳排放減少近 38%，營運成本減少 36%，有可能改變世界上能源最密集的產業之一。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261103003207.htm",
+      "orig": "Scientists discover that a clogged filter could revolutionize oil refining",
+      "origX": "Scientists have developed a remarkable new membrane that separates crude oil at room temperature, using the oil itself to create microscopic filtration channels. The breakthrough could cut refining energy consumption by nearly 32%, carbon emissions by almost 38%, and operating costs by 36%, potentially transforming one of the world's most energy-intensive industries."
     },
     {
       "date": "2026-11-05",
@@ -30,14 +50,32 @@
       "origX": "Hypertension is a silent killer, with over half of affected adults unaware of their condition1,2. This lack of awareness is a major concern, as early intervention is critical for preventing major adverse cardiovascular events3,4. Here we show that applying artificial intelligence (AI) to multimodal waveforms (photoplethysmography and accelerometry) recorded using a widely available consumer smartwatch (AI-PPG-ACC-HTN), without any cuff calibration, can detect hypertension with accuracy levels comparable to traditional cuffed blood pressure (BP) devices in the existing clinical framework. We validated AI-PPG-ACC-HTN in a prospective, multicenter study of 196 diverse participants free from known cardiovascular disease and antihypertensive medication against gold-standard 24-hour ambulatory BP monitoring. Over seven days of real-world monitoring, AI-PPG-ACC-HTN detected hypertension with a sensitivity of 65.8% (95% CI, 54.0%-76.3%), specificity of 90.0% (95% CI, 83.2%-94.7%), and positive predictive value (PPV) of 80.6% (95% CI, 68.6%-89.6%). In comparison, initial office BP screening achieved a sensitivity of 55.3% (95% CI, 43.4%-66.7%), specificity of 90.0% (95% CI, 83.2%-94.7%) and PPV of 77.8% (95% CI, 64.4%-88.0%). These results highlight an opportunity for consumer smartwatches to facilitate population-level opportunistic hypertension screening by prompting at-risk individuals toward clinical assessment and confirmatory diagnosis using established cuff-based methodologies, offering an accessible tool to address this major public health challenge."
     },
     {
+      "date": "2026-11-03",
+      "cat": "bio",
+      "t": "中期肝癌無法開刀？「降階治療」縮小腫瘤，免疫合併療法逆轉生機",
+      "x": "中期肝癌若因腫瘤過大無法手術，可透過「免疫合併抗血管新生療法」進行降階治療。此法能有效縮小腫瘤，讓病灶轉為可開刀狀態，助患者化被動為主動，大幅提升長期存活率！",
+      "src": "泛科學",
+      "url": "https://pansci.asia/archives/382467"
+    },
+    {
       "date": "2026-11-06",
-      "cat": "chem",
-      "t": "革命性的新型顯微鏡可以揭示隱藏的生命機制",
-      "x": "研究人員開發了一種革命性的顯微鏡，它使用極其強大的激光，使以前看不見的細胞結構變得更容易看到。該技術極大地提高了影像清晰度，使科學家能夠檢查傳統電子顯微鏡難以捕捉的小蛋白質。它最終可能揭示微小的分子機器如何在細胞內相互作用，前提是",
+      "cat": "phys",
+      "t": "SLAC 科學家發現了神秘的第三種磁性的確鑿證據",
+      "x": "近 90 年來，科學家一直認為磁性只分為兩類，但研究人員現在證實了第三種引人注目的類型，稱為交變磁性。他們利用專門的 X 射線發現了獨特的磁性特徵，證明這些材料的行為與傳統磁鐵不同。交變磁鐵將穩定性與有效攜帶訊息的能力結合在一起，有潛力",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261021231230.htm",
-      "orig": "A revolutionary new microscope could reveal the hidden machinery of life",
-      "origX": "Researchers have developed a revolutionary microscope that uses an incredibly powerful laser to make previously invisible cellular structures easier to see. The technology dramatically improves image clarity, allowing scientists to examine small proteins that conventional electron microscopes struggle to capture. It could eventually reveal how tiny molecular machines interact inside cells, providing an unprecedented look at the hidden workings of life."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261104012256.htm",
+      "orig": "SLAC scientists find conclusive proof of a mysterious third type of magnetism",
+      "origX": "For nearly 90 years, scientists believed magnetism fell into just two categories, but researchers have now confirmed a remarkable third type called altermagnetism. Using specialized X-rays, they uncovered a unique magnetic signature that proves these materials behave differently from conventional magnets. Altermagnets combine stability with the ability to efficiently carry information, potentially overcoming major limitations in today's electronics. The discovery could lead to faster computers, more efficient data centers, and breakthroughs in quantum technology."
+    },
+    {
+      "date": "2026-11-04",
+      "cat": "chem",
+      "t": "牙刷透過刷毛移動時產生的電流來消滅細菌",
+      "x": "創新聚合物可以為手動牙刷帶來 1000 多年來的首次徹底重新設計。",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/d41586-026-03586-y",
+      "orig": "Toothbrush zaps bacteria with electricity made when bristles move",
+      "origX": "Innovative polymer could give the manual toothbrush its first radical redesign in more than 1,000 years."
     }
   ]
 }
