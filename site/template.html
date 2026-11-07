@@ -1862,6 +1862,10 @@ html[data-theme="dark"] .dse-lq .tx span{color:#b19c78}
 .lq-card{
   background:var(--paper);border:1px solid var(--line);border-radius:3px;
   padding:16px 18px;box-shadow:var(--shadow);
+  /* LQ 頁一次渲染全部年份（129 張卡），手機上捲動與展開都會卡。
+     讓視口外的卡片跳過排版與繪製，滾到才真正渲染；auto 會記住上次量到的高度，
+     所以捲回去不會跳。 */
+  content-visibility:auto;contain-intrinsic-size:auto 520px;
 }
 .lq-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .lq-qid{
@@ -1973,11 +1977,12 @@ html[data-theme="dark"] .dse-lq .tx span{color:#b19c78}
 .lq-prac-btn:hover{border-color:var(--green);color:var(--green)}
 .lq-prac-btn.open{background:var(--green);color:#fff;border-color:var(--green)}
 
-.lq-panel{
-  max-height:0;overflow:hidden;
-  transition:max-height var(--dur-slow) var(--ease-ios,ease);
-}
-.lq-panel.open{max-height:1200px}
+/* 展開面板：原本用 max-height 0→1200px 過渡，會在長頁面上每幀重排整頁（用戶反饋「很卡」），
+   而且 1200px 是硬上限，長題解會被裁掉。改成 display 切換 + 入場淡入：
+   高度瞬時確定（只重排一次），動畫走 transform/opacity，不觸發布局。 */
+.lq-panel{display:none;overflow:hidden}
+.lq-panel.open{display:block;animation:lqPanelIn .2s var(--ease-ios,ease)}
+@keyframes lqPanelIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
 .lq-panel-in{
   margin-top:12px;padding:12px 14px;border-radius:3px;
   background:var(--amber-soft);border-left:3px solid var(--amber);
