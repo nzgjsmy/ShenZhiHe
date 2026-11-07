@@ -23,11 +23,11 @@
  *   现在改为 10 秒：够 3.5MB 在多数网络下下载完，断网时也还能接受。
  *   若将来单档体积再翻倍，记得同步调大这个值。
  *
- * V0.25.23.13-4d00fa9c 由 prep_ghpages.py 在部署时替换成「站点版号-数据指纹」。
+ * V0.25.23.14-818b9be2 由 prep_ghpages.py 在部署时替换成「站点版号-数据指纹」。
  * 改版、或只改数据（不 bump 版号，例如每日新闻），缓存名都会变，
  * 避免用户长期停留在旧缓存上，同时 activate 时清掉旧版缓存防止无限增长。
  */
-var SW_VERSION = 'V0.25.23.13-4d00fa9c';
+var SW_VERSION = 'V0.25.23.14-818b9be2';
 var CACHE = 'shenzhine-' + SW_VERSION;
 var NET_TIMEOUT = 10000;
 
