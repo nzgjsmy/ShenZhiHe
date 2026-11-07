@@ -2,6 +2,54 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
+      "date": "2026-11-07",
+      "cat": "phys",
+      "t": "巧妙的分子技巧解鎖了玻璃中以前不可能的特性",
+      "x": "科學家發現如何使用一種特殊的分子重新編程玻璃的內部結構，該分子可以重新排列化學鍵，同時降低熔化溫度。這項突破可以解鎖具有精確控制的磁性和光學特性的全新玻璃材料，為先進電子、感測器和其他技術帶來可能性。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261103003202.htm",
+      "orig": "A clever molecular trick unlocks previously impossible properties in glass",
+      "origX": "Scientists have discovered how to reprogram the internal structure of glass using a special molecule that rearranges chemical bonds while lowering the melting temperature. The breakthrough could unlock entirely new glass materials with precisely controlled magnetic and optical properties, opening possibilities for advanced electronics, sensors, and other technologies."
+    },
+    {
+      "date": "2026-11-06",
+      "cat": "bio",
+      "t": "藥用植物、蘑菇的教訓和嗅覺的力量：書籍簡介",
+      "x": "安德魯羅賓遜回顧了五個最佳科學精選。",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/d41586-026-03595-x",
+      "orig": "Medicinal plants, lessons from mushrooms and the power of smell: Books in brief",
+      "origX": "Andrew Robinson reviews five of the best science picks."
+    },
+    {
+      "date": "2026-11-05",
+      "cat": "bio",
+      "t": "不是癌症卻同樣致命！耳朵痛癢伴隨臉歪嘴斜，當心致死率極高的「惡性外耳炎」",
+      "x": "「惡性外耳炎」並非癌症，而是致死率極高的嚴重耳道感染，細菌恐侵犯顱底與腦神經導致臉歪嘴斜。此病好發於高齡糖尿病患等免疫低下族群，若出現異常耳痛癢應盡速就醫。",
+      "src": "泛科學",
+      "url": "https://pansci.asia/archives/382488"
+    },
+    {
+      "date": "2026-11-07",
+      "cat": "chem",
+      "t": "晶體中的微小缺陷揭示了巨大的量子驚喜",
+      "x": "研究人員解決了一個長期存在的挑戰，即了解鑽石和碳化矽等材料中的微小缺陷在光照下如何表現。他們的新計算方法揭示了碳化矽中一個令人驚訝的重要能量損失機制，而科學家之前卻低估了這個機制。這項發現有助於解釋多年來困擾研究人員的謎團，",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/10/261022081302.htm",
+      "orig": "A tiny defect in a crystal reveals a big quantum surprise",
+      "origX": "Researchers have solved a long-standing challenge in understanding how tiny defects in materials like diamond and silicon carbide behave when exposed to light. Their new computational method revealed a surprisingly important energy-loss mechanism in silicon carbide that scientists had previously underestimated. The finding helps explain a mystery that has puzzled researchers for years and could improve the design of quantum computers and sensors."
+    },
+    {
+      "date": "2026-11-06",
+      "cat": "bio",
+      "t": "霍亂細菌的善行：激發出具有稀有特性的膠水",
+      "x": "即使在水下也能牢固黏合的黏合劑的靈感來自一種可怕的病原體產生的蛋白質。",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/d41586-026-03630-x",
+      "orig": "Cholera bacterium’s good deed: inspiring a glue with rare properties",
+      "origX": "An adhesive that binds strongly even under water was inspired by a protein made by a feared pathogen."
+    },
+    {
       "date": "2026-11-06",
       "cat": "phys",
       "t": "麻省理工學院的科學家打破了 20 年的規則並解鎖了前所未見的晶體結構",
@@ -20,62 +68,6 @@
       "url": "https://www.nature.com/articles/s41586-026-11351-4",
       "orig": "Hydrogen Derivatives Enable Cost-Effective Carbon Neutrality in China",
       "origX": "The Intergovernmental Panel on Climate Change recommended 1.5°C carbon reduction target, requiring powerful enforcement from major economies. China, the largest CO2 emitter, is facing severe difficulties for both variable renewable accommodation and decarbonization of hard-to-abate sectors. Hydrogen, as a critical green energy carrier bridging renewable to end-users, faces significant obstacles in real-world deployment such as costly transportation, storage and fuel-cell adoption. Affordable and coordinated hydrogen deployment plan to accelerate the carbon-neutral transition remains ambiguous. Here, we present cost-effective carbon-neutral transition pathways for entire energy economy of China emphasizing the significant role of hydrogen and derivatives as green energy carriers, considering high-resolution renewable deployments, hourly power system operations in 29 provincial regions, over 46,000 rail/road/marine/pipeline transfer routing of hydrogen derivatives, process-level fuel adoption strategies in all end-use sectors. Results show that incorporating hydrogen and derivatives can reduce the overall transition cost by $ 10.7 trillion compared with renewable and electrification pathways, achieving negative carbon abatement costs ($-6.15/ton), eliminating external oil import expenses, equivalent to over 50% of China trade surplus (2023 level)1, significantly boosting employment and economic growth. Hydrogen derivative based transition pathway offers a vital direction for affordable and secure decarbonization for China and beyond under volatile international energy markets."
-    },
-    {
-      "date": "2026-11-05",
-      "cat": "bio",
-      "t": "不是癌症卻同樣致命！耳朵痛癢伴隨臉歪嘴斜，當心致死率極高的「惡性外耳炎」",
-      "x": "「惡性外耳炎」並非癌症，而是致死率極高的嚴重耳道感染，細菌恐侵犯顱底與腦神經導致臉歪嘴斜。此病好發於高齡糖尿病患等免疫低下族群，若出現異常耳痛癢應盡速就醫。",
-      "src": "泛科學",
-      "url": "https://pansci.asia/archives/382488"
-    },
-    {
-      "date": "2026-11-06",
-      "cat": "chem",
-      "t": "科學家發現堵塞的過濾器可以徹底改變煉油業",
-      "x": "科學家們開發出了一種非凡的新型薄膜，可以在室溫下分離原油，利用油本身創建微觀過濾通道。這項突破可以將煉油能源消耗減少近 32%，碳排放減少近 38%，營運成本減少 36%，有可能改變世界上能源最密集的產業之一。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261103003207.htm",
-      "orig": "Scientists discover that a clogged filter could revolutionize oil refining",
-      "origX": "Scientists have developed a remarkable new membrane that separates crude oil at room temperature, using the oil itself to create microscopic filtration channels. The breakthrough could cut refining energy consumption by nearly 32%, carbon emissions by almost 38%, and operating costs by 36%, potentially transforming one of the world's most energy-intensive industries."
-    },
-    {
-      "date": "2026-11-05",
-      "cat": "bio",
-      "t": "在消費性智慧手錶上機會性地檢測高血壓跡象",
-      "x": "高血壓是個無聲的殺手，超過一半的受影響成年人不知道自己的病情1,2。這種認知的缺乏是一個主要問題，因為早期介入對於預防重大不良心血管事件至關重要3,4。在這裡，我們展示了將人工智慧 (AI) 應用於使用廣泛使用的消費者智慧型裝置記錄的多模態波形（光電體積描記法…",
-      "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/s41586-026-11336-3",
-      "orig": "Opportunistically Detecting Signs of Hypertension on a Consumer Smartwatch",
-      "origX": "Hypertension is a silent killer, with over half of affected adults unaware of their condition1,2. This lack of awareness is a major concern, as early intervention is critical for preventing major adverse cardiovascular events3,4. Here we show that applying artificial intelligence (AI) to multimodal waveforms (photoplethysmography and accelerometry) recorded using a widely available consumer smartwatch (AI-PPG-ACC-HTN), without any cuff calibration, can detect hypertension with accuracy levels comparable to traditional cuffed blood pressure (BP) devices in the existing clinical framework. We validated AI-PPG-ACC-HTN in a prospective, multicenter study of 196 diverse participants free from known cardiovascular disease and antihypertensive medication against gold-standard 24-hour ambulatory BP monitoring. Over seven days of real-world monitoring, AI-PPG-ACC-HTN detected hypertension with a sensitivity of 65.8% (95% CI, 54.0%-76.3%), specificity of 90.0% (95% CI, 83.2%-94.7%), and positive predictive value (PPV) of 80.6% (95% CI, 68.6%-89.6%). In comparison, initial office BP screening achieved a sensitivity of 55.3% (95% CI, 43.4%-66.7%), specificity of 90.0% (95% CI, 83.2%-94.7%) and PPV of 77.8% (95% CI, 64.4%-88.0%). These results highlight an opportunity for consumer smartwatches to facilitate population-level opportunistic hypertension screening by prompting at-risk individuals toward clinical assessment and confirmatory diagnosis using established cuff-based methodologies, offering an accessible tool to address this major public health challenge."
-    },
-    {
-      "date": "2026-11-03",
-      "cat": "bio",
-      "t": "中期肝癌無法開刀？「降階治療」縮小腫瘤，免疫合併療法逆轉生機",
-      "x": "中期肝癌若因腫瘤過大無法手術，可透過「免疫合併抗血管新生療法」進行降階治療。此法能有效縮小腫瘤，讓病灶轉為可開刀狀態，助患者化被動為主動，大幅提升長期存活率！",
-      "src": "泛科學",
-      "url": "https://pansci.asia/archives/382467"
-    },
-    {
-      "date": "2026-11-06",
-      "cat": "phys",
-      "t": "SLAC 科學家發現了神秘的第三種磁性的確鑿證據",
-      "x": "近 90 年來，科學家一直認為磁性只分為兩類，但研究人員現在證實了第三種引人注目的類型，稱為交變磁性。他們利用專門的 X 射線發現了獨特的磁性特徵，證明這些材料的行為與傳統磁鐵不同。交變磁鐵將穩定性與有效攜帶訊息的能力結合在一起，有潛力",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261104012256.htm",
-      "orig": "SLAC scientists find conclusive proof of a mysterious third type of magnetism",
-      "origX": "For nearly 90 years, scientists believed magnetism fell into just two categories, but researchers have now confirmed a remarkable third type called altermagnetism. Using specialized X-rays, they uncovered a unique magnetic signature that proves these materials behave differently from conventional magnets. Altermagnets combine stability with the ability to efficiently carry information, potentially overcoming major limitations in today's electronics. The discovery could lead to faster computers, more efficient data centers, and breakthroughs in quantum technology."
-    },
-    {
-      "date": "2026-11-04",
-      "cat": "chem",
-      "t": "牙刷透過刷毛移動時產生的電流來消滅細菌",
-      "x": "創新聚合物可以為手動牙刷帶來 1000 多年來的首次徹底重新設計。",
-      "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03586-y",
-      "orig": "Toothbrush zaps bacteria with electricity made when bristles move",
-      "origX": "Innovative polymer could give the manual toothbrush its first radical redesign in more than 1,000 years."
     }
   ]
 }
