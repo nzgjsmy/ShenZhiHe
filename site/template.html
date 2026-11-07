@@ -1278,6 +1278,27 @@ footer{max-width:1120px;margin:0 auto;padding:18px 20px 40px;color:var(--muted);
 .pptag{font-size:11.5px;color:#64748b;background:#f1f5f9;border-radius:5px;padding:1px 6px}
 .ppmore{margin-top:6px;border:1px dashed #cbd5e1;background:#f8fafc;color:#475569;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer}
 .ppmore:hover{background:#eef2f7}
+/* ---- 按年份：年度总览卡（统计条 + 题号网格 + 按需展开的题卡） ---- */
+.ppystat{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.ppystat i{font-style:normal;font-size:12px;color:var(--muted);background:var(--hover);border-radius:999px;padding:2px 9px;line-height:1.6}
+.ppygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));gap:5px}
+.ppcell{height:34px;border-radius:9px;border:1px solid var(--line);background:var(--paper);
+  font-size:13px;font-weight:700;cursor:pointer;color:var(--text-soft);display:flex;align-items:center;
+  justify-content:center;padding:0;line-height:1;font-family:inherit;min-width:0;
+  transition:transform .08s ease,border-color .12s ease,box-shadow .12s ease}
+.ppcell:hover{transform:translateY(-1px);border-color:var(--accent);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.ppcell:active{transform:scale(.96)}
+.ppcell.e{background:#dcfce7;color:#14532d;border-color:#34d399}
+.ppcell.m{background:#fef3c7;color:#78350f;border-color:#fbbf24}
+.ppcell.h{background:#ffedd5;color:#7c2d12;border-color:#fb923c}
+.ppcell.vh{background:#fee2e2;color:#7f1d1d;border-color:#f87171}
+.ppcell.gap{background:transparent;border-style:dashed;color:var(--muted);cursor:default;opacity:.55;font-weight:400}
+.ppcell.gap:hover{transform:none;border-color:var(--line);box-shadow:none}
+.ppybody{margin-top:12px}
+.ppybody .pplist{margin-top:0}
+.ppyindex{margin:0 0 10px}
+.ppyindex .ppchip{padding:3px 10px;font-size:12px}
+.ppycard{scroll-margin-top:74px}
 button.ppo{display:flex;gap:7px;font-size:14px;line-height:1.55;text-align:left;width:100%;
   border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:7px 10px;cursor:pointer;
   font-family:inherit;color:inherit;transition:background .12s,border-color .12s}
@@ -1626,6 +1647,12 @@ html[data-theme="dark"] .pppct.e{background:#173d24;color:#4ade80}
 html[data-theme="dark"] .pppct.m{background:#3a2e1a;color:#fbbf24}
 html[data-theme="dark"] .pppct.h{background:#4a2a10;color:#fdba74}
 html[data-theme="dark"] .pppct.vh{background:#4a1a1a;color:#fca5a5}
+html[data-theme="dark"] .ppcell{background:var(--paper-soft);color:var(--text-soft);border-color:var(--line)}
+html[data-theme="dark"] .ppcell.e{background:#173d24;color:#4ade80;border-color:#1f5133}
+html[data-theme="dark"] .ppcell.m{background:#3a2e1a;color:#fbbf24;border-color:#4a3a1f}
+html[data-theme="dark"] .ppcell.h{background:#4a2a10;color:#fdba74;border-color:#5a3416}
+html[data-theme="dark"] .ppcell.vh{background:#4a1a1a;color:#fca5a5;border-color:#5c2222}
+html[data-theme="dark"] .ppcell.gap{background:transparent;border-color:var(--line);color:var(--muted)}
 html[data-theme="dark"] .ppfig{background:#2a2010;color:#fdba74}
 html[data-theme="dark"] .ppbtn{background:#0f3d38;color:var(--accent);border-color:var(--accent)}
 html[data-theme="dark"] .ppbtn:hover{background:#134e48}
@@ -5408,11 +5435,31 @@ function retryWrong(ids){
 /* ---------------- DSE 真題（by topic / by year）--------------- */
 /* 頂部話題篩選 → 只顯示該話題題目；ABCD 可點，答錯自動進錯題本；題解預設收起。 */
 let PP_TOPIC = '';                 // '' = 全部話題
+let PP_ALL_BY_YEAR = {};           // 按年份的原始題目，供「按年份」視圖按需展開
 function ppLvl(p){return p>=80?'容易':(p>=60?'中等':(p>=40?'偏難':'極難'));}
 function ppCls(p){return p>=80?'e':(p>=60?'m':(p>=40?'h':'vh'));}
 function ppTopicName(k){
   if(k==='zz') return '未分類';
   return (typeof TMAP!=='undefined'&&TMAP[k]&&TMAP[k].title)?TMAP[k].title:k;
+}
+/* 課題的章號（Ch NN）：以資料裡的 pdf 檔名（"Ch07 人體的氣體交換.pdf"）為準，
+   取不到就退回 id 裡的數字（bio07 → 7）。排序一律用這個數字，不用字串，
+   將來出現 bio2／bio9 這種沒補零的 id 也不會亂。 */
+function ppChNo(k){
+  if(k==='zz') return 999;
+  const t=(typeof TMAP!=='undefined')&&TMAP[k];
+  const m=/(\d+)/.exec(String((t&&t.pdf)||k||''));
+  return m?parseInt(m[1],10):999;
+}
+function ppChLab(k){
+  if(k==='zz') return '未分類';
+  const n=ppChNo(k);
+  const name=ppTopicName(k);
+  if(n>=999) return name;
+  return 'Ch'+String(n).padStart(2,'0')+' '+name;
+}
+function ppYearLab(y){
+  return y==='PP'?'PP 練習卷':(y==='SP'?'SP 樣本試卷':y+' 年');
 }
 function ppCard(q){
   const opts=q.options||[];
@@ -5971,25 +6018,25 @@ function viewPastPaper(){
   const all=[]; yrs.forEach(y=>(years[y]||[]).forEach(q=>all.push(q)));
   const byTopic={};
   all.forEach(q=>{const k=q.topic||'zz';(byTopic[k]=byTopic[k]||[]).push(q);});
-  const tKeys=Object.keys(byTopic).sort();
+  const tKeys=Object.keys(byTopic).sort((a,b)=>ppChNo(a)-ppChNo(b)||String(a).localeCompare(String(b)));
   if(PP_TOPIC && !byTopic[PP_TOPIC]) PP_TOPIC='';
 
   const chips=`<div class="ppchips">
     <button class="ppchip${PP_TOPIC===''?' on':''}" onclick="ppSetTopic('')">全部 <span>${all.length}</span></button>
-    ${tKeys.map(k=>`<button class="ppchip${PP_TOPIC===k?' on':''}" onclick="ppSetTopic('${esc(k)}')">${esc(ppTopicName(k))} <span>${byTopic[k].length}</span></button>`).join('')}
+    ${tKeys.map(k=>`<button class="ppchip${PP_TOPIC===k?' on':''}" onclick="ppSetTopic('${esc(k)}')">${esc(ppChLab(k))} <span>${byTopic[k].length}</span></button>`).join('')}
   </div>`;
 
   let cards='';
   if(PP_TOPIC){
     const qs=byTopic[PP_TOPIC].slice().sort((a,b)=>a.year===b.year?a.qnum-b.qnum:(a.year>b.year?1:-1));
     const avg=Math.round(qs.reduce((s,q)=>s+(q.pct||0),0)/qs.length);
-    cards=`<div class="pcard"><h4>${esc(ppTopicName(PP_TOPIC))} <span class="pg">${qs.length} 題 · 平均 ${avg}%</span></h4>
+    cards=`<div class="pcard"><h4>${esc(ppChLab(PP_TOPIC))} <span class="pg">${qs.length} 題 · 平均 ${avg}%</span></h4>
       <div class="pplist">${qs.map(ppCard).join('')}</div></div>`;
   }else{
     cards=tKeys.map(k=>{
       const qs=byTopic[k].slice().sort((a,b)=>a.year===b.year?a.qnum-b.qnum:(a.year>b.year?1:-1));
       const avg=Math.round(qs.reduce((s,q)=>s+(q.pct||0),0)/qs.length);
-      return `<div class="pcard"><h4>${esc(ppTopicName(k))} <span class="pg">${qs.length} 題 · 平均 ${avg}%</span>
+      return `<div class="pcard"><h4>${esc(ppChLab(k))} <span class="pg">${qs.length} 題 · 平均 ${avg}%</span>
         <button class="qbtn" onclick="ppSetTopic('${esc(k)}')">只看這一類</button></h4>
         <div class="pplist">${qs.slice(0,3).map(ppCard).join('')}</div>
         ${qs.length>3?`<div style="text-align:center;margin-top:8px"><button class="ppmore" onclick="ppSetTopic('${esc(k)}')">展開全部 ${qs.length} 題 ▾</button></div>`:''}
@@ -5997,15 +6044,50 @@ function viewPastPaper(){
     }).join('');
   }
 
+  /* 按年份：年度總覽（統計 + 題號網格），題卡按需展開，避免一次渲染 467 張 */
+  PP_ALL_BY_YEAR=years;
   const yearList=yrs.map(y=>{
     const qs=(years[y]||[]).slice().sort((a,b)=>a.qnum-b.qnum);
-    return `<div class="pcard"><h4>${y} 年 <span class="pg">${qs.length} 題</span></h4><div class="md">${qs.map(q=>`<p>• 第 ${q.qnum} 題（答對率 ${q.pct}%）<span style="font-size:12px;color:var(--muted)"> 〔${esc(ppTopicName(q.topic))}〕</span></p>`).join('')}</div></div>`;
+    const n=qs.length;
+    const rated=qs.filter(q=>q.pct>0);            // PP／SP 無官方得分率，不參與平均
+    const avg=rated.length?Math.round(rated.reduce((s,q)=>s+q.pct,0)/rated.length):0;
+    const cnt={e:0,m:0,h:0,vh:0};
+    rated.forEach(q=>{cnt[ppCls(q.pct)]++;});
+    const tset=new Set(qs.map(q=>q.topic||'zz'));
+    const byNum={}; qs.forEach(q=>{byNum[q.qnum]=q;});
+    const span=Math.max(36,...qs.map(q=>q.qnum));
+    let cells='';
+    for(let i=1;i<=span;i++){
+      const q=byNum[i];
+      if(!q){
+        cells+=`<span class="ppcell gap" title="第 ${i} 題 · 本卷無此題（官方刪除或原卷缺漏）">${i}</span>`;
+        continue;
+      }
+      const cls=q.pct>0?ppCls(q.pct):'';
+      const ttl=q.pct>0?`答對率 ${q.pct}% · ${ppLvl(q.pct)}`:'無官方得分率';
+      cells+=`<button class="ppcell ${cls}" title="第 ${i} 題 · ${esc(ppTopicName(q.topic))} · ${ttl}" onclick="ppOpenYearQ('${esc(y)}',${i})">${i}</button>`;
+    }
+    const segs=rated.length
+      ? [['e','容易'],['m','中等'],['h','偏難'],['vh','極難']]
+          .filter(x=>cnt[x[0]]).map(x=>`<i>${x[1]} ${cnt[x[0]]}</i>`).join('')
+      : '<i>PP／SP 無官方得分率</i>';
+    return `<div class="pcard ppycard" id="ppycard-${esc(y)}">
+      <h4>${esc(ppYearLab(y))} <span class="pg">${n} 題${avg?' · 平均 '+avg+'%':''}</span>
+        <button class="qbtn" id="ppyt-${esc(y)}" onclick="ppToggleYear('${esc(y)}')">展開 ${n} 題</button></h4>
+      <div class="ppystat"><i>覆蓋 ${tset.size} 個課題</i>${segs}</div>
+      <div class="ppygrid">${cells}</div>
+      <div class="ppybody" id="ppy-${esc(y)}" data-n="${n}" data-open="0" style="display:none"></div>
+    </div>`;
   }).join('');
+  /* 年份索引：13 張卡滑起來太長，頂部給一排快速跳轉 */
+  const yearIndex=`<div class="ppchips ppyindex">${yrs.map(y=>
+    `<button class="ppchip" onclick="ppJumpYear('${esc(y)}')">${esc(ppYearLab(y))}</button>`).join('')}</div>`;
+  const yearBlock=yearIndex+yearList;
 
   app.innerHTML=`
   <div class="view">
     <div class="thead"><button class="back" onclick="go('#/home')">← 返回首頁</button><h2>📝 ${esc(PP.title||'DSE 生物歷屆真題')}</h2></div>
-    <div class="tmeta">共 ${yrs.length} 個年份 · ${all.length} 道選擇題。點選項作答，答錯自動收進「錯題本」；答對後自動移出。答對率取自各年《評卷參考》。</div>
+    <div class="tmeta">共 ${yrs.length} 個年份 · ${all.length} 道選擇題，按課題（Ch 編號）或按年份排序。點選項作答，答錯自動收進「錯題本」；答對後自動移出。答對率取自各年《評卷參考》。</div>
     ${chips}
     <div class="quick" style="margin:10px 0 4px">
       <button onclick="showPPView('bytopic')">🏷️ 按話題</button>
@@ -6013,7 +6095,7 @@ function viewPastPaper(){
       <button onclick="go('#/lq')">📖 長題目</button>
     </div>
     <div id="pp-bytopic">${cards}</div>
-    <div id="pp-byyear" style="display:none">${yearList}</div>
+    <div id="pp-byyear" style="display:none">${yearBlock}</div>
   </div>`;
   ppLazyInit();
 }
@@ -6022,6 +6104,43 @@ function showPPView(v){
   if(!t||!y)return;
   t.style.display=(v==='bytopic')?'block':'none';
   y.style.display=(v==='byyear')?'block':'none';
+}
+/* 按年份：展開／收起該年份的完整題卡（第一次展開才渲染，避免一次 467 張卡） */
+function ppToggleYear(y){
+  const box=document.getElementById('ppy-'+y), btn=document.getElementById('ppyt-'+y);
+  if(!box)return;
+  const n=box.dataset.n||'0';
+  if(box.dataset.open==='1'){
+    box.style.display='none'; box.dataset.open='0';
+    if(btn)btn.textContent='展開 '+n+' 題';
+    return;
+  }
+  if(box.dataset.filled!=='1'){
+    const qs=(PP_ALL_BY_YEAR[y]||[]).slice().sort((a,b)=>a.qnum-b.qnum);
+    box.innerHTML='<div class="pplist">'+qs.map(ppCard).join('')+'</div>';
+    box.dataset.filled='1';
+    ppLazyInit();
+  }
+  box.style.display='block'; box.dataset.open='1';
+  if(btn)btn.textContent='收起';
+}
+/* 點題號格：展開該年份並捲到該題、短暫highlight */
+function ppJumpYear(y){
+  const el=document.getElementById('ppycard-'+y);
+  if(el) el.scrollIntoView({block:'start'});
+}
+function ppOpenYearQ(y,n){
+  const box=document.getElementById('ppy-'+y);
+  if(!box)return;
+  if(box.dataset.open!=='1') ppToggleYear(y);
+  const el=box.querySelector('[data-id="pp_'+y+'_q'+n+'"]');
+  if(!el)return;
+  el.scrollIntoView({block:'center'});   // 目錄式跳轉，用瞬時滾動（smooth 在部分環境不生效）
+  // 跳過去就立刻把該題圖片載入，不等 IntersectionObserver（否則會先看到破圖圖標）
+  el.querySelectorAll('img.pplazy[data-src]').forEach(im=>{im.src=im.dataset.src;im.removeAttribute('data-src');});
+  el.style.transition='box-shadow .35s ease';
+  el.style.boxShadow='0 0 0 3px var(--accent)';
+  setTimeout(()=>{el.style.boxShadow='';},1500);
 }
 
 /* ---------------- 複習頁 ---------------- */
