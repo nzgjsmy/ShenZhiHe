@@ -2,14 +2,42 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
-      "date": "2026-11-07",
+      "date": "2026-11-08",
       "cat": "phys",
-      "t": "巧妙的分子技巧解鎖了玻璃中以前不可能的特性",
-      "x": "科學家發現如何使用一種特殊的分子重新編程玻璃的內部結構，該分子可以重新排列化學鍵，同時降低熔化溫度。這項突破可以解鎖具有精確控制的磁性和光學特性的全新玻璃材料，為先進電子、感測器和其他技術帶來可能性。",
+      "t": "SLAC 科學家發現了神秘的第三種磁性的確鑿證據",
+      "x": "近 90 年來，科學家一直認為磁性只分為兩類，但研究人員現在證實了第三種引人注目的類型，稱為交變磁性。他們利用專門的 X 射線發現了獨特的磁性特徵，證明這些材料的行為與傳統磁鐵不同。交變磁鐵將穩定性與有效攜帶訊息的能力結合在一起，有潛力",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261103003202.htm",
-      "orig": "A clever molecular trick unlocks previously impossible properties in glass",
-      "origX": "Scientists have discovered how to reprogram the internal structure of glass using a special molecule that rearranges chemical bonds while lowering the melting temperature. The breakthrough could unlock entirely new glass materials with precisely controlled magnetic and optical properties, opening possibilities for advanced electronics, sensors, and other technologies."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261104012256.htm",
+      "orig": "SLAC scientists find conclusive proof of a mysterious third type of magnetism",
+      "origX": "For nearly 90 years, scientists believed magnetism fell into just two categories, but researchers have now confirmed a remarkable third type called altermagnetism. Using specialized X-rays, they uncovered a unique magnetic signature that proves these materials behave differently from conventional magnets. Altermagnets combine stability with the ability to efficiently carry information, potentially overcoming major limitations in today's electronics. The discovery could lead to faster computers, more efficient data centers, and breakthroughs in quantum technology."
+    },
+    {
+      "date": "2026-11-06",
+      "cat": "bio",
+      "t": "ANGPTL3 的體內 CRISPR 鹼基編輯可實現持久降脂",
+      "x": "低密度脂蛋白胆固醇 (LDL-C) 和富含甘油三酯的脂蛋白的循环浓度是动脉粥样硬化性心血管疾病的主要危险因素1。儘管有幾種已獲批准的降血脂藥物，但大多數患者在慢性護理治療模式下未能達到目標血脂水平2,3。在這裡，我們描述了一種潛在的單療程治療，其中輸注",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/s41586-026-11233-9",
+      "orig": "In Vivo CRISPR Base Editing of ANGPTL3 for Durable Lipid Lowering",
+      "origX": "Circulating concentrations of low-density lipoprotein cholesterol (LDL-C) and triglyceride-rich lipoproteins are leading risk factors for atherosclerotic cardiovascular disease1. Despite several approved lipid-lowering medications, most patients fail to achieve target lipid levels under the chronic care treatment model2,3. Here, we describe a potential single-course treatment in which an infusion of guide RNA and mRNA encoding a CRISPR adenine base editor—encapsulated within a GalNAc–lipid nanoparticle—leads to durable, liver-selective inactivation of angiopoietin-like 3 (ANGPTL3), a known driver of increased LDL-C and triglyceride concentrations. Analyses in human liver cells in vitro confirmed that the base editor introduces a DNA base-pair change at the target ANGPTL3 locus with no detectable off-target editing at any of approximately 3000 candidate sites or treatment-related structural variants. Targeted ANGPTL3 inactivation in nonhuman primates was well-tolerated and led to a > 90% mean reduction in circulating ANGPTL3 protein, with durability confirmed out to 3 years following a single dose. In mouse and nonhuman primate models of hyperlipidemia, gene inactivation was associated with reductions of approximately 40 to 50% in LDL-C and 50 to 70% in triglycerides. These results provided the scientific foundation for initiation of an ongoing first-in-human clinical trial in patients with refractory hyperlipidemia syndromes."
+    },
+    {
+      "date": "2026-11-05",
+      "cat": "bio",
+      "t": "不是癌症卻同樣致命！耳朵痛癢伴隨臉歪嘴斜，當心致死率極高的「惡性外耳炎」",
+      "x": "「惡性外耳炎」並非癌症，而是致死率極高的嚴重耳道感染，細菌恐侵犯顱底與腦神經導致臉歪嘴斜。此病好發於高齡糖尿病患等免疫低下族群，若出現異常耳痛癢應盡速就醫。",
+      "src": "泛科學",
+      "url": "https://pansci.asia/archives/382488"
+    },
+    {
+      "date": "2026-11-08",
+      "cat": "chem",
+      "t": "科學家發現堵塞的過濾器可以徹底改變煉油業",
+      "x": "科學家們開發出了一種非凡的新型薄膜，可以在室溫下分離原油，利用油本身創建微觀過濾通道。這項突破可以將煉油能源消耗減少近 32%，碳排放減少近 38%，營運成本減少 36%，有可能改變世界上能源最密集的產業之一。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261103003207.htm",
+      "orig": "Scientists discover that a clogged filter could revolutionize oil refining",
+      "origX": "Scientists have developed a remarkable new membrane that separates crude oil at room temperature, using the oil itself to create microscopic filtration channels. The breakthrough could cut refining energy consumption by nearly 32%, carbon emissions by almost 38%, and operating costs by 36%, potentially transforming one of the world's most energy-intensive industries."
     },
     {
       "date": "2026-11-06",
@@ -22,42 +50,14 @@
       "origX": "Andrew Robinson reviews five of the best science picks."
     },
     {
-      "date": "2026-11-05",
-      "cat": "bio",
-      "t": "不是癌症卻同樣致命！耳朵痛癢伴隨臉歪嘴斜，當心致死率極高的「惡性外耳炎」",
-      "x": "「惡性外耳炎」並非癌症，而是致死率極高的嚴重耳道感染，細菌恐侵犯顱底與腦神經導致臉歪嘴斜。此病好發於高齡糖尿病患等免疫低下族群，若出現異常耳痛癢應盡速就醫。",
-      "src": "泛科學",
-      "url": "https://pansci.asia/archives/382488"
-    },
-    {
       "date": "2026-11-07",
-      "cat": "chem",
-      "t": "晶體中的微小缺陷揭示了巨大的量子驚喜",
-      "x": "研究人員解決了一個長期存在的挑戰，即了解鑽石和碳化矽等材料中的微小缺陷在光照下如何表現。他們的新計算方法揭示了碳化矽中一個令人驚訝的重要能量損失機制，而科學家之前卻低估了這個機制。這項發現有助於解釋多年來困擾研究人員的謎團，",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/10/261022081302.htm",
-      "orig": "A tiny defect in a crystal reveals a big quantum surprise",
-      "origX": "Researchers have solved a long-standing challenge in understanding how tiny defects in materials like diamond and silicon carbide behave when exposed to light. Their new computational method revealed a surprisingly important energy-loss mechanism in silicon carbide that scientists had previously underestimated. The finding helps explain a mystery that has puzzled researchers for years and could improve the design of quantum computers and sensors."
-    },
-    {
-      "date": "2026-11-06",
-      "cat": "bio",
-      "t": "霍亂細菌的善行：激發出具有稀有特性的膠水",
-      "x": "即使在水下也能牢固黏合的黏合劑的靈感來自一種可怕的病原體產生的蛋白質。",
-      "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03630-x",
-      "orig": "Cholera bacterium’s good deed: inspiring a glue with rare properties",
-      "origX": "An adhesive that binds strongly even under water was inspired by a protein made by a feared pathogen."
-    },
-    {
-      "date": "2026-11-06",
       "cat": "phys",
-      "t": "麻省理工學院的科學家打破了 20 年的規則並解鎖了前所未見的晶體結構",
-      "x": "麻省理工學院的科學家挑戰了二十年來的傳統思維，發現靈活的分子連接，而不是剛性的分子連接，可以解鎖排列奈米顆粒的全新方法。這項突破可能會催生出具有不同尋常特性的新一代設計材料，並在電子、醫學和能源領域得到應用。",
+      "t": "巧妙的分子技巧解鎖了玻璃中以前不可能的特性",
+      "x": "科學家發現如何使用一種特殊的分子重新編程玻璃的內部結構，該分子可以重新排列化學鍵，同時降低熔化溫度。這項突破可以解鎖具有精確控制的磁性和光學特性的全新玻璃材料，為先進電子、感測器和其他技術帶來可能性。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261104012248.htm",
-      "orig": "MIT scientists break a 20-year rule and unlock never-before-seen crystal structures",
-      "origX": "MIT scientists have challenged two decades of conventional thinking by discovering that flexible molecular connections, rather than rigid ones, can unlock entirely new ways to arrange nanoparticles. The breakthrough could lead to a new generation of designer materials with unusual properties and applications in electronics, medicine, and energy."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261103003202.htm",
+      "orig": "A clever molecular trick unlocks previously impossible properties in glass",
+      "origX": "Scientists have discovered how to reprogram the internal structure of glass using a special molecule that rearranges chemical bonds while lowering the melting temperature. The breakthrough could unlock entirely new glass materials with precisely controlled magnetic and optical properties, opening possibilities for advanced electronics, sensors, and other technologies."
     },
     {
       "date": "2026-11-05",
