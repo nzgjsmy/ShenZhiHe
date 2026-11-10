@@ -2,62 +2,50 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
-      "date": "2026-11-09",
-      "cat": "phys",
-      "t": "空間和時間的隱藏限制可以將電子設備解鎖速度提高 100,000 倍",
-      "x": "科學家發現了一個令人驚訝的量子極限，它阻止電子在空間和時間上被無限精確地追蹤。這項突破可能為操縱化學反應和開發電子產品鋪平道路，其速度比當今技術快數十萬倍。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261106174537.htm",
-      "orig": "A hidden limit of space and time could unlock electronics 100,000 times faster",
-      "origX": "Scientists have discovered a surprising quantum limit that prevents electrons from being tracked with unlimited precision in both space and time. The breakthrough could pave the way for manipulating chemical reactions and developing electronics hundreds of thousands of times faster than today's technology."
-    },
-    {
-      "date": "2026-11-06",
+      "date": "2026-11-10",
       "cat": "bio",
-      "t": "霍亂細菌的善行：激發出具有稀有特性的膠水",
-      "x": "一種即使在水下也能牢固粘合的粘合劑的靈感來自一種令人恐懼的病原體產生的蛋白質。",
-      "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03630-x",
-      "orig": "Cholera bacterium’s good deed: inspiring a glue with rare properties",
-      "origX": "An adhesive that binds strongly even under water was inspired by a protein made by a feared pathogen."
-    },
-    {
-      "date": "2026-11-05",
-      "cat": "bio",
-      "t": "不是癌症卻同樣致命！耳朵痛癢伴隨臉歪嘴斜，當心致死率極高的「惡性外耳炎」",
-      "x": "「惡性外耳炎」並非癌症，而是致死率極高的嚴重耳道感染，細菌恐侵犯顱底與腦神經導致臉歪嘴斜。此病好發於高齡糖尿病患等免疫低下族群，若出現異常耳痛癢應盡速就醫。",
+      "t": "基因不是命運：你的生活習慣正在改寫身體劇本",
+      "x": "同卵雙胞胎共用同一套基因，中年後卻可能一胖一瘦、疾病各異。陽明交大吳俊穎講座教授指出，腸道微菌叢是人體的「第二套基因組」，而飲食、運動、睡眠與用藥，正天天改寫這套菌叢生態；從糞菌植入到活菌生藥，「以菌治病」也逐步走進臨床。",
       "src": "泛科學",
-      "url": "https://pansci.asia/archives/382488"
+      "url": "https://pansci.asia/archives/382557"
+    },
+    {
+      "date": "2026-11-10",
+      "cat": "phys",
+      "t": "40 年後，CERN 發現了百億分之一粒子衰變的證據",
+      "x": "CERN 的科學家終於找到了粒子衰變的證據，這種衰變非常罕見，大約 100 億次衰變中只發生一次，結束了長達 40 多年的搜尋。這項突破可以幫助物理學家揭示當今最強大的加速器無法企及的隱藏粒子和力量。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261108233047.htm",
+      "orig": "After 40 years, CERN finds evidence of a one-in-10-billion particle decay",
+      "origX": "CERN scientists have finally found evidence of a particle decay so rare that it happens only once in roughly 10 billion decays, ending a search spanning more than 40 years. The breakthrough could help physicists uncover hidden particles and forces that lie beyond the reach of today's most powerful accelerators."
     },
     {
       "date": "2026-11-09",
-      "cat": "chem",
-      "t": "科學家不小心解開了持續60年的化學謎團",
-      "x": "經過 60 多年的失敗嘗試，科學家們終於分離了曾經被認為太不穩定而無法捕獲的難以捉摸的硼氧分子的穩定例子。這一令人驚訝的突破是透過相對簡單的化學反應實現的，可能為一類全新的奇異化合物鋪平道路。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261103003205.htm",
-      "orig": "Scientists accidentally solve a chemistry mystery that lasted 60 years",
-      "origX": "After more than 60 years of unsuccessful attempts, scientists have finally isolated stable examples of elusive boron-oxygen molecules once considered too unstable to capture. The surprising breakthrough, achieved using relatively simple chemical reactions, could pave the way for an entirely new class of exotic compounds."
-    },
-    {
-      "date": "2026-11-06",
       "cat": "bio",
-      "t": "ANGPTL3 的體內 CRISPR 鹼基編輯可實現持久降脂",
-      "x": "低密度脂蛋白胆固醇 (LDL-C) 和富含甘油三酯的脂蛋白的循环浓度是动脉粥样硬化性心血管疾病的主要危险因素1。儘管有幾種已獲批准的降血脂藥物，但大多數患者在慢性護理治療模式下未能達到目標血脂水平2,3。在這裡，我們描述了一種潛在的單療程治療，其中輸注",
+      "t": "超級厄爾尼諾現像不僅是一種氣候衝擊，也是一種健康衝擊",
+      "x": "糧食短缺和疾病爆發是可以預見的，需要一起解決。",
       "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/s41586-026-11233-9",
-      "orig": "In Vivo CRISPR Base Editing of ANGPTL3 for Durable Lipid Lowering",
-      "origX": "Circulating concentrations of low-density lipoprotein cholesterol (LDL-C) and triglyceride-rich lipoproteins are leading risk factors for atherosclerotic cardiovascular disease1. Despite several approved lipid-lowering medications, most patients fail to achieve target lipid levels under the chronic care treatment model2,3. Here, we describe a potential single-course treatment in which an infusion of guide RNA and mRNA encoding a CRISPR adenine base editor—encapsulated within a GalNAc–lipid nanoparticle—leads to durable, liver-selective inactivation of angiopoietin-like 3 (ANGPTL3), a known driver of increased LDL-C and triglyceride concentrations. Analyses in human liver cells in vitro confirmed that the base editor introduces a DNA base-pair change at the target ANGPTL3 locus with no detectable off-target editing at any of approximately 3000 candidate sites or treatment-related structural variants. Targeted ANGPTL3 inactivation in nonhuman primates was well-tolerated and led to a > 90% mean reduction in circulating ANGPTL3 protein, with durability confirmed out to 3 years following a single dose. In mouse and nonhuman primate models of hyperlipidemia, gene inactivation was associated with reductions of approximately 40 to 50% in LDL-C and 50 to 70% in triglycerides. These results provided the scientific foundation for initiation of an ongoing first-in-human clinical trial in patients with refractory hyperlipidemia syndromes."
+      "url": "https://www.nature.com/articles/d41586-026-03628-5",
+      "orig": "The super El Niño is more than a climate shock – it’s a health one, too",
+      "origX": "Food shortages and disease outbreaks are to be expected and need to be addressed together."
     },
     {
-      "date": "2026-11-08",
-      "cat": "phys",
-      "t": "SLAC 科學家發現了神秘的第三種磁性的確鑿證據",
-      "x": "近 90 年來，科學家一直認為磁性只分為兩類，但研究人員現在證實了第三種引人注目的類型，稱為交變磁性。他們利用專門的 X 射線發現了獨特的磁性特徵，證明這些材料的行為與傳統磁鐵不同。交變磁鐵將穩定性與有效攜帶訊息的能力結合在一起，有潛力",
+      "date": "2026-11-10",
+      "cat": "bio",
+      "t": "膽固醇超標不只塞血管！當心「慢性發炎」引發心血管危機",
+      "x": "膽固醇過高不僅會阻塞血管，還會刺激免疫系統引發慢性發炎。發炎反應會與高膽固醇形成惡性循環，加速心肌梗塞與腦血管梗塞發生，因此控制脂質代謝與抗發炎缺一不可。",
+      "src": "泛科學",
+      "url": "https://pansci.asia/archives/382483"
+    },
+    {
+      "date": "2026-11-10",
+      "cat": "chem",
+      "t": "量子突破使光錶現得既像固體又像液體",
+      "x": "科學家觀察到了一種奇怪的物質量子態，它在室溫下將晶體結構與液體的無摩擦流動結合在一起。這項突破推翻了奇異量子實驗的主要實際限制，有助於使強大的新型光計算和感測技術更接近現實。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261104012256.htm",
-      "orig": "SLAC scientists find conclusive proof of a mysterious third type of magnetism",
-      "origX": "For nearly 90 years, scientists believed magnetism fell into just two categories, but researchers have now confirmed a remarkable third type called altermagnetism. Using specialized X-rays, they uncovered a unique magnetic signature that proves these materials behave differently from conventional magnets. Altermagnets combine stability with the ability to efficiently carry information, potentially overcoming major limitations in today's electronics. The discovery could lead to faster computers, more efficient data centers, and breakthroughs in quantum technology."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261105224536.htm",
+      "orig": "A quantum breakthrough makes light behave like both a solid and a liquid",
+      "origX": "Scientists have observed a bizarre quantum state of matter that combines the structure of a crystal with the frictionless flow of a liquid, all at room temperature. The breakthrough overturns a major practical limitation of exotic quantum experiments and could help bring powerful new light-based computing and sensing technologies closer to reality."
     },
     {
       "date": "2026-11-05",
@@ -68,6 +56,16 @@
       "url": "https://www.nature.com/articles/s41586-026-11351-4",
       "orig": "Hydrogen Derivatives Enable Cost-Effective Carbon Neutrality in China",
       "origX": "The Intergovernmental Panel on Climate Change recommended 1.5°C carbon reduction target, requiring powerful enforcement from major economies. China, the largest CO2 emitter, is facing severe difficulties for both variable renewable accommodation and decarbonization of hard-to-abate sectors. Hydrogen, as a critical green energy carrier bridging renewable to end-users, faces significant obstacles in real-world deployment such as costly transportation, storage and fuel-cell adoption. Affordable and coordinated hydrogen deployment plan to accelerate the carbon-neutral transition remains ambiguous. Here, we present cost-effective carbon-neutral transition pathways for entire energy economy of China emphasizing the significant role of hydrogen and derivatives as green energy carriers, considering high-resolution renewable deployments, hourly power system operations in 29 provincial regions, over 46,000 rail/road/marine/pipeline transfer routing of hydrogen derivatives, process-level fuel adoption strategies in all end-use sectors. Results show that incorporating hydrogen and derivatives can reduce the overall transition cost by $ 10.7 trillion compared with renewable and electrification pathways, achieving negative carbon abatement costs ($-6.15/ton), eliminating external oil import expenses, equivalent to over 50% of China trade surplus (2023 level)1, significantly boosting employment and economic growth. Hydrogen derivative based transition pathway offers a vital direction for affordable and secure decarbonization for China and beyond under volatile international energy markets."
+    },
+    {
+      "date": "2026-11-09",
+      "cat": "phys",
+      "t": "空間和時間的隱藏限制可以將電子設備解鎖速度提高 100,000 倍",
+      "x": "科學家發現了一個令人驚訝的量子極限，它阻止電子在空間和時間上被無限精確地追蹤。這項突破可能為操縱化學反應和開發電子產品鋪平道路，其速度比當今技術快數十萬倍。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261106174537.htm",
+      "orig": "A hidden limit of space and time could unlock electronics 100,000 times faster",
+      "origX": "Scientists have discovered a surprising quantum limit that prevents electrons from being tracked with unlimited precision in both space and time. The breakthrough could pave the way for manipulating chemical reactions and developing electronics hundreds of thousands of times faster than today's technology."
     }
   ]
 }
