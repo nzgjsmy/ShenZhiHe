@@ -2,12 +2,60 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
+      "date": "2026-11-11",
+      "cat": "phys",
+      "t": "愛因斯坦方程式揭示了重力如何破壞、重新連結和釋放能量",
+      "x": "愛因斯坦徹底改變了我們對引力的理解一個多世紀後，科學家發現了隱藏在他的方程式中的令人驚訝的新現象。哥倫比亞大學和阿道夫·伊巴涅斯大學的研究人員發現了一種稱為「引力重新連接」的理論過程，其中引力場內的結構可以分裂並重新連接，從而轉移能量",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261104084011.htm",
+      "orig": "Einstein's equations reveal how gravity could break, reconnect, and release energy",
+      "origX": "More than a century after Einstein revolutionized our understanding of gravity, scientists have uncovered a surprising new phenomenon hidden within his equations. Researchers at Columbia University and Universidad Adolfo Ibáñez have identified a theoretical process called \"gravitational reconnection,\" in which structures within gravitational fields can break apart and reconnect, transferring energy into matter."
+    },
+    {
+      "date": "2026-11-10",
+      "cat": "phys",
+      "t": "為什麼你的物理專案需要人類學家",
+      "x": "為天文台選址不應只是出於科學考量。人文學者在負責任的選址中發揮著至關重要的作用。",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/d41586-026-03623-w",
+      "orig": "Why your physics project needs an anthropologist",
+      "origX": "Picking a site for an observatory should be about more than science. Humanities scholars have a crucial role in responsible siting."
+    },
+    {
       "date": "2026-11-10",
       "cat": "bio",
       "t": "基因不是命運：你的生活習慣正在改寫身體劇本",
       "x": "同卵雙胞胎共用同一套基因，中年後卻可能一胖一瘦、疾病各異。陽明交大吳俊穎講座教授指出，腸道微菌叢是人體的「第二套基因組」，而飲食、運動、睡眠與用藥，正天天改寫這套菌叢生態；從糞菌植入到活菌生藥，「以菌治病」也逐步走進臨床。",
       "src": "泛科學",
       "url": "https://pansci.asia/archives/382557"
+    },
+    {
+      "date": "2026-11-11",
+      "cat": "chem",
+      "t": "科學家發現堵塞的過濾器可以徹底改變煉油業",
+      "x": "科學家們開發出了一種非凡的新型薄膜，可以在室溫下分離原油，利用油本身創建微觀過濾通道。這項突破可以將煉油能源消耗減少近 32%，碳排放減少近 38%，營運成本減少 36%，有可能改變世界上能源最密集的產業之一。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261103003207.htm",
+      "orig": "Scientists discover that a clogged filter could revolutionize oil refining",
+      "origX": "Scientists have developed a remarkable new membrane that separates crude oil at room temperature, using the oil itself to create microscopic filtration channels. The breakthrough could cut refining energy consumption by nearly 32%, carbon emissions by almost 38%, and operating costs by 36%, potentially transforming one of the world's most energy-intensive industries."
+    },
+    {
+      "date": "2026-11-10",
+      "cat": "bio",
+      "t": "加州投票決定向醫學研究撥款創紀錄的 84 億美元",
+      "x": "這筆專門用於免疫學研究的現金注入是美國公眾投票授權的有史以來最大的科學研究資金注入，但它引起了批評。",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/d41586-026-03635-6",
+      "orig": "California votes to give record $8.4 billion to medical research",
+      "origX": "The cash infusion, earmarked for immunology studies, is the largest ever for science authorized by a US public vote — but it has drawn criticism."
+    },
+    {
+      "date": "2026-11-10",
+      "cat": "bio",
+      "t": "膽固醇超標不只塞血管！當心「慢性發炎」引發心血管危機",
+      "x": "膽固醇過高不僅會阻塞血管，還會刺激免疫系統引發慢性發炎。發炎反應會與高膽固醇形成惡性循環，加速心肌梗塞與腦血管梗塞發生，因此控制脂質代謝與抗發炎缺一不可。",
+      "src": "泛科學",
+      "url": "https://pansci.asia/archives/382483"
     },
     {
       "date": "2026-11-10",
@@ -20,34 +68,6 @@
       "origX": "CERN scientists have finally found evidence of a particle decay so rare that it happens only once in roughly 10 billion decays, ending a search spanning more than 40 years. The breakthrough could help physicists uncover hidden particles and forces that lie beyond the reach of today's most powerful accelerators."
     },
     {
-      "date": "2026-11-09",
-      "cat": "bio",
-      "t": "超級厄爾尼諾現像不僅是一種氣候衝擊，也是一種健康衝擊",
-      "x": "糧食短缺和疾病爆發是可以預見的，需要一起解決。",
-      "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03628-5",
-      "orig": "The super El Niño is more than a climate shock – it’s a health one, too",
-      "origX": "Food shortages and disease outbreaks are to be expected and need to be addressed together."
-    },
-    {
-      "date": "2026-11-10",
-      "cat": "bio",
-      "t": "膽固醇超標不只塞血管！當心「慢性發炎」引發心血管危機",
-      "x": "膽固醇過高不僅會阻塞血管，還會刺激免疫系統引發慢性發炎。發炎反應會與高膽固醇形成惡性循環，加速心肌梗塞與腦血管梗塞發生，因此控制脂質代謝與抗發炎缺一不可。",
-      "src": "泛科學",
-      "url": "https://pansci.asia/archives/382483"
-    },
-    {
-      "date": "2026-11-10",
-      "cat": "chem",
-      "t": "量子突破使光錶現得既像固體又像液體",
-      "x": "科學家觀察到了一種奇怪的物質量子態，它在室溫下將晶體結構與液體的無摩擦流動結合在一起。這項突破推翻了奇異量子實驗的主要實際限制，有助於使強大的新型光計算和感測技術更接近現實。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261105224536.htm",
-      "orig": "A quantum breakthrough makes light behave like both a solid and a liquid",
-      "origX": "Scientists have observed a bizarre quantum state of matter that combines the structure of a crystal with the frictionless flow of a liquid, all at room temperature. The breakthrough overturns a major practical limitation of exotic quantum experiments and could help bring powerful new light-based computing and sensing technologies closer to reality."
-    },
-    {
       "date": "2026-11-05",
       "cat": "chem",
       "t": "氫衍生物使中國實現具有成本效益的碳中和",
@@ -56,16 +76,6 @@
       "url": "https://www.nature.com/articles/s41586-026-11351-4",
       "orig": "Hydrogen Derivatives Enable Cost-Effective Carbon Neutrality in China",
       "origX": "The Intergovernmental Panel on Climate Change recommended 1.5°C carbon reduction target, requiring powerful enforcement from major economies. China, the largest CO2 emitter, is facing severe difficulties for both variable renewable accommodation and decarbonization of hard-to-abate sectors. Hydrogen, as a critical green energy carrier bridging renewable to end-users, faces significant obstacles in real-world deployment such as costly transportation, storage and fuel-cell adoption. Affordable and coordinated hydrogen deployment plan to accelerate the carbon-neutral transition remains ambiguous. Here, we present cost-effective carbon-neutral transition pathways for entire energy economy of China emphasizing the significant role of hydrogen and derivatives as green energy carriers, considering high-resolution renewable deployments, hourly power system operations in 29 provincial regions, over 46,000 rail/road/marine/pipeline transfer routing of hydrogen derivatives, process-level fuel adoption strategies in all end-use sectors. Results show that incorporating hydrogen and derivatives can reduce the overall transition cost by $ 10.7 trillion compared with renewable and electrification pathways, achieving negative carbon abatement costs ($-6.15/ton), eliminating external oil import expenses, equivalent to over 50% of China trade surplus (2023 level)1, significantly boosting employment and economic growth. Hydrogen derivative based transition pathway offers a vital direction for affordable and secure decarbonization for China and beyond under volatile international energy markets."
-    },
-    {
-      "date": "2026-11-09",
-      "cat": "phys",
-      "t": "空間和時間的隱藏限制可以將電子設備解鎖速度提高 100,000 倍",
-      "x": "科學家發現了一個令人驚訝的量子極限，它阻止電子在空間和時間上被無限精確地追蹤。這項突破可能為操縱化學反應和開發電子產品鋪平道路，其速度比當今技術快數十萬倍。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261106174537.htm",
-      "orig": "A hidden limit of space and time could unlock electronics 100,000 times faster",
-      "origX": "Scientists have discovered a surprising quantum limit that prevents electrons from being tracked with unlimited precision in both space and time. The breakthrough could pave the way for manipulating chemical reactions and developing electronics hundreds of thousands of times faster than today's technology."
     }
   ]
 }
