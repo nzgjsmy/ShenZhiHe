@@ -2,12 +2,60 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
+      "date": "2026-11-13",
+      "cat": "phys",
+      "t": "大規模的新模擬揭示了宇宙如何從黑暗中出現",
+      "x": "一項突破性的新型超級電腦模擬揭示了宇宙如何擺脫宇宙黑暗時代並轉變為充滿恆星和星系的宇宙。它被稱為 Lumina，在 16 億光年寬的區域內再現了 20 億年的早期宇宙歷史，捕捉了以前的模擬無法捕捉到的非凡細節。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261110042534.htm",
+      "orig": "A massive new simulation reveals how the universe emerged from darkness",
+      "origX": "A groundbreaking new supercomputer simulation is revealing how the universe escaped its cosmic dark age and transformed into a cosmos filled with stars and galaxies. Called Lumina, it recreates 2 billion years of early cosmic history across a region 1.6 billion light-years wide, capturing extraordinary details that previous simulations could not."
+    },
+    {
+      "date": "2026-11-12",
+      "cat": "chem",
+      "t": "這種棕色小蘑菇含有致幻劑和致命毒素",
+      "x": "佛羅裡達州的一種真菌可能會將迷幻化合物裸蓋菇素與致命的化學物質結合起來，以抵禦飢餓的動物。",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/d41586-026-03639-2",
+      "orig": "This little brown mushroom is laced with a hallucinogen — and lethal toxins",
+      "origX": "A Florida fungus might combine the psychedelic compound psilocybin with deadly chemicals to defend itself against hungry animals."
+    },
+    {
       "date": "2026-11-12",
       "cat": "bio",
       "t": "晚期肝癌新曙光！健保給付「雙免疫治療」助逆轉病程、讓腫瘤消失",
       "x": "健保給付的「雙免疫治療」為晚期肝癌帶來新希望！透過活化自身免疫系統攻擊癌細胞，不僅較不易損傷肝功能，更有兩成患者腫瘤顯著縮小，成功逆轉病程延長存活期。",
       "src": "泛科學",
       "url": "https://pansci.asia/archives/382524"
+    },
+    {
+      "date": "2026-11-13",
+      "cat": "chem",
+      "t": "科學家發現堵塞的過濾器可以徹底改變煉油業",
+      "x": "科學家們開發出了一種非凡的新型薄膜，可以在室溫下分離原油，利用油本身創建微觀過濾通道。這項突破可以將煉油能源消耗減少近 32%，碳排放減少近 38%，營運成本減少 36%，有可能改變世界上能源最密集的產業之一。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261103003207.htm",
+      "orig": "Scientists discover that a clogged filter could revolutionize oil refining",
+      "origX": "Scientists have developed a remarkable new membrane that separates crude oil at room temperature, using the oil itself to create microscopic filtration channels. The breakthrough could cut refining energy consumption by nearly 32%, carbon emissions by almost 38%, and operating costs by 36%, potentially transforming one of the world's most energy-intensive industries."
+    },
+    {
+      "date": "2026-11-12",
+      "cat": "bio",
+      "t": "破紀錄的伊波拉疫情：電話數據重建了傳播的前幾週",
+      "x": "研究人員表示，本迪布焦病毒株在 5 月被發現之前已經傳播了數週，但由於監測失敗、檢測缺口和資金削減而被錯過。",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/d41586-026-03666-z",
+      "orig": "Record-breaking Ebola outbreak: phone data reconstruct first weeks of spread",
+      "origX": "The Bundibugyo virus strain was circulating for weeks before its detection in May, but was missed owing to surveillance failures, testing gaps and funding cuts, researchers say."
+    },
+    {
+      "date": "2026-11-10",
+      "cat": "bio",
+      "t": "膽固醇超標不只塞血管！當心「慢性發炎」引發心血管危機",
+      "x": "膽固醇過高不僅會阻塞血管，還會刺激免疫系統引發慢性發炎。發炎反應會與高膽固醇形成惡性循環，加速心肌梗塞與腦血管梗塞發生，因此控制脂質代謝與抗發炎缺一不可。",
+      "src": "泛科學",
+      "url": "https://pansci.asia/archives/382483"
     },
     {
       "date": "2026-11-12",
@@ -20,34 +68,6 @@
       "origX": "Global fossil fuel emissions are projected to fall in 2026 as renewable energy and electric vehicles gain ground, but rising emissions from deforestation threaten to push total CO2 emissions to a new record. Scientists warn that the world's remaining carbon budget for limiting warming to 1.5°C could be exhausted in less than four years, even as a lasting decline in emissions appears increasingly within reach."
     },
     {
-      "date": "2026-11-11",
-      "cat": "bio",
-      "t": "仙人掌太乾燥：極端乾燥可能導致標誌性物種滅絕",
-      "x": "聆聽科學界最偉大的故事 | 2026 年 11 月 11 日",
-      "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03671-2",
-      "orig": "Too dry for cacti: extreme droughts could push iconic species to extinction",
-      "origX": "Hear the biggest stories from the world of science | 11 Novemeber 2026"
-    },
-    {
-      "date": "2026-11-10",
-      "cat": "bio",
-      "t": "基因不是命運：你的生活習慣正在改寫身體劇本",
-      "x": "同卵雙胞胎共用同一套基因，中年後卻可能一胖一瘦、疾病各異。陽明交大吳俊穎講座教授指出，腸道微菌叢是人體的「第二套基因組」，而飲食、運動、睡眠與用藥，正天天改寫這套菌叢生態；從糞菌植入到活菌生藥，「以菌治病」也逐步走進臨床。",
-      "src": "泛科學",
-      "url": "https://pansci.asia/archives/382557"
-    },
-    {
-      "date": "2026-11-12",
-      "cat": "chem",
-      "t": "量子突破使光錶現得既像固體又像液體",
-      "x": "科學家觀察到了一種奇怪的物質量子態，它在室溫下將晶體結構與液體的無摩擦流動結合在一起。這項突破推翻了奇異量子實驗的主要實際限制，有助於使強大的新型光計算和感測技術更接近現實。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261105224536.htm",
-      "orig": "A quantum breakthrough makes light behave like both a solid and a liquid",
-      "origX": "Scientists have observed a bizarre quantum state of matter that combines the structure of a crystal with the frictionless flow of a liquid, all at room temperature. The breakthrough overturns a major practical limitation of exotic quantum experiments and could help bring powerful new light-based computing and sensing technologies closer to reality."
-    },
-    {
       "date": "2026-11-10",
       "cat": "phys",
       "t": "為什麼你的物理專案需要人類學家",
@@ -56,26 +76,6 @@
       "url": "https://www.nature.com/articles/d41586-026-03623-w",
       "orig": "Why your physics project needs an anthropologist",
       "origX": "Picking a site for an observatory should be about more than science. Humanities scholars have a crucial role in responsible siting."
-    },
-    {
-      "date": "2026-11-11",
-      "cat": "phys",
-      "t": "愛因斯坦方程式揭示了重力如何破壞、重新連結和釋放能量",
-      "x": "愛因斯坦徹底改變了我們對引力的理解一個多世紀後，科學家發現了隱藏在他的方程式中的令人驚訝的新現象。哥倫比亞大學和阿道夫·伊巴涅斯大學的研究人員發現了一種稱為「引力重新連接」的理論過程，其中引力場內的結構可以分裂並重新連接，從而轉移能量",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261104084011.htm",
-      "orig": "Einstein's equations reveal how gravity could break, reconnect, and release energy",
-      "origX": "More than a century after Einstein revolutionized our understanding of gravity, scientists have uncovered a surprising new phenomenon hidden within his equations. Researchers at Columbia University and Universidad Adolfo Ibáñez have identified a theoretical process called \"gravitational reconnection,\" in which structures within gravitational fields can break apart and reconnect, transferring energy into matter."
-    },
-    {
-      "date": "2026-11-05",
-      "cat": "chem",
-      "t": "氫衍生物使中國實現具有成本效益的碳中和",
-      "x": "政府間氣候變遷專門委員會建議1.5℃的碳減量目標，需要主要經濟體強而有力的執行。中國作為最大的二氧化碳排放國，在可變再生能源調節和難以減排產業的脫碳方面都面臨嚴峻的困難。氫作為連接再生能源與最終用戶的重要綠色能源載體，在發展方面面臨重大障礙",
-      "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/s41586-026-11351-4",
-      "orig": "Hydrogen Derivatives Enable Cost-Effective Carbon Neutrality in China",
-      "origX": "The Intergovernmental Panel on Climate Change recommended 1.5°C carbon reduction target, requiring powerful enforcement from major economies. China, the largest CO2 emitter, is facing severe difficulties for both variable renewable accommodation and decarbonization of hard-to-abate sectors. Hydrogen, as a critical green energy carrier bridging renewable to end-users, faces significant obstacles in real-world deployment such as costly transportation, storage and fuel-cell adoption. Affordable and coordinated hydrogen deployment plan to accelerate the carbon-neutral transition remains ambiguous. Here, we present cost-effective carbon-neutral transition pathways for entire energy economy of China emphasizing the significant role of hydrogen and derivatives as green energy carriers, considering high-resolution renewable deployments, hourly power system operations in 29 provincial regions, over 46,000 rail/road/marine/pipeline transfer routing of hydrogen derivatives, process-level fuel adoption strategies in all end-use sectors. Results show that incorporating hydrogen and derivatives can reduce the overall transition cost by $ 10.7 trillion compared with renewable and electrification pathways, achieving negative carbon abatement costs ($-6.15/ton), eliminating external oil import expenses, equivalent to over 50% of China trade surplus (2023 level)1, significantly boosting employment and economic growth. Hydrogen derivative based transition pathway offers a vital direction for affordable and secure decarbonization for China and beyond under volatile international energy markets."
     }
   ]
 }
