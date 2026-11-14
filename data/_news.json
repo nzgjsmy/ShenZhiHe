@@ -2,14 +2,50 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
-      "date": "2026-11-13",
+      "date": "2026-11-14",
+      "cat": "bio",
+      "t": "一年吞下5億顆安眠藥！大腦當機睡不著？新型藥物與 CBT-I 帶你找回「關機力」",
+      "x": "台灣人一年吃掉超過 5 億顆安眠藥，平均一天吞下 138 萬顆！難道我們真的這麼難入睡嗎？面對漫漫長夜，許多人依賴藥物來強制大腦關機，但安眠藥吃久了怕成癮、擔心戒不掉，甚至憂慮會引發失智。到底失眠一定要吃藥嗎？吃了十年的藥還有機會戒除嗎？這一集，就讓挺健康鄭丁…",
+      "src": "泛科學",
+      "url": "https://pansci.asia/archives/382531"
+    },
+    {
+      "date": "2026-11-14",
       "cat": "phys",
-      "t": "大規模的新模擬揭示了宇宙如何從黑暗中出現",
-      "x": "一項突破性的新型超級電腦模擬揭示了宇宙如何擺脫宇宙黑暗時代並轉變為充滿恆星和星系的宇宙。它被稱為 Lumina，在 16 億光年寬的區域內再現了 20 億年的早期宇宙歷史，捕捉了以前的模擬無法捕捉到的非凡細節。",
+      "t": "95億年前，暗能量可能已從負值轉變為正值",
+      "x": "推動宇宙膨脹的神秘力量可能在數十億年前經歷了戲劇性的逆轉。科學家在探索另一種重力理論中一個被忽視的分支時發現，暗能量可能在大約 95 億年前從負能量轉變為正能量，這可能會改變我們理解宇宙歷史的方式。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261110042534.htm",
-      "orig": "A massive new simulation reveals how the universe emerged from darkness",
-      "origX": "A groundbreaking new supercomputer simulation is revealing how the universe escaped its cosmic dark age and transformed into a cosmos filled with stars and galaxies. Called Lumina, it recreates 2 billion years of early cosmic history across a region 1.6 billion light-years wide, capturing extraordinary details that previous simulations could not."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261111005901.htm",
+      "orig": "Dark energy may have flipped from negative to positive 9.5 billion years ago",
+      "origX": "A mysterious force driving the expansion of the Universe may have undergone a dramatic reversal billions of years ago. Scientists exploring an overlooked branch of an alternative gravity theory discovered that dark energy could have switched from negative to positive roughly 9.5 billion years ago, potentially changing how we understand cosmic history."
+    },
+    {
+      "date": "2026-11-13",
+      "cat": "bio",
+      "t": "這個人工智慧「機制」可以窺視其他神經網路的黑盒子",
+      "x": "能夠定位和調試系統可以提高人工智慧的安全性和實用性。",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/d41586-026-03679-8",
+      "orig": "This AI ‘mechanic’ can peer inside the black box of other neural networks",
+      "origX": "Being able to target and debug systems could improve artificial-intelligence safety and utility."
+    },
+    {
+      "date": "2026-11-12",
+      "cat": "bio",
+      "t": "晚期肝癌新曙光！健保給付「雙免疫治療」助逆轉病程、讓腫瘤消失",
+      "x": "健保給付的「雙免疫治療」為晚期肝癌帶來新希望！透過活化自身免疫系統攻擊癌細胞，不僅較不易損傷肝功能，更有兩成患者腫瘤顯著縮小，成功逆轉病程延長存活期。",
+      "src": "泛科學",
+      "url": "https://pansci.asia/archives/382524"
+    },
+    {
+      "date": "2026-11-14",
+      "cat": "chem",
+      "t": "鑽石中的微小缺陷可能引發量子運算革命",
+      "x": "科學家發現了一種更快的方法來識別鑽石基材料，這些材料可以在室溫下為量子電腦和感測器提供動力。這項突破已經揭示了有前途的新量子建構模組，可以幫助釋放遠遠超出當今超級電腦的運算能力。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261111005855.htm",
+      "orig": "Tiny flaws in diamonds could unlock a quantum computing revolution",
+      "origX": "Scientists have discovered a faster way to identify diamond-based materials that could power quantum computers and sensors at room temperature. The breakthrough has already revealed promising new quantum building blocks that could help unlock computing capabilities far beyond those of today's supercomputers."
     },
     {
       "date": "2026-11-12",
@@ -22,50 +58,14 @@
       "origX": "A Florida fungus might combine the psychedelic compound psilocybin with deadly chemicals to defend itself against hungry animals."
     },
     {
-      "date": "2026-11-12",
-      "cat": "bio",
-      "t": "晚期肝癌新曙光！健保給付「雙免疫治療」助逆轉病程、讓腫瘤消失",
-      "x": "健保給付的「雙免疫治療」為晚期肝癌帶來新希望！透過活化自身免疫系統攻擊癌細胞，不僅較不易損傷肝功能，更有兩成患者腫瘤顯著縮小，成功逆轉病程延長存活期。",
-      "src": "泛科學",
-      "url": "https://pansci.asia/archives/382524"
-    },
-    {
       "date": "2026-11-13",
-      "cat": "chem",
-      "t": "科學家發現堵塞的過濾器可以徹底改變煉油業",
-      "x": "科學家們開發出了一種非凡的新型薄膜，可以在室溫下分離原油，利用油本身創建微觀過濾通道。這項突破可以將煉油能源消耗減少近 32%，碳排放減少近 38%，營運成本減少 36%，有可能改變世界上能源最密集的產業之一。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261103003207.htm",
-      "orig": "Scientists discover that a clogged filter could revolutionize oil refining",
-      "origX": "Scientists have developed a remarkable new membrane that separates crude oil at room temperature, using the oil itself to create microscopic filtration channels. The breakthrough could cut refining energy consumption by nearly 32%, carbon emissions by almost 38%, and operating costs by 36%, potentially transforming one of the world's most energy-intensive industries."
-    },
-    {
-      "date": "2026-11-12",
-      "cat": "bio",
-      "t": "破紀錄的伊波拉疫情：電話數據重建了傳播的前幾週",
-      "x": "研究人員表示，本迪布焦病毒株在 5 月被發現之前已經傳播了數週，但由於監測失敗、檢測缺口和資金削減而被錯過。",
-      "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03666-z",
-      "orig": "Record-breaking Ebola outbreak: phone data reconstruct first weeks of spread",
-      "origX": "The Bundibugyo virus strain was circulating for weeks before its detection in May, but was missed owing to surveillance failures, testing gaps and funding cuts, researchers say."
-    },
-    {
-      "date": "2026-11-10",
-      "cat": "bio",
-      "t": "膽固醇超標不只塞血管！當心「慢性發炎」引發心血管危機",
-      "x": "膽固醇過高不僅會阻塞血管，還會刺激免疫系統引發慢性發炎。發炎反應會與高膽固醇形成惡性循環，加速心肌梗塞與腦血管梗塞發生，因此控制脂質代謝與抗發炎缺一不可。",
-      "src": "泛科學",
-      "url": "https://pansci.asia/archives/382483"
-    },
-    {
-      "date": "2026-11-12",
       "cat": "phys",
-      "t": "2026 年全球化石燃料排放量將下降，但二氧化碳總量持續上升",
-      "x": "隨著再生能源和電動車的普及，全球化石燃料排放量預計將在 2026 年下降，但森林砍伐導致的排放量增加可能會將二氧化碳總排放量推至新紀錄。科學家警告說，儘管排放量的持續下降似乎越來越明顯，但世界上用於將氣溫升高限制在 1.5°C 的剩餘碳預算可能會在不到四年的時…",
+      "t": "大規模的新模擬揭示了宇宙如何從黑暗中出現",
+      "x": "一項突破性的新型超級電腦模擬揭示了宇宙如何擺脫宇宙黑暗時代並轉變為充滿恆星和星系的宇宙。它被稱為 Lumina，在 16 億光年寬的區域內再現了 20 億年的早期宇宙歷史，捕捉了以前的模擬無法捕捉到的非凡細節。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261109205358.htm",
-      "orig": "Global fossil fuel emissions set to fall in 2026, but total CO2 keeps rising",
-      "origX": "Global fossil fuel emissions are projected to fall in 2026 as renewable energy and electric vehicles gain ground, but rising emissions from deforestation threaten to push total CO2 emissions to a new record. Scientists warn that the world's remaining carbon budget for limiting warming to 1.5°C could be exhausted in less than four years, even as a lasting decline in emissions appears increasingly within reach."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261110042534.htm",
+      "orig": "A massive new simulation reveals how the universe emerged from darkness",
+      "origX": "A groundbreaking new supercomputer simulation is revealing how the universe escaped its cosmic dark age and transformed into a cosmos filled with stars and galaxies. Called Lumina, it recreates 2 billion years of early cosmic history across a region 1.6 billion light-years wide, capturing extraordinary details that previous simulations could not."
     },
     {
       "date": "2026-11-10",
