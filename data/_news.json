@@ -2,22 +2,22 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
+      "date": "2026-11-15",
+      "cat": "phys",
+      "t": "科學家捕獲電子，實現看似不可能的量子躍遷",
+      "x": "科學家捕獲了電子看似不可能跨越石墨烯禁能帶的躍遷，其中一些躍遷發生的機率高達 100%。這項突破為量子行為提供了前所未有的視角，有助於解鎖新一代超快光控電子裝置。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261112025523.htm",
+      "orig": "Scientists capture electrons making seemingly impossible quantum jumps",
+      "origX": "Scientists have captured electrons making seemingly impossible jumps across forbidden energy gaps in graphene, with some transitions occurring at a remarkable 100% probability. The breakthrough offers an unprecedented look at quantum behavior and could help unlock a new generation of ultrafast, light-controlled electronics."
+    },
+    {
       "date": "2026-11-14",
       "cat": "bio",
       "t": "一年吞下5億顆安眠藥！大腦當機睡不著？新型藥物與 CBT-I 帶你找回「關機力」",
       "x": "台灣人一年吃掉超過 5 億顆安眠藥，平均一天吞下 138 萬顆！難道我們真的這麼難入睡嗎？面對漫漫長夜，許多人依賴藥物來強制大腦關機，但安眠藥吃久了怕成癮、擔心戒不掉，甚至憂慮會引發失智。到底失眠一定要吃藥嗎？吃了十年的藥還有機會戒除嗎？這一集，就讓挺健康鄭丁…",
       "src": "泛科學",
       "url": "https://pansci.asia/archives/382531"
-    },
-    {
-      "date": "2026-11-14",
-      "cat": "phys",
-      "t": "95億年前，暗能量可能已從負值轉變為正值",
-      "x": "推動宇宙膨脹的神秘力量可能在數十億年前經歷了戲劇性的逆轉。科學家在探索另一種重力理論中一個被忽視的分支時發現，暗能量可能在大約 95 億年前從負能量轉變為正能量，這可能會改變我們理解宇宙歷史的方式。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261111005901.htm",
-      "orig": "Dark energy may have flipped from negative to positive 9.5 billion years ago",
-      "origX": "A mysterious force driving the expansion of the Universe may have undergone a dramatic reversal billions of years ago. Scientists exploring an overlooked branch of an alternative gravity theory discovered that dark energy could have switched from negative to positive roughly 9.5 billion years ago, potentially changing how we understand cosmic history."
     },
     {
       "date": "2026-11-13",
@@ -30,22 +30,22 @@
       "origX": "Being able to target and debug systems could improve artificial-intelligence safety and utility."
     },
     {
+      "date": "2026-11-15",
+      "cat": "chem",
+      "t": "磁性的突破可以使人工智慧晶片使用的能源大大減少",
+      "x": "布朗大學的研究人員克服了製造超低功耗電腦晶片的一個主要障礙，有助於削減人工智慧的能源需求。他們的突破消除了長期存在的「死層」問題，該問題會導致有前途的材料在做得極薄時停止工作。值得注意的是，這項新技術不僅在近乎保留了材料的電學和磁學性質。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261111005853.htm",
+      "orig": "A breakthrough in magnetism could make AI chips use dramatically less energy",
+      "origX": "Researchers at Brown University have overcome a major obstacle to creating ultra-low-power computer chips that could help slash the energy demands of AI. Their breakthrough eliminates a long-standing \"dead layer\" problem that causes promising materials to stop working when made extremely thin. Remarkably, the new technique not only preserves the materials' electrical and magnetic properties at nearly atomic thicknesses but also gives them enhanced magnetic capabilities"
+    },
+    {
       "date": "2026-11-12",
       "cat": "bio",
       "t": "晚期肝癌新曙光！健保給付「雙免疫治療」助逆轉病程、讓腫瘤消失",
       "x": "健保給付的「雙免疫治療」為晚期肝癌帶來新希望！透過活化自身免疫系統攻擊癌細胞，不僅較不易損傷肝功能，更有兩成患者腫瘤顯著縮小，成功逆轉病程延長存活期。",
       "src": "泛科學",
       "url": "https://pansci.asia/archives/382524"
-    },
-    {
-      "date": "2026-11-14",
-      "cat": "chem",
-      "t": "鑽石中的微小缺陷可能引發量子運算革命",
-      "x": "科學家發現了一種更快的方法來識別鑽石基材料，這些材料可以在室溫下為量子電腦和感測器提供動力。這項突破已經揭示了有前途的新量子建構模組，可以幫助釋放遠遠超出當今超級電腦的運算能力。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261111005855.htm",
-      "orig": "Tiny flaws in diamonds could unlock a quantum computing revolution",
-      "origX": "Scientists have discovered a faster way to identify diamond-based materials that could power quantum computers and sensors at room temperature. The breakthrough has already revealed promising new quantum building blocks that could help unlock computing capabilities far beyond those of today's supercomputers."
     },
     {
       "date": "2026-11-12",
@@ -58,14 +58,14 @@
       "origX": "A Florida fungus might combine the psychedelic compound psilocybin with deadly chemicals to defend itself against hungry animals."
     },
     {
-      "date": "2026-11-13",
+      "date": "2026-11-14",
       "cat": "phys",
-      "t": "大規模的新模擬揭示了宇宙如何從黑暗中出現",
-      "x": "一項突破性的新型超級電腦模擬揭示了宇宙如何擺脫宇宙黑暗時代並轉變為充滿恆星和星系的宇宙。它被稱為 Lumina，在 16 億光年寬的區域內再現了 20 億年的早期宇宙歷史，捕捉了以前的模擬無法捕捉到的非凡細節。",
+      "t": "95億年前，暗能量可能已從負值轉變為正值",
+      "x": "推動宇宙膨脹的神秘力量可能在數十億年前經歷了戲劇性的逆轉。科學家在探索另一種重力理論中一個被忽視的分支時發現，暗能量可能在大約 95 億年前從負能量轉變為正能量，這可能會改變我們理解宇宙歷史的方式。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261110042534.htm",
-      "orig": "A massive new simulation reveals how the universe emerged from darkness",
-      "origX": "A groundbreaking new supercomputer simulation is revealing how the universe escaped its cosmic dark age and transformed into a cosmos filled with stars and galaxies. Called Lumina, it recreates 2 billion years of early cosmic history across a region 1.6 billion light-years wide, capturing extraordinary details that previous simulations could not."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261111005901.htm",
+      "orig": "Dark energy may have flipped from negative to positive 9.5 billion years ago",
+      "origX": "A mysterious force driving the expansion of the Universe may have undergone a dramatic reversal billions of years ago. Scientists exploring an overlooked branch of an alternative gravity theory discovered that dark energy could have switched from negative to positive roughly 9.5 billion years ago, potentially changing how we understand cosmic history."
     },
     {
       "date": "2026-11-10",
