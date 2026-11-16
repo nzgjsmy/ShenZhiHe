@@ -2,14 +2,14 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
-      "date": "2026-11-15",
+      "date": "2026-11-16",
       "cat": "phys",
-      "t": "科學家捕獲電子，實現看似不可能的量子躍遷",
-      "x": "科學家捕獲了電子看似不可能跨越石墨烯禁能帶的躍遷，其中一些躍遷發生的機率高達 100%。這項突破為量子行為提供了前所未有的視角，有助於解鎖新一代超快光控電子裝置。",
+      "t": "物理學家使用雷射來解鎖晶體隱藏的電力",
+      "x": "科學家發現如何使用雷射閃光來組織晶體內的微小電子區域，解決了數十年來有關材料行為的謎團。雷射誘導對準僅持續萬億分之一秒，但這一突破可能為處理和儲存資訊的新方法打開大門。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261112025523.htm",
-      "orig": "Scientists capture electrons making seemingly impossible quantum jumps",
-      "origX": "Scientists have captured electrons making seemingly impossible jumps across forbidden energy gaps in graphene, with some transitions occurring at a remarkable 100% probability. The breakthrough offers an unprecedented look at quantum behavior and could help unlock a new generation of ultrafast, light-controlled electronics."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261112230500.htm",
+      "orig": "Physicists use laser light to unlock a crystal's hidden electrical powers",
+      "origX": "Scientists have discovered how to use flashes of laser light to organize tiny electrical regions inside a crystal, solving a decades-old mystery about how the material behaves. The laser-induced alignment lasts just a trillionth of a second, but the breakthrough could open the door to new ways of processing and storing information."
     },
     {
       "date": "2026-11-14",
@@ -30,14 +30,14 @@
       "origX": "Being able to target and debug systems could improve artificial-intelligence safety and utility."
     },
     {
-      "date": "2026-11-15",
+      "date": "2026-11-16",
       "cat": "chem",
-      "t": "磁性的突破可以使人工智慧晶片使用的能源大大減少",
-      "x": "布朗大學的研究人員克服了製造超低功耗電腦晶片的一個主要障礙，有助於削減人工智慧的能源需求。他們的突破消除了長期存在的「死層」問題，該問題會導致有前途的材料在做得極薄時停止工作。值得注意的是，這項新技術不僅在近乎保留了材料的電學和磁學性質。",
+      "t": "鑽石中的微小缺陷可能引發量子運算革命",
+      "x": "科學家發現了一種更快的方法來識別鑽石基材料，這些材料可以在室溫下為量子電腦和感測器提供動力。這項突破已經揭示了有前途的新量子建構模組，可以幫助釋放遠遠超出當今超級電腦的運算能力。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261111005853.htm",
-      "orig": "A breakthrough in magnetism could make AI chips use dramatically less energy",
-      "origX": "Researchers at Brown University have overcome a major obstacle to creating ultra-low-power computer chips that could help slash the energy demands of AI. Their breakthrough eliminates a long-standing \"dead layer\" problem that causes promising materials to stop working when made extremely thin. Remarkably, the new technique not only preserves the materials' electrical and magnetic properties at nearly atomic thicknesses but also gives them enhanced magnetic capabilities"
+      "url": "https://www.sciencedaily.com/releases/2026/11/261111005855.htm",
+      "orig": "Tiny flaws in diamonds could unlock a quantum computing revolution",
+      "origX": "Scientists have discovered a faster way to identify diamond-based materials that could power quantum computers and sensors at room temperature. The breakthrough has already revealed promising new quantum building blocks that could help unlock computing capabilities far beyond those of today's supercomputers."
     },
     {
       "date": "2026-11-12",
@@ -58,14 +58,14 @@
       "origX": "A Florida fungus might combine the psychedelic compound psilocybin with deadly chemicals to defend itself against hungry animals."
     },
     {
-      "date": "2026-11-14",
+      "date": "2026-11-15",
       "cat": "phys",
-      "t": "95億年前，暗能量可能已從負值轉變為正值",
-      "x": "推動宇宙膨脹的神秘力量可能在數十億年前經歷了戲劇性的逆轉。科學家在探索另一種重力理論中一個被忽視的分支時發現，暗能量可能在大約 95 億年前從負能量轉變為正能量，這可能會改變我們理解宇宙歷史的方式。",
+      "t": "科學家捕獲電子，實現看似不可能的量子躍遷",
+      "x": "科學家捕獲了電子看似不可能跨越石墨烯禁能帶的躍遷，其中一些躍遷發生的機率高達 100%。這項突破為量子行為提供了前所未有的視角，有助於解鎖新一代超快光控電子裝置。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261111005901.htm",
-      "orig": "Dark energy may have flipped from negative to positive 9.5 billion years ago",
-      "origX": "A mysterious force driving the expansion of the Universe may have undergone a dramatic reversal billions of years ago. Scientists exploring an overlooked branch of an alternative gravity theory discovered that dark energy could have switched from negative to positive roughly 9.5 billion years ago, potentially changing how we understand cosmic history."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261112025523.htm",
+      "orig": "Scientists capture electrons making seemingly impossible quantum jumps",
+      "origX": "Scientists have captured electrons making seemingly impossible jumps across forbidden energy gaps in graphene, with some transitions occurring at a remarkable 100% probability. The breakthrough offers an unprecedented look at quantum behavior and could help unlock a new generation of ultrafast, light-controlled electronics."
     },
     {
       "date": "2026-11-10",
