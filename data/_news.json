@@ -2,14 +2,32 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
-      "date": "2026-11-16",
+      "date": "2026-11-17",
       "cat": "phys",
-      "t": "物理學家使用雷射來解鎖晶體隱藏的電力",
-      "x": "科學家發現如何使用雷射閃光來組織晶體內的微小電子區域，解決了數十年來有關材料行為的謎團。雷射誘導對準僅持續萬億分之一秒，但這一突破可能為處理和儲存資訊的新方法打開大門。",
+      "t": "角膜太薄無法近視雷射？眼科醫師解析「植入式隱形眼鏡」EVO ICL，保留角膜且可隨時取出！",
+      "x": "高度近視或角膜太薄無法做近視雷射嗎？「EVO ICL植入式隱形眼鏡」保留完整角膜結構，不僅能降低術後乾眼風險，晶體更具備可取出的彈性，是視力矯正的安全新選擇。",
+      "src": "泛科學",
+      "url": "https://pansci.asia/archives/382529"
+    },
+    {
+      "date": "2026-11-17",
+      "cat": "phys",
+      "t": "物理學家透過控制單一原子的磁心來打破預期",
+      "x": "科學家出人意料地發現如何利用無線電波控制單一原子核內的磁自旋，推翻了先前關於原子行為的假設。儘管研究人員仍在試圖了解其工作原理，但這項突破可能為更可靠的量子記憶體鋪平道路。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261112230500.htm",
-      "orig": "Physicists use laser light to unlock a crystal's hidden electrical powers",
-      "origX": "Scientists have discovered how to use flashes of laser light to organize tiny electrical regions inside a crystal, solving a decades-old mystery about how the material behaves. The laser-induced alignment lasts just a trillionth of a second, but the breakthrough could open the door to new ways of processing and storing information."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261114202232.htm",
+      "orig": "Physicists defy expectations by controlling the magnetic heart of a single atom",
+      "origX": "Scientists have unexpectedly discovered how to control the magnetic spin inside a single atom's nucleus using radio waves, overturning previous assumptions about atomic behavior. The breakthrough could pave the way for more reliable quantum memory, although researchers are still trying to understand why it works."
+    },
+    {
+      "date": "2026-11-16",
+      "cat": "bio",
+      "t": "嵌入痘病毒核心的門戶複合體的架構",
+      "x": "病毒核心內的基因轉錄是痘病毒複製的顯著特徵。進入細胞質後，痘病毒核心與側體分離並進行擴張，作為早期轉錄的隔間1。然而，病毒核心和宿主細胞質之間的分子交換方式仍知之甚少。在這裡，使用冷凍電子湯姆",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/s41586-026-11399-2",
+      "orig": "Architecture of a portal complex embedded in the poxvirus core",
+      "origX": "Gene transcription within the viral core is a distinctive feature of poxvirus replication. Following entry into the cytoplasm, the poxvirus core dissociates from the lateral bodies and undergoes expansion, functioning as a compartment for early transcription1. However, how molecules are exchanged between the viral core and the host cytoplasm remains poorly understood. Here, using cryo-electron tomography and sub-tomogram averaging, we determine the structures of the portal complex and its central pore on the vaccinia virus core at 6.7 Å and 4.4 Å resolution, respectively. Guided by structural predictions and experimental density, we identify three viral proteins, E8, E6 and L3, as the principal components of the pore and construct a structural model of their organization. The pore contains a narrow, positively charged constriction formed by conserved lysine residues in L3, substitutions of which impair viral gene expression and propagation. The dimensions and electrostatic properties of the channel are consistent with a potential role in molecular exchange across the core wall. Together, our findings establish a structural framework for understanding the organization and potential function of the poxvirus portal complex."
     },
     {
       "date": "2026-11-14",
@@ -20,32 +38,34 @@
       "url": "https://pansci.asia/archives/382531"
     },
     {
-      "date": "2026-11-13",
-      "cat": "bio",
-      "t": "這個人工智慧「機制」可以窺視其他神經網路的黑盒子",
-      "x": "能夠定位和調試系統可以提高人工智慧的安全性和實用性。",
-      "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03679-8",
-      "orig": "This AI ‘mechanic’ can peer inside the black box of other neural networks",
-      "origX": "Being able to target and debug systems could improve artificial-intelligence safety and utility."
+      "date": "2026-11-17",
+      "cat": "chem",
+      "t": "建造月球基地的秘密可能隱藏在緊急毯中",
+      "x": "科學家將應急毯中使用的薄塑膠變成了非常堅固的隔熱材料，可以幫助太空人在月球的極端溫度下生存。這種材料由數百層堆疊而成，能夠承受擠壓壓力而不會失去熱保護能力，這可能為更堅固、更持久的月球棲息地​​鋪平道路。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261115085549.htm",
+      "orig": "The secret to building Moon bases may be hiding in emergency blankets",
+      "origX": "Scientists have turned the thin plastic used in emergency blankets into remarkably strong insulation that could help astronauts survive the Moon's extreme temperatures. Built from hundreds of stacked layers, the material withstands crushing pressure without losing its thermal protection, potentially paving the way for tougher, longer-lasting lunar habitats."
     },
     {
       "date": "2026-11-16",
-      "cat": "chem",
-      "t": "鑽石中的微小缺陷可能引發量子運算革命",
-      "x": "科學家發現了一種更快的方法來識別鑽石基材料，這些材料可以在室溫下為量子電腦和感測器提供動力。這項突破已經揭示了有前途的新量子建構模組，可以幫助釋放遠遠超出當今超級電腦的運算能力。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261111005855.htm",
-      "orig": "Tiny flaws in diamonds could unlock a quantum computing revolution",
-      "origX": "Scientists have discovered a faster way to identify diamond-based materials that could power quantum computers and sensors at room temperature. The breakthrough has already revealed promising new quantum building blocks that could help unlock computing capabilities far beyond those of today's supercomputers."
+      "cat": "bio",
+      "t": "吸血鬼的秘密：基因組揭示了這些蝙蝠如何僅靠血液生存",
+      "x": "可擴張的胃使這些飛行的哺乳動物能夠吞下大量的血液，而液體處理基因則幫助它們在吸收所有液體後飛回家。",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/d41586-026-03706-8",
+      "orig": "Secrets of the vampires: genomes reveal how these bats live off blood alone",
+      "origX": "Expandable stomachs allow these flying mammals to gulp large amounts of blood, and fluid-handling genes help them to fly home after all that liquid."
     },
     {
-      "date": "2026-11-12",
-      "cat": "bio",
-      "t": "晚期肝癌新曙光！健保給付「雙免疫治療」助逆轉病程、讓腫瘤消失",
-      "x": "健保給付的「雙免疫治療」為晚期肝癌帶來新希望！透過活化自身免疫系統攻擊癌細胞，不僅較不易損傷肝功能，更有兩成患者腫瘤顯著縮小，成功逆轉病程延長存活期。",
-      "src": "泛科學",
-      "url": "https://pansci.asia/archives/382524"
+      "date": "2026-11-16",
+      "cat": "phys",
+      "t": "物理學家使用雷射來解鎖晶體隱藏的電力",
+      "x": "科學家發現如何使用雷射閃光來組織晶體內的微小電子區域，解決了數十年來有關材料行為的謎團。雷射誘導對準僅持續萬億分之一秒，但這一突破可能為處理和儲存資訊的新方法打開大門。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261112230500.htm",
+      "orig": "Physicists use laser light to unlock a crystal's hidden electrical powers",
+      "origX": "Scientists have discovered how to use flashes of laser light to organize tiny electrical regions inside a crystal, solving a decades-old mystery about how the material behaves. The laser-induced alignment lasts just a trillionth of a second, but the breakthrough could open the door to new ways of processing and storing information."
     },
     {
       "date": "2026-11-12",
@@ -56,26 +76,6 @@
       "url": "https://www.nature.com/articles/d41586-026-03639-2",
       "orig": "This little brown mushroom is laced with a hallucinogen — and lethal toxins",
       "origX": "A Florida fungus might combine the psychedelic compound psilocybin with deadly chemicals to defend itself against hungry animals."
-    },
-    {
-      "date": "2026-11-15",
-      "cat": "phys",
-      "t": "科學家捕獲電子，實現看似不可能的量子躍遷",
-      "x": "科學家捕獲了電子看似不可能跨越石墨烯禁能帶的躍遷，其中一些躍遷發生的機率高達 100%。這項突破為量子行為提供了前所未有的視角，有助於解鎖新一代超快光控電子裝置。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261112025523.htm",
-      "orig": "Scientists capture electrons making seemingly impossible quantum jumps",
-      "origX": "Scientists have captured electrons making seemingly impossible jumps across forbidden energy gaps in graphene, with some transitions occurring at a remarkable 100% probability. The breakthrough offers an unprecedented look at quantum behavior and could help unlock a new generation of ultrafast, light-controlled electronics."
-    },
-    {
-      "date": "2026-11-10",
-      "cat": "phys",
-      "t": "為什麼你的物理專案需要人類學家",
-      "x": "為天文台選址不應只是出於科學考量。人文學者在負責任的選址中發揮著至關重要的作用。",
-      "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03623-w",
-      "orig": "Why your physics project needs an anthropologist",
-      "origX": "Picking a site for an observatory should be about more than science. Humanities scholars have a crucial role in responsible siting."
     }
   ]
 }
