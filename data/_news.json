@@ -2,6 +2,26 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
+      "date": "2026-11-18",
+      "cat": "phys",
+      "t": "只有一個原子厚的材料揭示了一個奇怪的量子秘密",
+      "x": "大阪大學的研究人員發現，在單原子厚度的材料和金屬之間的邊界處形成了顯著的量子態。他們觀察到電子的行為就好像它們異常重一樣，包括超薄層與其下方的銅之間相互作用產生的以前未見過的狀態。這項史無前例的觀察揭示了一種有前途的新方法",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261115085554.htm",
+      "orig": "A material just one atom thick reveals a strange quantum secret",
+      "origX": "Researchers at the University of Osaka have discovered a remarkable quantum state forming at the boundary between a one-atom-thick material and a metal. They observed electrons behaving as though they were unusually heavy, including a previously unseen state created by interactions between the ultrathin layer and the copper beneath it. This first-of-its-kind observation reveals a promising new way to control exotic quantum behavior."
+    },
+    {
+      "date": "2026-11-17",
+      "cat": "phys",
+      "t": "遇見“深不可測的強大黑暗天體”",
+      "x": "天文學家報告說，有一對罕見的極其明亮的黑洞，它們在大爆炸後不到十億年的時間裡正在吞噬氣體。",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/d41586-026-03750-4",
+      "orig": "Meet the ‘celestial bodies of fathomless powerful darkness’",
+      "origX": "Astronomers report a rare pair of extremely bright black holes that were gobbling gas less than one billion years after the Big Bang."
+    },
+    {
       "date": "2026-11-17",
       "cat": "phys",
       "t": "角膜太薄無法近視雷射？眼科醫師解析「植入式隱形眼鏡」EVO ICL，保留角膜且可隨時取出！",
@@ -10,24 +30,24 @@
       "url": "https://pansci.asia/archives/382529"
     },
     {
-      "date": "2026-11-17",
-      "cat": "phys",
-      "t": "物理學家透過控制單一原子的磁心來打破預期",
-      "x": "科學家出人意料地發現如何利用無線電波控制單一原子核內的磁自旋，推翻了先前關於原子行為的假設。儘管研究人員仍在試圖了解其工作原理，但這項突破可能為更可靠的量子記憶體鋪平道路。",
+      "date": "2026-11-18",
+      "cat": "chem",
+      "t": "這種非凡的新材料可以解決主要的碳捕獲問題",
+      "x": "科學家們開發了一種新型碳捕獲材料，可以將水分從障礙轉變為優勢，有可能解決從工業排放中去除二氧化碳的主要問題。該材料即使在極其潮濕的條件下也能工作，並且可以重複使用，為更便宜、更有效的碳捕獲提供了一條有希望的途徑。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261114202232.htm",
-      "orig": "Physicists defy expectations by controlling the magnetic heart of a single atom",
-      "origX": "Scientists have unexpectedly discovered how to control the magnetic spin inside a single atom's nucleus using radio waves, overturning previous assumptions about atomic behavior. The breakthrough could pave the way for more reliable quantum memory, although researchers are still trying to understand why it works."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261116023405.htm",
+      "orig": "This remarkable new material could solve a major carbon capture problem",
+      "origX": "Scientists have developed a new carbon capture material that turns moisture from an obstacle into an advantage, potentially solving a major problem with removing CO2 from industrial emissions. The material works even in extremely humid conditions and can be reused repeatedly, offering a promising path toward cheaper, more effective carbon capture."
     },
     {
-      "date": "2026-11-16",
+      "date": "2026-11-17",
       "cat": "bio",
-      "t": "嵌入痘病毒核心的門戶複合體的架構",
-      "x": "病毒核心內的基因轉錄是痘病毒複製的顯著特徵。進入細胞質後，痘病毒核心與側體分離並進行擴張，作為早期轉錄的隔間1。然而，病毒核心和宿主細胞質之間的分子交換方式仍知之甚少。在這裡，使用冷凍電子湯姆",
+      "t": "阿茲海默症的「光和聲」療法在期待已久的試驗中失敗",
+      "x": "一項受到密切關注的研究發現，旨在治療阿茲海默症的大腦刺激耳機並沒有帶來認知益處。",
       "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/s41586-026-11399-2",
-      "orig": "Architecture of a portal complex embedded in the poxvirus core",
-      "origX": "Gene transcription within the viral core is a distinctive feature of poxvirus replication. Following entry into the cytoplasm, the poxvirus core dissociates from the lateral bodies and undergoes expansion, functioning as a compartment for early transcription1. However, how molecules are exchanged between the viral core and the host cytoplasm remains poorly understood. Here, using cryo-electron tomography and sub-tomogram averaging, we determine the structures of the portal complex and its central pore on the vaccinia virus core at 6.7 Å and 4.4 Å resolution, respectively. Guided by structural predictions and experimental density, we identify three viral proteins, E8, E6 and L3, as the principal components of the pore and construct a structural model of their organization. The pore contains a narrow, positively charged constriction formed by conserved lysine residues in L3, substitutions of which impair viral gene expression and propagation. The dimensions and electrostatic properties of the channel are consistent with a potential role in molecular exchange across the core wall. Together, our findings establish a structural framework for understanding the organization and potential function of the poxvirus portal complex."
+      "url": "https://www.nature.com/articles/d41586-026-03770-0",
+      "orig": "‘Light and sound’ therapy for Alzheimer’s flops in long-anticipated trial",
+      "origX": "A closely watched study found no cognitive benefit from a brain-stimulating headset designed to treat Alzheimer’s disease."
     },
     {
       "date": "2026-11-14",
@@ -38,34 +58,14 @@
       "url": "https://pansci.asia/archives/382531"
     },
     {
-      "date": "2026-11-17",
-      "cat": "chem",
-      "t": "建造月球基地的秘密可能隱藏在緊急毯中",
-      "x": "科學家將應急毯中使用的薄塑膠變成了非常堅固的隔熱材料，可以幫助太空人在月球的極端溫度下生存。這種材料由數百層堆疊而成，能夠承受擠壓壓力而不會失去熱保護能力，這可能為更堅固、更持久的月球棲息地​​鋪平道路。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261115085549.htm",
-      "orig": "The secret to building Moon bases may be hiding in emergency blankets",
-      "origX": "Scientists have turned the thin plastic used in emergency blankets into remarkably strong insulation that could help astronauts survive the Moon's extreme temperatures. Built from hundreds of stacked layers, the material withstands crushing pressure without losing its thermal protection, potentially paving the way for tougher, longer-lasting lunar habitats."
-    },
-    {
-      "date": "2026-11-16",
+      "date": "2026-11-18",
       "cat": "bio",
-      "t": "吸血鬼的秘密：基因組揭示了這些蝙蝠如何僅靠血液生存",
-      "x": "可擴張的胃使這些飛行的哺乳動物能夠吞下大量的血液，而液體處理基因則幫助它們在吸收所有液體後飛回家。",
-      "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03706-8",
-      "orig": "Secrets of the vampires: genomes reveal how these bats live off blood alone",
-      "origX": "Expandable stomachs allow these flying mammals to gulp large amounts of blood, and fluid-handling genes help them to fly home after all that liquid."
-    },
-    {
-      "date": "2026-11-16",
-      "cat": "phys",
-      "t": "物理學家使用雷射來解鎖晶體隱藏的電力",
-      "x": "科學家發現如何使用雷射閃光來組織晶體內的微小電子區域，解決了數十年來有關材料行為的謎團。雷射誘導對準僅持續萬億分之一秒，但這一突破可能為處理和儲存資訊的新方法打開大門。",
+      "t": "一種古老的病毒可能幫助解釋人類大腦與眾不同的原因",
+      "x": "數百萬年前感染黑猩猩的病毒可能幫助塑造了人類和我們最近的親戚之間最重要的差異之一：我們的大腦如何發展。隆德大學的科學家發現，嵌入黑猩猩基因組中的古病毒 DNA 會關閉一種名為 LINC00662 的基因，在人類中仍然活躍，似乎在早期大腦中發揮重要作用",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261112230500.htm",
-      "orig": "Physicists use laser light to unlock a crystal's hidden electrical powers",
-      "origX": "Scientists have discovered how to use flashes of laser light to organize tiny electrical regions inside a crystal, solving a decades-old mystery about how the material behaves. The laser-induced alignment lasts just a trillionth of a second, but the breakthrough could open the door to new ways of processing and storing information."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261114202230.htm",
+      "orig": "An ancient virus may help explain what makes the human brain different",
+      "origX": "A virus that infected chimpanzees millions of years ago may have helped shape one of the most important differences between humans and our closest relatives: how our brains develop. Scientists at Lund University discovered that ancient viral DNA embedded in the chimpanzee genome switches off a gene called LINC00662, which remains active in humans and appears to play an important role in early brain development."
     },
     {
       "date": "2026-11-12",
