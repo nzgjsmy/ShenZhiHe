@@ -2,24 +2,24 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
-      "date": "2026-11-19",
+      "date": "2026-11-20",
       "cat": "phys",
-      "t": "物理學家透過控制單一原子的磁心來打破預期",
-      "x": "科學家出人意料地發現如何利用無線電波控制單一原子核內的磁自旋，推翻了先前關於原子行為的假設。儘管研究人員仍在試圖了解其工作原理，但這項突破可能為更可靠的量子記憶體鋪平道路。",
+      "t": "物理學家使用雷射來解鎖晶體隱藏的電力",
+      "x": "科學家發現如何使用雷射閃光來組織晶體內的微小電子區域，解決了數十年來有關材料行為的謎團。雷射誘導對準僅持續萬億分之一秒，但這一突破可能為處理和儲存資訊的新方法打開大門。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261114202232.htm",
-      "orig": "Physicists defy expectations by controlling the magnetic heart of a single atom",
-      "origX": "Scientists have unexpectedly discovered how to control the magnetic spin inside a single atom's nucleus using radio waves, overturning previous assumptions about atomic behavior. The breakthrough could pave the way for more reliable quantum memory, although researchers are still trying to understand why it works."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261112230500.htm",
+      "orig": "Physicists use laser light to unlock a crystal's hidden electrical powers",
+      "origX": "Scientists have discovered how to use flashes of laser light to organize tiny electrical regions inside a crystal, solving a decades-old mystery about how the material behaves. The laser-induced alignment lasts just a trillionth of a second, but the breakthrough could open the door to new ways of processing and storing information."
     },
     {
-      "date": "2026-11-18",
-      "cat": "bio",
-      "t": "微生物組家庭測試正在興起。他們可以信任嗎？",
-      "x": "我們的記者郵寄了她的糞便，以了解兩家公司對她的微生物組的評價。這是她的發現。",
+      "date": "2026-11-19",
+      "cat": "chem",
+      "t": "鈣催化親核氟化",
+      "x": "眾所周知，挑戰合成和永續製造現有邊界的新催化歧管很難實施1，特別是對於基於金屬的催化範例，這些範例缺乏支持許多已建立的 d 區機械途徑（例如氧化加成和還原消除）的基本過程。系統基礎的廣泛利用",
       "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03710-y",
-      "orig": "Microbiome home tests are taking off. Can they be trusted?",
-      "origX": "Our reporter mailed off her poo to find out what two companies say about her microbiome. Here’s what she found."
+      "url": "https://www.nature.com/articles/s41586-026-11445-z",
+      "orig": "Calcium catalysed nucleophilic fluorination",
+      "origX": "New catalytic manifolds that challenge existing boundaries for synthesis and sustainable manufacturing are notoriously difficult to implement1, particularly for catalytic paradigms based on metals which lack access to the fundamental processes that underpin many established d-block mechanistic pathways (e.g. oxidative addition and reductive elimination). The widespread exploitation of systems based on main-group elements therefore requires alternative elementary steps to effect turnover. Herein, we demonstrate a new catalytic platform for nucleophilic fluorination, which exploits a complex based on calcium (the fifth most Earth-abundant element) as the fluoride delivery vehicle. The key intermediate is a calcium-fluoride complex featuring a terminal Ca–F interaction, a unique structural geometry enabled by a highly sterically encumbered dianionic ligand-scaffold. This intermediate links reactants and products through F– capture and release steps, and thereby unlocks catalytic F– shuttling. Late Ca–F bond breaking in the rate-determining fluoride-delivery transition-state means that electronic and steric tuning of F– by calcium is chemically significant; proof-of-concept results show a hitherto unprecedented level of selectivity for substitution over elimination brought about by Ca-modulation. In a broader context, this work demonstrates how control over catalyst speciation and reagent binding affinity are key factors for the future development of sustainable non-transition metal paradigms in catalysis."
     },
     {
       "date": "2026-11-17",
@@ -30,24 +30,24 @@
       "url": "https://pansci.asia/archives/382529"
     },
     {
-      "date": "2026-11-19",
+      "date": "2026-11-20",
       "cat": "chem",
-      "t": "科學家利用維生素 B12 創造出一種非凡的新型可充電電池",
-      "x": "科學家發現了維生素 B12 的一個令人驚訝的新用途，即開發一種可充電電池，利用這種必需營養素來幫助發電和儲存電力。原型機可承受高達 250 次充電週期，為更安全、更便宜、更環保的鋰離子電池替代品打開了大門。",
+      "t": "為什麼氫火焰會發出橙色光，然後幾乎看不見",
+      "x": "氫火焰可以從亮橙色轉變為幾乎看不見，這取決於一些意想不到的情況：空氣中漂浮著微量的鈉。科學家表示，這項發現可以透過用專門的感測器取代視覺火焰檢測來幫助未來的氫動力爐和烤箱更安全。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261117033909.htm",
-      "orig": "Scientists create a remarkable new rechargeable battery using vitamin B12",
-      "origX": "Scientists have found a surprising new use for vitamin B12, developing a rechargeable battery that uses the essential nutrient to help generate and store electricity. The prototype survived up to 250 charging cycles and could open the door to safer, cheaper, and more environmentally friendly alternatives to lithium-ion batteries."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261118065509.htm",
+      "orig": "Why hydrogen flames can glow orange, then turn nearly invisible",
+      "origX": "Hydrogen flames can shift from bright orange to nearly invisible depending on something unexpected: tiny amounts of sodium floating in the air. Scientists say this discovery could help make future hydrogen-powered stoves and ovens safer by replacing visual flame detection with specialized sensors."
     },
     {
-      "date": "2026-11-18",
+      "date": "2026-11-19",
       "cat": "bio",
-      "t": "熱帶土地利用密集以預期和意想不到的方式重塑生物多樣性",
-      "x": "對印尼蘇門答臘島 40,000 個物種的調查可以為保育工作提供資訊。",
+      "t": "現在進入老年的人的記憶力比他們的父母好",
+      "x": "一項針對 219,000 名成年人的研究表明，如今的老年人比前幾代人保持記憶功能的時間更長。",
       "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03602-1",
-      "orig": "Tropical land-use intensification reshapes biodiversity in expected and unexpected ways",
-      "origX": "A survey of 40,000 species in Sumatra, Indonesia, could inform conservation efforts."
+      "url": "https://www.nature.com/articles/d41586-026-03783-9",
+      "orig": "People entering old age now have better memory than their parents did",
+      "origX": "Older people today maintain memory function for longer than previous generations did, according to a study of 219,000 adults."
     },
     {
       "date": "2026-11-14",
@@ -58,14 +58,14 @@
       "url": "https://pansci.asia/archives/382531"
     },
     {
-      "date": "2026-11-18",
-      "cat": "phys",
-      "t": "只有一個原子厚的材料揭示了一個奇怪的量子秘密",
-      "x": "大阪大學的研究人員發現，在單原子厚度的材料和金屬之間的邊界處形成了顯著的量子態。他們觀察到電子的行為就好像它們異常重一樣，包括超薄層與其下方的銅之間相互作用產生的以前未見過的狀態。這項史無前例的觀察揭示了一種有前途的新方法",
+      "date": "2026-11-20",
+      "cat": "bio",
+      "t": "科學家測試了 212 種植物性食品。每一顆都含有真菌毒素",
+      "x": "一項新研究揭示了流行的植物性食品和飲料中隱藏的令人驚訝的擔憂。研究人員測試了在英國銷售的 212 種純素和素食產品，包括肉類替代品、燕麥奶、杏仁奶和豆奶，發現每種都含有至少一種潛在有害的真菌毒素。這些天然存在的化合物稱為黴菌毒素，會污染穀物，",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261115085554.htm",
-      "orig": "A material just one atom thick reveals a strange quantum secret",
-      "origX": "Researchers at the University of Osaka have discovered a remarkable quantum state forming at the boundary between a one-atom-thick material and a metal. They observed electrons behaving as though they were unusually heavy, including a previously unseen state created by interactions between the ultrathin layer and the copper beneath it. This first-of-its-kind observation reveals a promising new way to control exotic quantum behavior."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261118073749.htm",
+      "orig": "Scientists tested 212 plant-based foods. Every single one contained fungal toxins",
+      "origX": "A new study has uncovered a surprising concern hiding in popular plant-based foods and drinks. Researchers tested 212 vegan and vegetarian products sold in the UK, including meat alternatives, oat milk, almond milk, and soy milk, and found that every single one contained at least one potentially harmful fungal toxin. Known as mycotoxins, these naturally occurring compounds can contaminate grains, legumes, and seeds during farming and storage."
     },
     {
       "date": "2026-11-12",
