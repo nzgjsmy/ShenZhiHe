@@ -40,13 +40,18 @@ BOOKS = {
     "2019": (["2019/2019 P1.pdf"], "2019/2019 MS.pdf"),
     "2020": (["2020/2020 P1.pdf"], "2020/2020 MS.pdf"),
     "2021": (["2021/2021 P1.pdf"], "2021/2021 MS.pdf"),
-    "2022": (["2022/2022 P1.pdf"], "2022/2022 MS.pdf"),
+    # 2022 只有一份 72 頁合并檔（卷一＋卷二＋評卷參考），用 PAGES 指定頁碼範圍
+    "2022": (["2022/2022.pdf"], "2022/2022.pdf"),
     "2023": (["2023/2023 P1.pdf"], "2023/2023 MS.pdf"),
-    "2024": (["2024/2024 P1.pdf"], "2024/2024 MS.pdf"),
+    "2024": (["2024/2024 P1A.pdf", "2024/2024 P1B.pdf"], "2024/2024 MS.pdf"),
     "2025": (["2025/2025 P1A.pdf", "2025/2025 P1B.pdf"], "2025/2025 MS+CP.pdf"),
     "PP": (["Practice Paper/PP P1.pdf"], "Practice Paper/PP MS.pdf"),
     "SP": (["Sample Paper/SP P1.pdf"], None),
 }
+
+# 合併檔的頁碼範圍（1-based）：key -> {"Q": [...], "MS": [...]}
+# 2022 的 72 頁合併檔：卷一 MC 在 p8–p17，評卷參考甲部答案表在 p38。
+PAGES = {"2022": {"Q": list(range(8, 18)), "MS": [38]}}
 
 _eng = None
 
@@ -58,7 +63,7 @@ def eng():
     return _eng
 
 
-def build(pdfs, outdir, label):
+def build(pdfs, outdir, label, page_filter=None):
     os.makedirs(outdir, exist_ok=True)
     from PIL import Image
 
@@ -71,7 +76,9 @@ def build(pdfs, outdir, label):
             print("  !! missing:", pdf)
             continue
         doc = pymupdf.open(pdf)
-        for page in doc:
+        for pi, page in enumerate(doc):
+            if page_filter is not None and (pi + 1) not in page_filter:
+                continue
             n += 1
             jpg = os.path.join(outdir, "p%03d.jpg" % n)
             if not os.path.exists(jpg):
@@ -116,11 +123,12 @@ def main():
             continue
         qpdfs, mspdf = BOOKS[key]
         base = os.path.join(OUT, key)
+        pg = PAGES.get(key, {})
         print("== %s 卷一 ==" % key)
-        build(qpdfs, base, key + " Q")
+        build(qpdfs, base, key + " Q", pg.get("Q"))
         if mspdf and not no_ms:
             print("== %s MS ==" % key)
-            build([mspdf], os.path.join(base, "ms"), key + " MS")
+            build([mspdf], os.path.join(base, "ms"), key + " MS", pg.get("MS"))
 
 
 if __name__ == "__main__":
