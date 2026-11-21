@@ -1841,6 +1841,8 @@ html[data-theme="dark"] .dse-hero .tx span{color:#8fb8a8}
    用色相區分：卷一青綠（現有），卷二暖褐（新增），一眼可辨不是同一套。 */
 .dse-duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
 .dse-duo .dse-hero{margin:0}
+/* 只有卷一 MC、沒有卷二 LQ 的科目（化學），讓單張卡撐滿整行，不要只佔左半邊 */
+.dse-duo>.dse-hero:only-child{grid-column:1/-1}
 @media (max-width:760px){.dse-duo{grid-template-columns:1fr}}
 
 .dse-lq{
@@ -4087,6 +4089,11 @@ function viewHome(){
   const _LQ=(SUB&&SUB._lq&&SUB._lq.years)||{};
   const LQYRS=Object.keys(_LQ).length;
   const LQN=Object.keys(_LQ).reduce((a,y)=>a+(_LQ[y]||[]).length,0);
+  // 卷一（MC）統計：任何科目只要有 _pastpaper 就該有入口，不能寫死 bio。
+  // 化學 V0.25.24 起也有真題，但首頁卡片當年只判斷 SUB.id==='bio'，用戶看不到入口。
+  const _PP=(SUB&&SUB._pastpaper&&SUB._pastpaper.years)||{};
+  const PPYRS=Object.keys(_PP).length;
+  const PPN=Object.keys(_PP).reduce((a,y)=>a+(_PP[y]||[]).length,0);
   const freshCards=dueList().slice(0,3).map(x=>`<div class="rrow"><div class="rt"><b>${esc(x.o.p.title)}</b><span>${esc(x.o.t.title)} · ${esc(x.o.s.title)}${x.fresh?' · 還沒測過':''}</span></div><button class="go" onclick="jumpPoint('${x.pid}')">去看</button><button class="go" style="background:var(--ink)" onclick="startQuiz({mode:'point',id:'${x.pid}'})">測驗</button></div>`).join('');
   const _d=new Date();
   const _wd=['日','一','二','三','四','五','六'][_d.getDay()];
@@ -4135,16 +4142,18 @@ function viewHome(){
       <div class="hn-daily-t">${esc(dailyItem.t||'')}</div>
       <div class="hn-daily-x">${esc(dailyItem.x||'')}</div>
     </div>`:''}
-    ${SUB&&SUB.id==='bio'?`
+    ${SUB&&PPN>0?`
     ${/* DSE 真題分兩張卡：卷一（MC 選擇題）與卷二（LQ 長題目）**完全分開**。
          兩者題型、題號體系、答題方式都不同，混在一張卡裡用戶會以為是同一套。
-         2026-10-30 */''}
+         2026-10-30
+         ⚠️ 入口條件必須看 PPN（有沒有 _pastpaper 資料），不能寫死 SUB.id==='bio' ——
+            化學 V0.25.24 起也有真題，寫死會讓用戶完全看不到入口（本次踩過）。 */''}
     <div class="dse-duo">
       <div class="dse-hero dse-mc" role="button" tabindex="0" aria-label="進入卷一 · MC 真題"
            onclick="go('#/pastpaper')" onkeydown="dseCardKey(event)">
         <span class="ic">📝</span>
         <span class="tx"><b>卷一 · MC</b>
-          <span>2012–2023 · 選擇題 · 附逐題詳解與正確率</span></span>
+          <span>${PPYRS} 個年份 · ${PPN} 道選擇題 · 附題解與答對率</span></span>
       </div>
       ${LQN>0?`
       <div class="dse-hero dse-lq" role="button" tabindex="0" aria-label="進入卷二 · LQ 真題"
@@ -6097,7 +6106,7 @@ function viewPastPaper(){
     <div class="quick" style="margin:10px 0 4px">
       <button onclick="showPPView('bytopic')">🏷️ 按話題</button>
       <button onclick="showPPView('byyear')">📅 按年份</button>
-      <button onclick="go('#/lq')">📖 長題目</button>
+      ${SUB&&SUB._lq?'<button onclick="go(\'#/lq\')">📖 長題目</button>':''}
     </div>
     <div id="pp-bytopic">${cards}</div>
     <div id="pp-byyear" style="display:none">${yearBlock}</div>
