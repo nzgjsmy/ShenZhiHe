@@ -5456,21 +5456,51 @@ function ppTopicName(k){
   if(k==='zz') return '未分類';
   return (typeof TMAP!=='undefined'&&TMAP[k]&&TMAP[k].title)?TMAP[k].title:k;
 }
-/* 課題的章號（Ch NN）：以資料裡的 pdf 檔名（"Ch07 人體的氣體交換.pdf"）為準，
-   取不到就退回 id 裡的數字（bio07 → 7）。排序一律用這個數字，不用字串，
-   將來出現 bio2／bio9 這種沒補零的 id 也不會亂。 */
+/* 題幹／題解的陳述編號排版：把「(1) (2) (3)」「(i) (ii) (iii)」各自獨立成行。
+   DSE 這類題常把三個陳述擠成一行（"…？(1) 它…。(2) 它…。(3) 它…。"），
+   手機上一整坨看不清；這裡按編號斷開，一行一個陳述。
+   ⚠️ 只認小寫 (i)(ii)(iii) 與 (1)–(9)，且編號後必須接空白或中文——
+      化學式裡的氧化態是大寫（氯化鈷(II)），絕不能斷。
+   ⚠️ 表格／清單／標題／引用／圖片／代碼行整行跳過，否則會把已有的結構切碎。 */
+function ppMarks(src){
+  let s=String(src||'');
+  if(s.indexOf('\\n')>=0) s=s.replace(/\\n/g,'\n');   // 資料層誤存的字面 \n
+  return s.split(/\r?\n/).map(line=>{
+    const t=line.trim();
+    if(!t) return line;
+    if(/^(\||[-*]\s|\d+[.)]\s|#{1,4}\s|>|```|!\[)/.test(t)) return line;
+    const re=/(^|[\s。；：？！，])(\((?:[1-9]|i{1,3}|iv)\))(?=[\s\u4e00-\u9fff])/g;
+    if((t.match(re)||[]).length<2) return line;        // 只有一個編號就照原樣
+    return t.replace(re,(m,pre,mark)=>(pre?pre.trim():'')+'\n\n'+mark+' ').trim();
+  }).join('\n');
+}
+/* 課題編號：**每科用自己的原始編號**，不要一律套生物那套 Ch NN。
+     化學筆記檔名 → "1A 化學筆記～～地球 Teacher.pdf"  → 1A／1B／1C／2A／2B／3A…
+     生物筆記檔名 → "Ch07 人體的氣體交換.pdf"          → Ch07
+   ⚠️ 只能看 pdf 檔名，不可以拿 id 去「取第一個數字」：化學 id 是 1a/1b/1c，
+      取第一個數字會把 1A、1B、1C 全算成 1（2026-11-21 用戶截圖：三個都顯示 Ch01）。
+   排序用 ppChNo（章號）+ ppChTag（章內字母），這樣 1A<1B<1C<2A<…<6<8 才正確。 */
+function ppChTag(k){
+  if(k==='zz') return '';
+  const t=(typeof TMAP!=='undefined')&&TMAP[k];
+  const pdf=String((t&&t.pdf)||'');
+  let m=pdf.match(/^(\d+[A-C]?)(?![0-9A-Za-z])/);     // 化學：1A / 1B / 4B（"4B…" 用省略號接檔名）／6 / 8
+  if(m) return m[1];
+  m=pdf.match(/^Ch\.?\s*0*(\d+)/i);                  // 生物：Ch07
+  if(m) return 'Ch'+String(m[1]).padStart(2,'0');
+  m=/(\d+)/.exec(String(k||''));                      // 退路：bio07 → Ch07
+  return m?'Ch'+String(m[1]).padStart(2,'0'):'';
+}
 function ppChNo(k){
   if(k==='zz') return 999;
-  const t=(typeof TMAP!=='undefined')&&TMAP[k];
-  const m=/(\d+)/.exec(String((t&&t.pdf)||k||''));
+  const m=/(\d+)/.exec(ppChTag(k));
   return m?parseInt(m[1],10):999;
 }
 function ppChLab(k){
   if(k==='zz') return '未分類';
-  const n=ppChNo(k);
+  const tag=ppChTag(k);
   const name=ppTopicName(k);
-  if(n>=999) return name;
-  return 'Ch'+String(n).padStart(2,'0')+' '+name;
+  return tag?tag+' '+name:name;
 }
 function ppYearLab(y){
   return y==='PP'?'PP 練習卷':(y==='SP'?'SP 樣本試卷':y+' 年');
@@ -5486,7 +5516,7 @@ function ppCard(q){
       : `<div class="ppfig">此題選項為圖片，請對照原卷作答。</div>`);
   const isSample=(q.year==='PP'||q.year==='SP');
   const ex=q.explanation
-    ? (q.explSource==='notes'?`<div class="ppsrc">依筆記整理</div>`:'')+mdLite(q.explanation)
+    ? (q.explSource==='notes'?`<div class="ppsrc">依筆記整理</div>`:'')+mdLite(ppMarks(q.explanation))
     : (isSample
         ? '<span class="ppnoex">PP（練習卷）／SP（樣本試卷）的題解整理中，先對照筆記的相應課題溫習。</span>'
         : '<span class="ppnoex">原稿未附詳解，可對照筆記相應章節複習。</span>');
@@ -5500,7 +5530,7 @@ function ppCard(q){
       ${q.pct>0?`<span class="pppct ${ppCls(q.pct)}">答對率 ${q.pct}%</span>`:'<span class="pppct">PP／SP · 無官方得分率</span>'}</div>
     ${img}
     ${qImg}
-    <div class="md ppstem">${mdLite(q.q||'')}</div>
+    <div class="md ppstem">${mdLite(ppMarks(q.q||''))}</div>
     ${optImg}
     ${oh}
     <div class="ppbtns">
@@ -6032,7 +6062,8 @@ function viewPastPaper(){
   const all=[]; yrs.forEach(y=>(years[y]||[]).forEach(q=>all.push(q)));
   const byTopic={};
   all.forEach(q=>{const k=q.topic||'zz';(byTopic[k]=byTopic[k]||[]).push(q);});
-  const tKeys=Object.keys(byTopic).sort((a,b)=>ppChNo(a)-ppChNo(b)||String(a).localeCompare(String(b)));
+  const tKeys=Object.keys(byTopic).sort((a,b)=>
+    ppChNo(a)-ppChNo(b)||String(ppChTag(a)).localeCompare(String(ppChTag(b)))||String(a).localeCompare(String(b)));
   if(PP_TOPIC && !byTopic[PP_TOPIC]) PP_TOPIC='';
 
   const chips=`<div class="ppchips">
