@@ -2,24 +2,24 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
-      "date": "2026-11-20",
+      "date": "2026-11-21",
       "cat": "phys",
-      "t": "物理學家使用雷射來解鎖晶體隱藏的電力",
-      "x": "科學家發現如何使用雷射閃光來組織晶體內的微小電子區域，解決了數十年來有關材料行為的謎團。雷射誘導對準僅持續萬億分之一秒，但這一突破可能為處理和儲存資訊的新方法打開大門。",
+      "t": "CERN 科學家終於找到了粒子衰變的證據，這種衰變非常罕見，以至於花了 40 年才發現",
+      "x": "經過 40 多年的探索，歐洲核子研究組織 (CERN) 的科學家首次發現了極其罕見的粒子衰變的證據，檢測到這一過程預計每 100 億個美麗粒子中只會發生一次。這項突破可以幫助物理學家探索一個神秘的微觀領域，那裡可能隱藏著未知的粒子和力量。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261112230500.htm",
-      "orig": "Physicists use laser light to unlock a crystal's hidden electrical powers",
-      "origX": "Scientists have discovered how to use flashes of laser light to organize tiny electrical regions inside a crystal, solving a decades-old mystery about how the material behaves. The laser-induced alignment lasts just a trillionth of a second, but the breakthrough could open the door to new ways of processing and storing information."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261119194530.htm",
+      "orig": "CERN scientists finally find evidence of a particle decay so rare it took 40 years to detect",
+      "origX": "Scientists at CERN have found the first evidence of an incredibly rare particle decay after more than 40 years of searching, detecting a process expected to occur just once in every 10 billion beauty particles. The breakthrough could help physicists explore a mysterious microscopic realm where unknown particles and forces may be hiding."
     },
     {
-      "date": "2026-11-19",
-      "cat": "chem",
-      "t": "鈣催化親核氟化",
-      "x": "眾所周知，挑戰合成和永續製造現有邊界的新催化歧管很難實施1，特別是對於基於金屬的催化範例，這些範例缺乏支持許多已建立的 d 區機械途徑（例如氧化加成和還原消除）的基本過程。系統基礎的廣泛利用",
+      "date": "2026-11-20",
+      "cat": "phys",
+      "t": "簡報：航海家一號現在距離地球只有一個「光日」－創造了一項宇宙記錄",
+      "x": "聆聽科學界最偉大的故事 | 2026 年 11 月 20 日",
       "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/s41586-026-11445-z",
-      "orig": "Calcium catalysed nucleophilic fluorination",
-      "origX": "New catalytic manifolds that challenge existing boundaries for synthesis and sustainable manufacturing are notoriously difficult to implement1, particularly for catalytic paradigms based on metals which lack access to the fundamental processes that underpin many established d-block mechanistic pathways (e.g. oxidative addition and reductive elimination). The widespread exploitation of systems based on main-group elements therefore requires alternative elementary steps to effect turnover. Herein, we demonstrate a new catalytic platform for nucleophilic fluorination, which exploits a complex based on calcium (the fifth most Earth-abundant element) as the fluoride delivery vehicle. The key intermediate is a calcium-fluoride complex featuring a terminal Ca–F interaction, a unique structural geometry enabled by a highly sterically encumbered dianionic ligand-scaffold. This intermediate links reactants and products through F– capture and release steps, and thereby unlocks catalytic F– shuttling. Late Ca–F bond breaking in the rate-determining fluoride-delivery transition-state means that electronic and steric tuning of F– by calcium is chemically significant; proof-of-concept results show a hitherto unprecedented level of selectivity for substitution over elimination brought about by Ca-modulation. In a broader context, this work demonstrates how control over catalyst speciation and reagent binding affinity are key factors for the future development of sustainable non-transition metal paradigms in catalysis."
+      "url": "https://www.nature.com/articles/d41586-026-03806-5",
+      "orig": "Briefing Chat: Voyager 1 is now one ‘light day’ from Earth — setting a cosmic record",
+      "origX": "Hear the biggest stories from the world of science | 20 November 2026"
     },
     {
       "date": "2026-11-17",
@@ -30,24 +30,24 @@
       "url": "https://pansci.asia/archives/382529"
     },
     {
-      "date": "2026-11-20",
+      "date": "2026-11-21",
       "cat": "chem",
-      "t": "為什麼氫火焰會發出橙色光，然後幾乎看不見",
-      "x": "氫火焰可以從亮橙色轉變為幾乎看不見，這取決於一些意想不到的情況：空氣中漂浮著微量的鈉。科學家表示，這項發現可以透過用專門的感測器取代視覺火焰檢測來幫助未來的氫動力爐和烤箱更安全。",
+      "t": "科學家利用維生素 B12 創造出一種非凡的新型可充電電池",
+      "x": "科學家發現了維生素 B12 的一個令人驚訝的新用途，即開發一種可充電電池，利用這種必需營養素來幫助發電和儲存電力。原型機可承受高達 250 次充電週期，為更安全、更便宜、更環保的鋰離子電池替代品打開了大門。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261118065509.htm",
-      "orig": "Why hydrogen flames can glow orange, then turn nearly invisible",
-      "origX": "Hydrogen flames can shift from bright orange to nearly invisible depending on something unexpected: tiny amounts of sodium floating in the air. Scientists say this discovery could help make future hydrogen-powered stoves and ovens safer by replacing visual flame detection with specialized sensors."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261117033909.htm",
+      "orig": "Scientists create a remarkable new rechargeable battery using vitamin B12",
+      "origX": "Scientists have found a surprising new use for vitamin B12, developing a rechargeable battery that uses the essential nutrient to help generate and store electricity. The prototype survived up to 250 charging cycles and could open the door to safer, cheaper, and more environmentally friendly alternatives to lithium-ion batteries."
     },
     {
-      "date": "2026-11-19",
+      "date": "2026-11-20",
       "cat": "bio",
-      "t": "現在進入老年的人的記憶力比他們的父母好",
-      "x": "一項針對 219,000 名成年人的研究表明，如今的老年人比前幾代人保持記憶功能的時間更長。",
+      "t": "偵探在數百篇研究論文中發現了“不可能的蛋白質”",
+      "x": "調查暴露了一個潛在的廣泛問題，促使撤回和更正。",
       "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03783-9",
-      "orig": "People entering old age now have better memory than their parents did",
-      "origX": "Older people today maintain memory function for longer than previous generations did, according to a study of 219,000 adults."
+      "url": "https://www.nature.com/articles/d41586-026-03799-1",
+      "orig": "Sleuth finds ‘impossible proteins’ in hundreds of research papers",
+      "origX": "Investigation exposes a potentially widespread problem, prompting retractions and corrections."
     },
     {
       "date": "2026-11-14",
@@ -58,24 +58,24 @@
       "url": "https://pansci.asia/archives/382531"
     },
     {
-      "date": "2026-11-20",
+      "date": "2026-11-21",
       "cat": "bio",
-      "t": "科學家測試了 212 種植物性食品。每一顆都含有真菌毒素",
-      "x": "一項新研究揭示了流行的植物性食品和飲料中隱藏的令人驚訝的擔憂。研究人員測試了在英國銷售的 212 種純素和素食產品，包括肉類替代品、燕麥奶、杏仁奶和豆奶，發現每種都含有至少一種潛在有害的真菌毒素。這些天然存在的化合物稱為黴菌毒素，會污染穀物，",
+      "t": "一個三百萬歲的孩子讓人類進化變得更複雜",
+      "x": "一項針對 300 萬年前湯恩兒童化石的開創性研究表明，曾經被認為屬於同一物種的幾個古代人類祖先實際上可能代表了我們進化譜系的不同分支。這項發現挑戰了一個世紀以來的假設，並揭示了劇烈的氣候變遷如何幫助塑造了一個令人驚訝的複雜的人類起源故事。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261118073749.htm",
-      "orig": "Scientists tested 212 plant-based foods. Every single one contained fungal toxins",
-      "origX": "A new study has uncovered a surprising concern hiding in popular plant-based foods and drinks. Researchers tested 212 vegan and vegetarian products sold in the UK, including meat alternatives, oat milk, almond milk, and soy milk, and found that every single one contained at least one potentially harmful fungal toxin. Known as mycotoxins, these naturally occurring compounds can contaminate grains, legumes, and seeds during farming and storage."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261118065531.htm",
+      "orig": "A 3-million-year-old child just made human evolution far more complicated",
+      "origX": "A groundbreaking study of the 3-million-year-old Taung Child fossil suggests that several ancient human ancestors once thought to belong to the same species may actually represent different branches of our evolutionary family tree. The discovery challenges a century of assumptions and reveals how dramatic climate changes helped shape a surprisingly complex story of human origins."
     },
     {
-      "date": "2026-11-12",
+      "date": "2026-11-19",
       "cat": "chem",
-      "t": "這種棕色小蘑菇含有致幻劑和致命毒素",
-      "x": "佛羅裡達州的一種真菌可能會將迷幻化合物裸蓋菇素與致命的化學物質結合起來，以抵禦飢餓的動物。",
+      "t": "鈣催化親核氟化",
+      "x": "眾所周知，挑戰合成和永續製造現有邊界的新催化歧管很難實施1，特別是對於基於金屬的催化範例，這些範例缺乏支持許多已建立的 d 區機械途徑（例如氧化加成和還原消除）的基本過程。系統基礎的廣泛利用",
       "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03639-2",
-      "orig": "This little brown mushroom is laced with a hallucinogen — and lethal toxins",
-      "origX": "A Florida fungus might combine the psychedelic compound psilocybin with deadly chemicals to defend itself against hungry animals."
+      "url": "https://www.nature.com/articles/s41586-026-11445-z",
+      "orig": "Calcium catalysed nucleophilic fluorination",
+      "origX": "New catalytic manifolds that challenge existing boundaries for synthesis and sustainable manufacturing are notoriously difficult to implement1, particularly for catalytic paradigms based on metals which lack access to the fundamental processes that underpin many established d-block mechanistic pathways (e.g. oxidative addition and reductive elimination). The widespread exploitation of systems based on main-group elements therefore requires alternative elementary steps to effect turnover. Herein, we demonstrate a new catalytic platform for nucleophilic fluorination, which exploits a complex based on calcium (the fifth most Earth-abundant element) as the fluoride delivery vehicle. The key intermediate is a calcium-fluoride complex featuring a terminal Ca–F interaction, a unique structural geometry enabled by a highly sterically encumbered dianionic ligand-scaffold. This intermediate links reactants and products through F– capture and release steps, and thereby unlocks catalytic F– shuttling. Late Ca–F bond breaking in the rate-determining fluoride-delivery transition-state means that electronic and steric tuning of F– by calcium is chemically significant; proof-of-concept results show a hitherto unprecedented level of selectivity for substitution over elimination brought about by Ca-modulation. In a broader context, this work demonstrates how control over catalyst speciation and reagent binding affinity are key factors for the future development of sustainable non-transition metal paradigms in catalysis."
     }
   ]
 }
