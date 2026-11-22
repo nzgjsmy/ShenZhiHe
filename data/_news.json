@@ -2,24 +2,24 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
-      "date": "2026-11-21",
+      "date": "2026-11-22",
       "cat": "phys",
-      "t": "CERN 科學家終於找到了粒子衰變的證據，這種衰變非常罕見，以至於花了 40 年才發現",
-      "x": "經過 40 多年的探索，歐洲核子研究組織 (CERN) 的科學家首次發現了極其罕見的粒子衰變的證據，檢測到這一過程預計每 100 億個美麗粒子中只會發生一次。這項突破可以幫助物理學家探索一個神秘的微觀領域，那裡可能隱藏著未知的粒子和力量。",
+      "t": "關於光的數十年之謎可能是更快網路的關鍵",
+      "x": "一種用於超高速光通訊的有前途的材料幾十年來一直是個秘密，但科學家可能最終破解了它。韓國科學技術院和加州理工學院的研究人員精確測量了鈦酸鋇如何控制和吸收光，解決了長期以來阻礙其發展的不確定性。他們的發現可以使製造快速傳輸資訊的光學設備變得更加容易",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261119194530.htm",
-      "orig": "CERN scientists finally find evidence of a particle decay so rare it took 40 years to detect",
-      "origX": "Scientists at CERN have found the first evidence of an incredibly rare particle decay after more than 40 years of searching, detecting a process expected to occur just once in every 10 billion beauty particles. The breakthrough could help physicists explore a mysterious microscopic realm where unknown particles and forces may be hiding."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261119194544.htm",
+      "orig": "A decades-old mystery about light could hold the key to faster internet",
+      "origX": "A promising material for ultra-fast optical communications has held a secret for decades, but scientists may have finally cracked it. Researchers at KAIST and Caltech have precisely measured how barium titanate controls and absorbs light, resolving longstanding uncertainties that have slowed its development. Their findings could make it easier to build optical devices that transmit information faster while wasting less light."
     },
     {
       "date": "2026-11-20",
       "cat": "phys",
-      "t": "簡報：航海家一號現在距離地球只有一個「光日」－創造了一項宇宙記錄",
-      "x": "聆聽科學界最偉大的故事 | 2026 年 11 月 20 日",
+      "t": "克勞德，為我找一顆行星：業餘天文學家正在使用人工智慧，結果好壞參半",
+      "x": "人工智慧工具正在幫助公民科學家識別以前未知的系外行星候選者——其中一些比其他行星更可信。",
       "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03806-5",
-      "orig": "Briefing Chat: Voyager 1 is now one ‘light day’ from Earth — setting a cosmic record",
-      "origX": "Hear the biggest stories from the world of science | 20 November 2026"
+      "url": "https://www.nature.com/articles/d41586-026-03790-w",
+      "orig": "Claude, find me a planet: amateur astronomers are using AI with mixed results",
+      "origX": "Artificial-intelligence tools are helping citizen scientists to identify previously unknown exoplanet candidates — some more credible than others."
     },
     {
       "date": "2026-11-17",
@@ -30,14 +30,14 @@
       "url": "https://pansci.asia/archives/382529"
     },
     {
-      "date": "2026-11-21",
+      "date": "2026-11-22",
       "cat": "chem",
-      "t": "科學家利用維生素 B12 創造出一種非凡的新型可充電電池",
-      "x": "科學家發現了維生素 B12 的一個令人驚訝的新用途，即開發一種可充電電池，利用這種必需營養素來幫助發電和儲存電力。原型機可承受高達 250 次充電週期，為更安全、更便宜、更環保的鋰離子電池替代品打開了大門。",
+      "t": "為什麼氫火焰會發出橙色光，然後幾乎看不見",
+      "x": "氫火焰可以從亮橙色轉變為幾乎看不見，這取決於一些意想不到的情況：空氣中漂浮著微量的鈉。科學家表示，這項發現可以透過用專門的感測器取代視覺火焰檢測來幫助未來的氫動力爐和烤箱更安全。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261117033909.htm",
-      "orig": "Scientists create a remarkable new rechargeable battery using vitamin B12",
-      "origX": "Scientists have found a surprising new use for vitamin B12, developing a rechargeable battery that uses the essential nutrient to help generate and store electricity. The prototype survived up to 250 charging cycles and could open the door to safer, cheaper, and more environmentally friendly alternatives to lithium-ion batteries."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261118065509.htm",
+      "orig": "Why hydrogen flames can glow orange, then turn nearly invisible",
+      "origX": "Hydrogen flames can shift from bright orange to nearly invisible depending on something unexpected: tiny amounts of sodium floating in the air. Scientists say this discovery could help make future hydrogen-powered stoves and ovens safer by replacing visual flame detection with specialized sensors."
     },
     {
       "date": "2026-11-20",
@@ -58,14 +58,14 @@
       "url": "https://pansci.asia/archives/382531"
     },
     {
-      "date": "2026-11-21",
+      "date": "2026-11-22",
       "cat": "bio",
-      "t": "一個三百萬歲的孩子讓人類進化變得更複雜",
-      "x": "一項針對 300 萬年前湯恩兒童化石的開創性研究表明，曾經被認為屬於同一物種的幾個古代人類祖先實際上可能代表了我們進化譜系的不同分支。這項發現挑戰了一個世紀以來的假設，並揭示了劇烈的氣候變遷如何幫助塑造了一個令人驚訝的複雜的人類起源故事。",
+      "t": "已有 50 年歷史的進化論可能一直都是錯的",
+      "x": "幾十年前的理論認為演化可以保護其最重要的基因免受突變，但這一理論受到了重大打擊。對細菌和酵母突變的廣泛新分析發現，沒有證據表明必需基因的突變頻率低於其他基因。研究人員表示，早期的研究可能被有害突變誤導，這些突變在科學家之前就已經透過自然選擇消失了",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261118065531.htm",
-      "orig": "A 3-million-year-old child just made human evolution far more complicated",
-      "origX": "A groundbreaking study of the 3-million-year-old Taung Child fossil suggests that several ancient human ancestors once thought to belong to the same species may actually represent different branches of our evolutionary family tree. The discovery challenges a century of assumptions and reveals how dramatic climate changes helped shape a surprisingly complex story of human origins."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261119194538.htm",
+      "orig": "A 50-year-old theory about evolution may have been wrong all along",
+      "origX": "A decades-old theory suggesting that evolution protects its most important genes from mutations has been dealt a major blow. An extensive new analysis of mutations in bacteria and yeast found no evidence that essential genes mutate less frequently than other genes. Researchers say earlier studies may have been misled by harmful mutations that disappeared through natural selection before scientists could detect them."
     },
     {
       "date": "2026-11-19",
