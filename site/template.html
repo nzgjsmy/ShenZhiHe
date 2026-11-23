@@ -6038,7 +6038,9 @@ function viewLQ(){
 
 let ppLazyObs=null;
 function ppLazyInit(){
-  const imgs=document.querySelectorAll('#pp-bytopic img.pplazy[data-src]');
+  /* ⚠️ 必須同時涵蓋「按話題」與「按年份」兩個容器：
+     早期只寫 '#pp-bytopic'，導致「按年份」展開後 img 永遠停在 data-src（不載入 → 看起來原卷圖全缺）。 */
+  const imgs=document.querySelectorAll('#pp-bytopic img.pplazy[data-src], #pp-byyear img.pplazy[data-src]');
   if(!imgs.length)return;
   if(typeof IntersectionObserver==='undefined'){
     imgs.forEach(im=>{im.src=im.dataset.src;im.removeAttribute('data-src');});
@@ -6164,10 +6166,10 @@ function ppToggleYear(y){
     const qs=(PP_ALL_BY_YEAR[y]||[]).slice().sort((a,b)=>a.qnum-b.qnum);
     box.innerHTML='<div class="pplist">'+qs.map(ppCard).join('')+'</div>';
     box.dataset.filled='1';
-    ppLazyInit();
   }
   box.style.display='block'; box.dataset.open='1';
   if(btn)btn.textContent='收起';
+  ppLazyInit();   // 必須在 display:block 之後才觀察，否則元素無佈局、IO 不會觸發
 }
 /* 點題號格：展開該年份並捲到該題、短暫highlight */
 function ppJumpYear(y){
