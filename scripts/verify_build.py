@@ -42,8 +42,11 @@ def main():
         print("✖ 找不到 site/神智核.html，请先跑 python site/build.py")
         return 1
     size = os.path.getsize(HTML)
-    check("产物体积 < 6 MB", size < 6 * 1024 * 1024,
-          "%.2f MB%s" % (size / 1048576.0, "（疑似内嵌了图片？EMBED_IMG=1）" if size > 6 * 1024 * 1024 else ""))
+    # 阈值 8 MB：这项检查的真正目的是「抓 EMBED_IMG=1」（内嵌图片会把产物撑到 60 MB+），
+    # 不是限制纯文本内容。2026-11 化学长题做到 2017 年后纯文本已到 6.0 MB，
+    # 后续年份填满预计 7 MB 上下，故把阈值从 6 MB 提到 8 MB，仍远低于内嵌图片的量级。
+    check("产物体积 < 8 MB", size < 8 * 1024 * 1024,
+          "%.2f MB%s" % (size / 1048576.0, "（疑似内嵌了图片？EMBED_IMG=1）" if size > 8 * 1024 * 1024 else ""))
 
     html = io.open(HTML, encoding="utf-8").read()
 
