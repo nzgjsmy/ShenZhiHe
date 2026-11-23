@@ -4085,10 +4085,15 @@ function viewHome(){
   // 這種頓號串起來的長列表，整份都沒有句號，切完還是全列出來。所以要限字數。
   const _desc=((SUB.description||'').split(/[。；]/)[0]||'').trim();
   const shortDesc=_desc.length>46?_desc.slice(0,46)+'…':_desc;
-  // 卷二（LQ）統計：與卷一 MC 完全分開，首頁卡片各自顯示自己的数量
-  const _LQ=(SUB&&SUB._lq&&SUB._lq.years)||{};
-  const LQYRS=Object.keys(_LQ).length;
-  const LQN=Object.keys(_LQ).reduce((a,y)=>a+(_LQ[y]||[]).length,0);
+  // 長題（LQ）統計：卷二（_lq）與卷一乙部（_lq_p1）是兩份獨立資料，
+  // 生物兩份都有、化學目前只有卷一乙部，首頁要各自顯示、不能互相覆蓋。
+  const _LQ2=(SUB&&SUB._lq&&SUB._lq.years)||{};
+  const _LQ1=(SUB&&SUB._lq_p1&&SUB._lq_p1.years)||{};
+  const LQN2=Object.keys(_LQ2).reduce((a,y)=>a+(_LQ2[y]||[]).length,0);
+  const LQN1=Object.keys(_LQ1).reduce((a,y)=>a+(_LQ1[y]||[]).length,0);
+  const LQYRS=Object.keys(Object.assign({},_LQ1,_LQ2)).length;
+  const LQN=LQN1+LQN2;
+  const LQ_P1_ONLY=(LQN1>0&&LQN2===0);   // 只有卷一乙部 → 卡片文案要寫「卷一乙部」
   // 卷一（MC）統計：任何科目只要有 _pastpaper 就該有入口，不能寫死 bio。
   // 化學 V0.25.24 起也有真題，但首頁卡片當年只判斷 SUB.id==='bio'，用戶看不到入口。
   const _PP=(SUB&&SUB._pastpaper&&SUB._pastpaper.years)||{};
@@ -4156,10 +4161,10 @@ function viewHome(){
           <span>${PPYRS} 個年份 · ${PPN} 道選擇題 · 附題解與答對率</span></span>
       </div>
       ${LQN>0?`
-      <div class="dse-hero dse-lq" role="button" tabindex="0" aria-label="進入卷二 · LQ 真題"
+      <div class="dse-hero dse-lq" role="button" tabindex="0" aria-label="進入長題真題"
            onclick="go('#/lq')" onkeydown="dseCardKey(event)">
         <span class="ic">✍️</span>
-        <span class="tx"><b>卷二 · LQ</b>
+        <span class="tx"><b>${LQ_P1_ONLY?'卷一乙部 · 長題':'卷二 · LQ'}</b>
           <span>${LQYRS} 個年份 · ${LQN} 道大題 · 原文與分項分值</span></span>
       </div>`:''}
     </div>`:''}
@@ -5647,7 +5652,7 @@ function lqCard(q){
   return `<div class="lq-card" data-id="${esc(q.id)}">
     <div class="lq-head">
       <span class="lq-qid">${esc(q.qnum)}</span>
-      <span class="lq-part">${esc(lqPartName(q.part))}</span>
+      <span class="lq-part">${esc(q.partName || lqPartName(q.part, q.paper))}</span>
       ${q.marksTotal?`<span class="lq-total">${q.marksTotal} 分</span>`:''}
       <span class="lq-pg">p${esc(q.page)}</span>
       ${flags.join('')}
@@ -5962,7 +5967,7 @@ function viewLQ(){
      所以切換時年份與分部篩選一律重置，避免出現「選了乙部卻在看卷二」這種錯亂。 */
   const paperTabs=`<div class="ppchips" style="margin:12px 0 4px">
       <button class="ppchip${LQ_PAPER===1?' on':''}" onclick="lqSetPaper(1)">📄 卷一 · 乙部 <span>${n1}</span></button>
-      <button class="ppchip${LQ_PAPER===2?' on':''}" onclick="lqSetPaper(2)">📚 卷二 · 甲–丁部 <span>${n2}</span></button>
+      <button class="ppchip${LQ_PAPER===2?' on':''}" onclick="lqSetPaper(2)">📚 卷二 · 長題 <span>${n2}</span></button>
     </div>`;
   const backBtn=`<button class="back" onclick="go('#/pastpaper')">← 返回真題</button>`;
   if(!all.length){
@@ -5970,7 +5975,7 @@ function viewLQ(){
       <div class="thead">${backBtn}<h2>${title}</h2></div>
       ${paperTabs}
       <div class="emptybox">
-        <p>${LQ_PAPER===1?'卷一的長題目還在整理中（每年約 10–11 道，先做 2019 樣本）。':'卷二的長題目還在整理中。'}</p>
+        <p>${LQ_PAPER===1?'卷一的長題目還在整理中（每年約 10–16 道）。':'卷二的長題目還在整理中。'}</p>
         <p>卷一選擇題已可正常使用：<button class="go" onclick="go('#/pastpaper')">去看卷一 MC</button></p></div>
     </div>`;
     return;
@@ -6016,7 +6021,7 @@ function viewLQ(){
       ${nGuide
         ? (all.length-nGuide > 0
           ? `參考答案已整理 <b>${nGuide}</b> 道（按鈕顯示「參考答案」），其餘 <b>${all.length-nGuide}</b> 道仍待收錄。`
-          : `<b>全部 ${all.length} 道大題均已附上參考答案</b>（本站依題目與 DSE 生物科評分慣例整理，非官方評分指引）。`)
+          : `<b>全部 ${all.length} 道大題均已附上參考答案</b>（各卡片的「資料來源」註明依據）。`)
         : '評分指引尚未收錄。'}
     </div>
     <div class="ppchips">
@@ -6139,7 +6144,7 @@ function viewPastPaper(){
     <div class="quick" style="margin:10px 0 4px">
       <button onclick="showPPView('bytopic')">🏷️ 按話題</button>
       <button onclick="showPPView('byyear')">📅 按年份</button>
-      ${SUB&&SUB._lq?'<button onclick="go(\'#/lq\')">📖 長題目</button>':''}
+      ${SUB&&(SUB._lq||SUB._lq_p1)?'<button onclick="go(\'#/lq\')">📖 長題目</button>':''}
     </div>
     <div id="pp-bytopic">${cards}</div>
     <div id="pp-byyear" style="display:none">${yearBlock}</div>
