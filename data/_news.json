@@ -2,24 +2,24 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
-      "date": "2026-11-22",
+      "date": "2026-11-23",
       "cat": "phys",
-      "t": "關於光的數十年之謎可能是更快網路的關鍵",
-      "x": "一種用於超高速光通訊的有前途的材料幾十年來一直是個秘密，但科學家可能最終破解了它。韓國科學技術院和加州理工學院的研究人員精確測量了鈦酸鋇如何控制和吸收光，解決了長期以來阻礙其發展的不確定性。他們的發現可以使製造快速傳輸資訊的光學設備變得更加容易",
+      "t": "一個神秘的間隙暗示從未爆炸的恆星誕生了黑洞",
+      "x": "大質量恆星可能會悄悄塌縮成黑洞，而不會產生科學家通常預期的壯觀的超新星爆炸。 257 次黑洞合併的令人驚訝的模式表明，這些神秘的恆星消失可以解釋整個宇宙中大量黑洞的起源。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261119194544.htm",
-      "orig": "A decades-old mystery about light could hold the key to faster internet",
-      "origX": "A promising material for ultra-fast optical communications has held a secret for decades, but scientists may have finally cracked it. Researchers at KAIST and Caltech have precisely measured how barium titanate controls and absorbs light, resolving longstanding uncertainties that have slowed its development. Their findings could make it easier to build optical devices that transmit information faster while wasting less light."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261121221126.htm",
+      "orig": "A mysterious gap hints at black holes born from stars that never exploded",
+      "origX": "Massive stars may be quietly collapsing into black holes without ever producing the spectacular supernova explosions scientists typically expect. A surprising pattern in 257 black hole mergers suggests these mysterious stellar disappearances could explain the origins of a large population of black holes throughout the universe."
     },
     {
       "date": "2026-11-20",
       "cat": "phys",
-      "t": "克勞德，為我找一顆行星：業餘天文學家正在使用人工智慧，結果好壞參半",
-      "x": "人工智慧工具正在幫助公民科學家識別以前未知的系外行星候選者——其中一些比其他行星更可信。",
+      "t": "簡報：航海家一號現在距離地球只有一個「光日」－創造了一項宇宙記錄",
+      "x": "聆聽科學界最偉大的故事 | 2026 年 11 月 20 日",
       "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03790-w",
-      "orig": "Claude, find me a planet: amateur astronomers are using AI with mixed results",
-      "origX": "Artificial-intelligence tools are helping citizen scientists to identify previously unknown exoplanet candidates — some more credible than others."
+      "url": "https://www.nature.com/articles/d41586-026-03806-5",
+      "orig": "Briefing Chat: Voyager 1 is now one ‘light day’ from Earth — setting a cosmic record",
+      "origX": "Hear the biggest stories from the world of science | 20 November 2026"
     },
     {
       "date": "2026-11-17",
@@ -30,14 +30,14 @@
       "url": "https://pansci.asia/archives/382529"
     },
     {
-      "date": "2026-11-22",
+      "date": "2026-11-23",
       "cat": "chem",
-      "t": "為什麼氫火焰會發出橙色光，然後幾乎看不見",
-      "x": "氫火焰可以從亮橙色轉變為幾乎看不見，這取決於一些意想不到的情況：空氣中漂浮著微量的鈉。科學家表示，這項發現可以透過用專門的感測器取代視覺火焰檢測來幫助未來的氫動力爐和烤箱更安全。",
+      "t": "愛因斯坦的相對論剛剛顛覆了化學的基本規則",
+      "x": "布朗大學的一項令人驚訝的發現正在挑戰化學教科書中最基本的解釋之一。研究人員發現了直接證據，表明愛因斯坦的相對論改變了重原子形成三鍵的方式，導致通常不同類型的化學鍵混合在一起。這項突破證實了幾十年前的預測，並表明傳統的化學規則並不適用",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261118065509.htm",
-      "orig": "Why hydrogen flames can glow orange, then turn nearly invisible",
-      "origX": "Hydrogen flames can shift from bright orange to nearly invisible depending on something unexpected: tiny amounts of sodium floating in the air. Scientists say this discovery could help make future hydrogen-powered stoves and ovens safer by replacing visual flame detection with specialized sensors."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261120075602.htm",
+      "orig": "Einstein’s relativity just upended a fundamental rule of chemistry",
+      "origX": "A surprising discovery at Brown University is challenging one of chemistry's most fundamental textbook explanations. Researchers found direct evidence that Einstein's theory of relativity changes how heavy atoms form triple bonds, causing normally distinct types of chemical bonds to blend together. The breakthrough confirms a decades-old prediction and suggests that traditional chemistry rules don't fully apply to heavy elements such as bismuth."
     },
     {
       "date": "2026-11-20",
@@ -58,14 +58,14 @@
       "url": "https://pansci.asia/archives/382531"
     },
     {
-      "date": "2026-11-22",
+      "date": "2026-11-23",
       "cat": "bio",
-      "t": "已有 50 年歷史的進化論可能一直都是錯的",
-      "x": "幾十年前的理論認為演化可以保護其最重要的基因免受突變，但這一理論受到了重大打擊。對細菌和酵母突變的廣泛新分析發現，沒有證據表明必需基因的突變頻率低於其他基因。研究人員表示，早期的研究可能被有害突變誤導，這些突變在科學家之前就已經透過自然選擇消失了",
+      "t": "一隻194歲的烏龜的DNA中隱藏著非凡的抗衰老秘密",
+      "x": "巨龜喬納森已經有 194 歲，是世界上現存最古老的陸地動物，科學家們可能終於揭開了它非凡壽命背後的秘密。研究人員發現了 287 種獨特的遺傳變異，這些變異與幫助修復受損 DNA、控制發炎、調節胰島素和抑制癌症的過程有關。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261119194538.htm",
-      "orig": "A 50-year-old theory about evolution may have been wrong all along",
-      "origX": "A decades-old theory suggesting that evolution protects its most important genes from mutations has been dealt a major blow. An extensive new analysis of mutations in bacteria and yeast found no evidence that essential genes mutate less frequently than other genes. Researchers say earlier studies may have been misled by harmful mutations that disappeared through natural selection before scientists could detect them."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261121221130.htm",
+      "orig": "A 194-year-old tortoise has a remarkable anti-aging secret hidden in its DNA",
+      "origX": "At an astonishing 194 years old, Jonathan the giant tortoise is the world's oldest living land animal, and scientists may have finally uncovered the secrets behind his extraordinary lifespan. Researchers identified 287 unique genetic variants linked to processes that help repair damaged DNA, control inflammation, regulate insulin, and suppress cancer."
     },
     {
       "date": "2026-11-19",
