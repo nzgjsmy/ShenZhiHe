@@ -27,22 +27,12 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
 <link rel="icon" href="./favicon.ico" sizes="any">
 <style>
-/* ===== 龙藏体（Long Cang）· 只用于大标题 =====
-   来源：Google Fonts，OFL 授权（可免费商用）。
-   子集化：原版 4.91MB → 315KB（只保留 1266 个标题用字）。
-   ⚠️ 实测限制（见 scratch/_proto/font_longcang.html）：
-      · 48px 大标题 → 文艺感强，可用
-      · 34px 卡片标题 → 勉强，笔画开始变细
-      · 15px 正文 → 偏细偏潦草
-      · 14px 正文 → 明显发虚
-      · 12px 小字 → 糊成一团
-      · 数字 → 笔画太细没分量
-   → 所以只给 .hero h1 / .thead h2 用，正文与数字保持系统字体。 */
-@font-face{
-  font-family:"Long Cang";
-  src:url("fonts/LongCang-Title.woff2") format("woff2");
-  font-weight:400;font-style:normal;font-display:swap;
-}
+/* ===== 字体：全站统一系统字体（2026-11-24 用户要求「变回默认字体风格」）=====
+   曾经用过龙藏体（Long Cang）做标题字体，视觉上是「手写体标题 + 宋体卡片标题 +
+   黑体正文」三套字体并存，整体风格割裂 —— 用户明确要求回到默认。
+   → 现在：@font-face 已移除，所有 font-family 覆盖都改走 body 的无衬线栈；
+     --hn-serif 这个手账衬线变量也指向同一栈（只是名字沿用，不再是衬线体）。
+   ⚠️ 别再单独给某个选择器加 title 字体：一处手写体就会让整页显得花。 */
 :root{
   --bg:#efe9da; --paper:#ffffff; --ink:#2b2a26; --muted:#6e6960;
   --line:#e8e2d6; --accent:#0f766e; --accent-soft:#e6f3f1;
@@ -324,7 +314,6 @@ main{max-width:1120px;margin:0 auto;padding:26px 20px 80px}
 .hn-date .hn-sub{letter-spacing:.24em;opacity:.85}
 .hn-hand{
   display:block;margin-top:10px;
-  font-family:"Long Cang","Noto Serif TC",serif;
   font-size:20px;line-height:1.6;
   /* ⚠️ 原本是 rgba(255,255,255,.82) —— 那是給深綠 hero 的白字，
      頁頭改成紙面後就成了「白字寫在米黃紙上」，肉眼幾乎看不見。改走語意變數。 */
@@ -400,8 +389,7 @@ nav#nav{view-transition-name:apptabbar}
 /* ---------- home ---------- */
 .hero{background:linear-gradient(135deg,#0f766e 0%,#115e59 60%,#134e4a 100%);color:#fff;border-radius:22px;padding:38px 34px;box-shadow:var(--shadow);position:relative;overflow:hidden}
 .hero:after{content:"⚗️";position:absolute;right:26px;bottom:-14px;font-size:120px;opacity:.16;transform:rotate(-12deg)}
-.hero h1{margin:0 0 8px;font-size:32px;letter-spacing:.01em;font-weight:400;
-  font-family:"Long Cang","Noto Serif TC",serif}
+.hero h1{margin:0 0 8px;font-size:32px;letter-spacing:.01em;font-weight:700}
 .hero p{margin:0;opacity:.92;max-width:640px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:18px 0 26px}
 .stat{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;text-align:center}
@@ -433,8 +421,7 @@ nav#nav{view-transition-name:apptabbar}
 html[data-theme="dark"] .quick button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 /* ---------- topic ---------- */
 .thead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
-.thead h2{margin:0;font-size:30px;font-weight:400;
-  font-family:"Long Cang","Noto Serif TC",serif}
+.thead h2{margin:0;font-size:30px;font-weight:700}
 .back{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:5px 14px;cursor:pointer;font-size:14px}
 .back:hover{border-color:var(--accent);color:var(--accent)}
 /* 「看知識點」按鈕在浮窗打開時變「收起知識點」，用實心底標示狀態 */
@@ -1721,7 +1708,7 @@ html[data-theme="dark"] .stat b{color:var(--accent)}
   box-shadow:0 1px 2px rgba(70,60,40,.10),0 10px 28px rgba(70,60,40,.09);
   padding:26px 28px;
 }
-.qtext{font-family:"Noto Serif TC",serif;font-size:19px;line-height:1.85;
+.qtext{font-size:19px;line-height:1.85;
   letter-spacing:-.2px;color:var(--ink)}
 /* 题型标签 → 手账小纸签 */
 .qtype{background:var(--paper);border:1px solid var(--line);border-radius:2px;
@@ -1818,11 +1805,9 @@ html[data-theme="dark"] body{
 .dse-hero:active{transform:scale(.985);opacity:.94}
 .dse-hero .ic{font-size:26px;flex:0 0 auto}
 .dse-hero .tx{flex:1;min-width:0}
-/* ⚠️ 手写体（Long Cang）的 ascent/descent 比常规字体大，line-height:1.3 会让
-   标题溢出并与下方副标题重叠（实测）。这里必须给足 1.55 + 下边距。 */
-.dse-hero .tx b{display:block;font-family:"Long Cang","Noto Serif TC",serif;
-  font-size:24px;color:#2d554e;letter-spacing:.01em;
-  line-height:1.55;margin-bottom:2px}
+.dse-hero .tx b{display:block;
+  font-size:24px;font-weight:700;color:#2d554e;letter-spacing:.01em;
+  line-height:1.4;margin-bottom:2px}
 .dse-hero .tx span{display:block;font-size:12px;color:#3d6b62;opacity:.82;
   letter-spacing:.02em;line-height:1.6}
 /* 整張卡就是進入分頁的入口：「開始」膠囊與右側箭頭都拿掉（用戶 2026-11-06），
@@ -2069,7 +2054,10 @@ html[data-theme="dark"] .dash-cta:hover{background:#47796f}
   --hn-muted:#8a9aa8;
   --hn-accent:#3d6b62;
   --hn-title:#2f2a22;
-  --hn-serif:"Noto Serif TC","Songti TC","Long Cang",serif;
+  /* 手帳風原本用襯線體做卡片標題（--hn-serif 是舊名，改不了到處引用）。
+     2026-11-24 用戶要求全站回到預設字體，所以這裡直接指向 body 的無襯線棧 ——
+     名字不改，只改值，引用處（十幾處）全部自動跟著變。 */
+  --hn-serif:"Microsoft JhengHei","PingFang TC","Noto Sans TC",system-ui,sans-serif;
   --hn-track:#ddd3bd;
 }
 
@@ -4165,18 +4153,18 @@ function viewHome(){
          ⚠️ 入口條件必須看 PPN（有沒有 _pastpaper 資料），不能寫死 SUB.id==='bio' ——
             化學 V0.25.24 起也有真題，寫死會讓用戶完全看不到入口（本次踩過）。 */''}
     <div class="dse-duo">
-      <div class="dse-hero dse-mc" role="button" tabindex="0" aria-label="進入卷一 · MC 真題"
+      <div class="dse-hero dse-mc" role="button" tabindex="0" aria-label="進入 MC 選擇題真題"
            onclick="go('#/pastpaper')" onkeydown="dseCardKey(event)">
         <span class="ic">📝</span>
-        <span class="tx"><b>卷一 · MC</b>
+        <span class="tx"><b>MC</b>
           <span>${PPYRS} 個年份 · ${PPN} 道選擇題 · 附題解與答對率</span></span>
       </div>
       ${LQN>0?`
-      <div class="dse-hero dse-lq" role="button" tabindex="0" aria-label="進入長題真題"
+      <div class="dse-hero dse-lq" role="button" tabindex="0" aria-label="進入 LQ 長題真題"
            onclick="go('#/lq')" onkeydown="dseCardKey(event)">
         <span class="ic">✍️</span>
-        <span class="tx"><b>${LQ_P1_ONLY?'卷一乙部 · 長題':(LQ_BOTH?'長題目 · 卷一乙部 ＋ 卷二':'卷二 · LQ')}</b>
-          <span>${LQ_BOTH?`卷一乙部 ${LQN1} 道 · 卷二 ${LQN2} 道 · 原文與分項分值`:`${LQYRS} 個年份 · ${LQN} 道大題 · 原文與分項分值`}</span></span>
+        <span class="tx"><b>LQ</b>
+          <span>${LQ_BOTH?`卷一乙部 ${LQN1} 道 · 卷二 ${LQN2} 道 · 原文與分項分值`:(LQ_P1_ONLY?`卷一乙部 ${LQN1} 道 · 原文與分項分值`:`${LQYRS} 個年份 · ${LQN} 道大題 · 原文與分項分值`)}</span></span>
       </div>`:''}
     </div>`:''}
     <div class="quick">
