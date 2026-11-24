@@ -343,6 +343,21 @@ def copy_pwa():
         else:
             shutil.copy2(src, dst)
         copied.append(name)
+    # 龍藏體標題字（site/fonts/*.woff2）：template.html 用相對路徑
+    #   fonts/LongCang-Title.woff2 引用，不拷進 gh-pages 線上就 404，
+    #   標題會靜默回退到系統字體（2026-11-24 才發現一直漏了這一步）。
+    fdir = os.path.join(SITE, "fonts")
+    if os.path.isdir(fdir):
+        fout = os.path.join(OUT, "fonts")
+        os.makedirs(fout, exist_ok=True)
+        for fn in sorted(os.listdir(fdir)):
+            src = os.path.join(fdir, fn)
+            if not os.path.isfile(src):
+                continue
+            shutil.copy2(src, os.path.join(fout, fn))
+            copied.append("fonts/" + fn)
+    else:
+        print("  note: 缺少 site/fonts（略過；標題會回退系統字體）")
     return copied
 
 
