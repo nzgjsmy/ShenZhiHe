@@ -2,24 +2,24 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
-      "date": "2026-11-23",
+      "date": "2026-11-24",
       "cat": "phys",
-      "t": "一個神秘的間隙暗示從未爆炸的恆星誕生了黑洞",
-      "x": "大質量恆星可能會悄悄塌縮成黑洞，而不會產生科學家通常預期的壯觀的超新星爆炸。 257 次黑洞合併的令人驚訝的模式表明，這些神秘的恆星消失可以解釋整個宇宙中大量黑洞的起源。",
+      "t": "星際太陽帆在75%光速時遇到奇怪問題",
+      "x": "科學家發現了星際旅行的一個令人驚訝的障礙：在極端速度下，推動未來太陽帆的光實際上可能開始減慢它們的速度。一旦太空船達到光速的 75%，一些散射光就會開始產生阻力，這可能會使人類到達遙遠恆星的計畫變得複雜。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261121221126.htm",
-      "orig": "A mysterious gap hints at black holes born from stars that never exploded",
-      "origX": "Massive stars may be quietly collapsing into black holes without ever producing the spectacular supernova explosions scientists typically expect. A surprising pattern in 257 black hole mergers suggests these mysterious stellar disappearances could explain the origins of a large population of black holes throughout the universe."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261120071305.htm",
+      "orig": "Interstellar solar sails hit a bizarre problem at 75% of light speed",
+      "origX": "Scientists have discovered a surprising obstacle to interstellar travel: at extreme speeds, the light propelling futuristic solar sails could actually begin slowing them down. Once a spacecraft reaches 75% of the speed of light, some scattered light starts producing drag, potentially complicating humanity’s plans to reach distant stars."
     },
     {
-      "date": "2026-11-20",
-      "cat": "phys",
-      "t": "簡報：航海家一號現在距離地球只有一個「光日」－創造了一項宇宙記錄",
-      "x": "聆聽科學界最偉大的故事 | 2026 年 11 月 20 日",
+      "date": "2026-11-23",
+      "cat": "chem",
+      "t": "非經典碳正離子合成六取代苯",
+      "x": "苯環是小分子藥物中最常見的環系1。然而，由於合成方面的挑戰以及市售芳香族結構單元的可用性有限，小分子庫中明顯不存在具有六個取代基的苯。因此，新的化學製程能夠透過可預測的區域化學合成它們",
       "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03806-5",
-      "orig": "Briefing Chat: Voyager 1 is now one ‘light day’ from Earth — setting a cosmic record",
-      "origX": "Hear the biggest stories from the world of science | 20 November 2026"
+      "url": "https://www.nature.com/articles/s41586-026-11449-9",
+      "orig": "Hexa-substituted benzene synthesis with non-classical carbocations",
+      "origX": "Benzene rings are the most frequently encountered ring system in small-molecule drugs1. However, benzenes with six substituents are notably absent from small molecule libraries, owing to challenges associated with their synthesis and the limited availability of commercially available aromatic building blocks2. Therefore, new chemical processes that enable their synthesis with predictable regiochemical control and broad substituent diversity could enable medicinal chemists to explore this uncharted aromatic chemical space in hit-to-lead and lead optimization campaigns. Herein, we describe a highly modular and programmable platform for accessing hexa-substituted benzene rings from aromatic cyclopropenium cations and (trialkylsilyl)allenes, with precise control over all six benzene positions encoded in the starting materials. The exceptional regioselectivity observed originates from the selective evolution of an unusual non-classical carbocation featuring four-centre four-electron bonding as revealed by density functional theory calculations. Our benzannulation enables the selective installation of synthetic handles that were exploited for the synthesis of previously inaccessible penta- and hexa-substituted analogues of the anticancer drug sonidegib and the antihypertensive drug telmisartan, as well as the polyaromatic hydrocarbon triphenylene. Notably, the use of enantiopure allenes unlocks a new route to enantioenriched multi-substituted biaryls through our benzannulation occurring with 「memory of chirality」."
     },
     {
       "date": "2026-11-17",
@@ -30,24 +30,24 @@
       "url": "https://pansci.asia/archives/382529"
     },
     {
-      "date": "2026-11-23",
+      "date": "2026-11-24",
       "cat": "chem",
-      "t": "愛因斯坦的相對論剛剛顛覆了化學的基本規則",
-      "x": "布朗大學的一項令人驚訝的發現正在挑戰化學教科書中最基本的解釋之一。研究人員發現了直接證據，表明愛因斯坦的相對論改變了重原子形成三鍵的方式，導致通常不同類型的化學鍵混合在一起。這項突破證實了幾十年前的預測，並表明傳統的化學規則並不適用",
+      "t": "為什麼氫火焰會發出橙色光，然後幾乎看不見",
+      "x": "氫火焰可以從亮橙色轉變為幾乎看不見，這取決於一些意想不到的情況：空氣中漂浮著微量的鈉。科學家表示，這項發現可以透過用專門的感測器取代視覺火焰檢測來幫助未來的氫動力爐和烤箱更安全。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261120075602.htm",
-      "orig": "Einstein’s relativity just upended a fundamental rule of chemistry",
-      "origX": "A surprising discovery at Brown University is challenging one of chemistry's most fundamental textbook explanations. Researchers found direct evidence that Einstein's theory of relativity changes how heavy atoms form triple bonds, causing normally distinct types of chemical bonds to blend together. The breakthrough confirms a decades-old prediction and suggests that traditional chemistry rules don't fully apply to heavy elements such as bismuth."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261118065509.htm",
+      "orig": "Why hydrogen flames can glow orange, then turn nearly invisible",
+      "origX": "Hydrogen flames can shift from bright orange to nearly invisible depending on something unexpected: tiny amounts of sodium floating in the air. Scientists say this discovery could help make future hydrogen-powered stoves and ovens safer by replacing visual flame detection with specialized sensors."
     },
     {
-      "date": "2026-11-20",
-      "cat": "bio",
-      "t": "偵探在數百篇研究論文中發現了“不可能的蛋白質”",
-      "x": "調查暴露了一個潛在的廣泛問題，促使撤回和更正。",
+      "date": "2026-11-23",
+      "cat": "chem",
+      "t": "連續 N-C 勝肽合成",
+      "x": "目前最先進的勝肽合成在效率和可持續性方面面臨著重大的全球挑戰。 1隨著對勝肽治療藥物的需求迅速增長，2,3我們提供這些重要藥物的能力面臨越來越大的壓力。 4化學合成通常進行C到N並需要保護基團，而核醣體合成是從未受保護的胺基酸進行N到C",
       "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03799-1",
-      "orig": "Sleuth finds ‘impossible proteins’ in hundreds of research papers",
-      "origX": "Investigation exposes a potentially widespread problem, prompting retractions and corrections."
+      "url": "https://www.nature.com/articles/s41586-026-11448-w",
+      "orig": "Continuous N-to-C Peptide Synthesis",
+      "origX": "Current state-of-the-art peptide synthesis faces a significant global challenge in efficiency and sustainability.1 With demand for peptide therapeutics growing rapidly,2,3 our ability to provide these important medicines is under increasing pressure.4 Chemical synthesis typically proceeds C-to-N and requires protecting groups, whereas ribosomal synthesis proceeds N-to-C from unprotected amino acids (AAs). To improve efficiency and sustainability, we developed a continuous N-to-C Peptide Synthesis (NCPS) using N-/C-unprotected AAs or fragments without intermediate isolations, achieving ≥95% average yield per coupling and ≤1.0% epimerization. The method enabled seven consecutive couplings. Starting from N-/C-unprotected AAs, peptide assembly requires fewer isolations than those needed to prepare the corresponding Fmoc-AA building blocks before conventional synthesis can begin. This method accepts all 20 canonical AAs and a wide range of non-canonical AAs important for drug-like profiles.5 Longer peptides can be readily assembled through continuous fragment coupling while maintaining chiral integrity. This approach reduces isolations by ~10-fold and waste generation by up to ~100-fold. We further developed a flow synthesizer that enhances speed and productivity while mitigating batch manufacturing risks. The method enabled the synthesis of a tirzepatide heptapeptide fragment, degarelix, a 14-mer engineered macrocyclic peptide, and semaglutide. Overall, continuous NCPS has the potential to transform peptide manufacturing."
     },
     {
       "date": "2026-11-14",
@@ -58,24 +58,24 @@
       "url": "https://pansci.asia/archives/382531"
     },
     {
-      "date": "2026-11-23",
+      "date": "2026-11-24",
       "cat": "bio",
-      "t": "一隻194歲的烏龜的DNA中隱藏著非凡的抗衰老秘密",
-      "x": "巨龜喬納森已經有 194 歲，是世界上現存最古老的陸地動物，科學家們可能終於揭開了它非凡壽命背後的秘密。研究人員發現了 287 種獨特的遺傳變異，這些變異與幫助修復受損 DNA、控制發炎、調節胰島素和抑制癌症的過程有關。",
+      "t": "這種以史蒂芬·科爾伯特 (Stephen Colbert) 命名的小蜘蛛的基因組比人類大 50%",
+      "x": "一種以 Stephen Colbert 命名的加州小型活板門蜘蛛，儘管其體型只有四分之一，但其基因組卻比人類大 50%。科學家發現其龐大的基因組包含 46 億個 DNA 鹼基對和 52 條染色體，揭示了有關蜘蛛進化的驚人線索。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261121221130.htm",
-      "orig": "A 194-year-old tortoise has a remarkable anti-aging secret hidden in its DNA",
-      "origX": "At an astonishing 194 years old, Jonathan the giant tortoise is the world's oldest living land animal, and scientists may have finally uncovered the secrets behind his extraordinary lifespan. Researchers identified 287 unique genetic variants linked to processes that help repair damaged DNA, control inflammation, regulate insulin, and suppress cancer."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261122060343.htm",
+      "orig": "This tiny spider named after Stephen Colbert has a genome 50% larger than a human’s",
+      "origX": "A tiny California trapdoor spider named after Stephen Colbert has a genome roughly 50% larger than a human's, despite being only about the size of a quarter. Scientists discovered that its enormous genome contains 4.6 billion DNA base pairs and 52 chromosomes, revealing surprising clues about spider evolution."
     },
     {
-      "date": "2026-11-19",
-      "cat": "chem",
-      "t": "鈣催化親核氟化",
-      "x": "眾所周知，挑戰合成和永續製造現有邊界的新催化歧管很難實施1，特別是對於基於金屬的催化範例，這些範例缺乏支持許多已建立的 d 區機械途徑（例如氧化加成和還原消除）的基本過程。系統基礎的廣泛利用",
+      "date": "2026-11-20",
+      "cat": "phys",
+      "t": "簡報：航海家一號現在距離地球只有一個「光日」－創造了一項宇宙記錄",
+      "x": "聆聽科學界最偉大的故事 | 2026 年 11 月 20 日",
       "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/s41586-026-11445-z",
-      "orig": "Calcium catalysed nucleophilic fluorination",
-      "origX": "New catalytic manifolds that challenge existing boundaries for synthesis and sustainable manufacturing are notoriously difficult to implement1, particularly for catalytic paradigms based on metals which lack access to the fundamental processes that underpin many established d-block mechanistic pathways (e.g. oxidative addition and reductive elimination). The widespread exploitation of systems based on main-group elements therefore requires alternative elementary steps to effect turnover. Herein, we demonstrate a new catalytic platform for nucleophilic fluorination, which exploits a complex based on calcium (the fifth most Earth-abundant element) as the fluoride delivery vehicle. The key intermediate is a calcium-fluoride complex featuring a terminal Ca–F interaction, a unique structural geometry enabled by a highly sterically encumbered dianionic ligand-scaffold. This intermediate links reactants and products through F– capture and release steps, and thereby unlocks catalytic F– shuttling. Late Ca–F bond breaking in the rate-determining fluoride-delivery transition-state means that electronic and steric tuning of F– by calcium is chemically significant; proof-of-concept results show a hitherto unprecedented level of selectivity for substitution over elimination brought about by Ca-modulation. In a broader context, this work demonstrates how control over catalyst speciation and reagent binding affinity are key factors for the future development of sustainable non-transition metal paradigms in catalysis."
+      "url": "https://www.nature.com/articles/d41586-026-03806-5",
+      "orig": "Briefing Chat: Voyager 1 is now one ‘light day’ from Earth — setting a cosmic record",
+      "origX": "Hear the biggest stories from the world of science | 20 November 2026"
     }
   ]
 }
