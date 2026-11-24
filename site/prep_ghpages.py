@@ -373,7 +373,11 @@ def copy_note_images():
     refs_pp = sorted(set(re.findall(r"img/(pp/(?:chem/)?(?:[0-9]{4}|PP|SP)/[A-Za-z0-9_]+\.webp)", html)))
     # 長題目的原卷頁圖：img/lq/<年份>/（卷二）與 img/lq1/<年份>/（卷一乙部）。
     # 同樣是「payload JSON 裡的引用」，不寫這條線上會整批 404。
-    refs_lq = sorted(set(re.findall(r"img/(lq1?/(?:[0-9]{4}|PP|SP)/p[0-9]{3}[A-Za-z0-9_\-]*\.webp)", html)))
+    # ⚠️ 化學科的長題圖放在 img/lq1/chem/<年份>/（與生物同檔名不衝突），
+    #    這裡必須容許中間的 chem/ 一層——2026-11-24 前漏了它，
+    #    導致化學卷一乙部 256 張原卷頁圖從未進過 gh-pages/，線上整批 404。
+    refs_lq = sorted(set(re.findall(
+        r"img/(lq1?/(?:chem/)?(?:[0-9]{4}|PP|SP)/p[0-9]{3}[A-Za-z0-9_\-]*\.webp)", html)))
     all_refs = refs + refs_gen + refs_pp + refs_lq
     if not all_refs:
         print("  note: index.html 未引用任何 img/*.webp（圖片外置未啟用？）")
