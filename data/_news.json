@@ -2,6 +2,62 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
+      "date": "2026-11-25",
+      "cat": "phys",
+      "t": "一種簡單的金屬隱藏著一種奇怪的新形式的磁性",
+      "x": "科學家在一種看似普通的金屬中發現了一種奇怪的磁性，這種金屬沒有整體磁化，但卻深刻地改變了電子的行為。這項突破為理解奇異量子材料和開發未來電子技術提供了一條有前途的新途徑。",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261123005341.htm",
+      "orig": "A simple metal is hiding a strange new form of magnetism",
+      "origX": "Scientists have discovered a strange form of magnetism in an ordinary-looking metal that has no overall magnetization yet profoundly changes how electrons behave. The breakthrough offers a promising new path toward understanding exotic quantum materials and developing future electronic technologies."
+    },
+    {
+      "date": "2026-11-24",
+      "cat": "bio",
+      "t": "大腦記錄分數：創傷如何在細胞中留下分子疤痕",
+      "x": "大型屍檢研究發現大腦中的表觀遺傳學變化與創傷後壓力症候群有關。",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/d41586-026-03821-6",
+      "orig": "The brain keeps the score: how trauma leaves molecular scars in cells",
+      "origX": "Large post-mortem study identifies epigenetic changes in the brain linked to post-traumatic stress disorder."
+    },
+    {
+      "date": "2026-11-17",
+      "cat": "phys",
+      "t": "角膜太薄無法近視雷射？眼科醫師解析「植入式隱形眼鏡」EVO ICL，保留角膜且可隨時取出！",
+      "x": "高度近視或角膜太薄無法做近視雷射嗎？「EVO ICL植入式隱形眼鏡」保留完整角膜結構，不僅能降低術後乾眼風險，晶體更具備可取出的彈性，是視力矯正的安全新選擇。",
+      "src": "泛科學",
+      "url": "https://pansci.asia/archives/382529"
+    },
+    {
+      "date": "2026-11-25",
+      "cat": "chem",
+      "t": "愛因斯坦的相對論剛剛顛覆了化學的基本規則",
+      "x": "布朗大學的一項令人驚訝的發現正在挑戰化學教科書中最基本的解釋之一。研究人員發現了直接證據，表明愛因斯坦的相對論改變了重原子形成三鍵的方式，導致通常不同類型的化學鍵混合在一起。這項突破證實了幾十年前的預測，並表明傳統的化學規則並不適用",
+      "src": "ScienceDaily（譯）",
+      "url": "https://www.sciencedaily.com/releases/2026/11/261120075602.htm",
+      "orig": "Einstein’s relativity just upended a fundamental rule of chemistry",
+      "origX": "A surprising discovery at Brown University is challenging one of chemistry's most fundamental textbook explanations. Researchers found direct evidence that Einstein's theory of relativity changes how heavy atoms form triple bonds, causing normally distinct types of chemical bonds to blend together. The breakthrough confirms a decades-old prediction and suggests that traditional chemistry rules don't fully apply to heavy elements such as bismuth."
+    },
+    {
+      "date": "2026-11-24",
+      "cat": "bio",
+      "t": "小心，AlphaFold：Claude 和 ChatGPT 的新生物學技能讓科學家們驚嘆不已",
+      "x": "Anthropic 和 OpenAI 的語言模型可以設計蛋白質並預測其序列和結構——以前只有在專門的人工智慧工具中才能看到的功能。",
+      "src": "Nature（譯）",
+      "url": "https://www.nature.com/articles/d41586-026-03836-z",
+      "orig": "Watch out, AlphaFold: Claude and ChatGPT’s new biology skills wow scientists",
+      "origX": "Anthropic and OpenAI’s language models can design proteins and predict their sequences and structures — capabilities previously seen only in specialized AI tools."
+    },
+    {
+      "date": "2026-11-14",
+      "cat": "bio",
+      "t": "一年吞下5億顆安眠藥！大腦當機睡不著？新型藥物與 CBT-I 帶你找回「關機力」",
+      "x": "台灣人一年吃掉超過 5 億顆安眠藥，平均一天吞下 138 萬顆！難道我們真的這麼難入睡嗎？面對漫漫長夜，許多人依賴藥物來強制大腦關機，但安眠藥吃久了怕成癮、擔心戒不掉，甚至憂慮會引發失智。到底失眠一定要吃藥嗎？吃了十年的藥還有機會戒除嗎？這一集，就讓挺健康鄭丁…",
+      "src": "泛科學",
+      "url": "https://pansci.asia/archives/382531"
+    },
+    {
       "date": "2026-11-24",
       "cat": "phys",
       "t": "星際太陽帆在75%光速時遇到奇怪問題",
@@ -20,62 +76,6 @@
       "url": "https://www.nature.com/articles/s41586-026-11449-9",
       "orig": "Hexa-substituted benzene synthesis with non-classical carbocations",
       "origX": "Benzene rings are the most frequently encountered ring system in small-molecule drugs1. However, benzenes with six substituents are notably absent from small molecule libraries, owing to challenges associated with their synthesis and the limited availability of commercially available aromatic building blocks2. Therefore, new chemical processes that enable their synthesis with predictable regiochemical control and broad substituent diversity could enable medicinal chemists to explore this uncharted aromatic chemical space in hit-to-lead and lead optimization campaigns. Herein, we describe a highly modular and programmable platform for accessing hexa-substituted benzene rings from aromatic cyclopropenium cations and (trialkylsilyl)allenes, with precise control over all six benzene positions encoded in the starting materials. The exceptional regioselectivity observed originates from the selective evolution of an unusual non-classical carbocation featuring four-centre four-electron bonding as revealed by density functional theory calculations. Our benzannulation enables the selective installation of synthetic handles that were exploited for the synthesis of previously inaccessible penta- and hexa-substituted analogues of the anticancer drug sonidegib and the antihypertensive drug telmisartan, as well as the polyaromatic hydrocarbon triphenylene. Notably, the use of enantiopure allenes unlocks a new route to enantioenriched multi-substituted biaryls through our benzannulation occurring with 「memory of chirality」."
-    },
-    {
-      "date": "2026-11-17",
-      "cat": "phys",
-      "t": "角膜太薄無法近視雷射？眼科醫師解析「植入式隱形眼鏡」EVO ICL，保留角膜且可隨時取出！",
-      "x": "高度近視或角膜太薄無法做近視雷射嗎？「EVO ICL植入式隱形眼鏡」保留完整角膜結構，不僅能降低術後乾眼風險，晶體更具備可取出的彈性，是視力矯正的安全新選擇。",
-      "src": "泛科學",
-      "url": "https://pansci.asia/archives/382529"
-    },
-    {
-      "date": "2026-11-24",
-      "cat": "chem",
-      "t": "為什麼氫火焰會發出橙色光，然後幾乎看不見",
-      "x": "氫火焰可以從亮橙色轉變為幾乎看不見，這取決於一些意想不到的情況：空氣中漂浮著微量的鈉。科學家表示，這項發現可以透過用專門的感測器取代視覺火焰檢測來幫助未來的氫動力爐和烤箱更安全。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261118065509.htm",
-      "orig": "Why hydrogen flames can glow orange, then turn nearly invisible",
-      "origX": "Hydrogen flames can shift from bright orange to nearly invisible depending on something unexpected: tiny amounts of sodium floating in the air. Scientists say this discovery could help make future hydrogen-powered stoves and ovens safer by replacing visual flame detection with specialized sensors."
-    },
-    {
-      "date": "2026-11-23",
-      "cat": "chem",
-      "t": "連續 N-C 勝肽合成",
-      "x": "目前最先進的勝肽合成在效率和可持續性方面面臨著重大的全球挑戰。 1隨著對勝肽治療藥物的需求迅速增長，2,3我們提供這些重要藥物的能力面臨越來越大的壓力。 4化學合成通常進行C到N並需要保護基團，而核醣體合成是從未受保護的胺基酸進行N到C",
-      "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/s41586-026-11448-w",
-      "orig": "Continuous N-to-C Peptide Synthesis",
-      "origX": "Current state-of-the-art peptide synthesis faces a significant global challenge in efficiency and sustainability.1 With demand for peptide therapeutics growing rapidly,2,3 our ability to provide these important medicines is under increasing pressure.4 Chemical synthesis typically proceeds C-to-N and requires protecting groups, whereas ribosomal synthesis proceeds N-to-C from unprotected amino acids (AAs). To improve efficiency and sustainability, we developed a continuous N-to-C Peptide Synthesis (NCPS) using N-/C-unprotected AAs or fragments without intermediate isolations, achieving ≥95% average yield per coupling and ≤1.0% epimerization. The method enabled seven consecutive couplings. Starting from N-/C-unprotected AAs, peptide assembly requires fewer isolations than those needed to prepare the corresponding Fmoc-AA building blocks before conventional synthesis can begin. This method accepts all 20 canonical AAs and a wide range of non-canonical AAs important for drug-like profiles.5 Longer peptides can be readily assembled through continuous fragment coupling while maintaining chiral integrity. This approach reduces isolations by ~10-fold and waste generation by up to ~100-fold. We further developed a flow synthesizer that enhances speed and productivity while mitigating batch manufacturing risks. The method enabled the synthesis of a tirzepatide heptapeptide fragment, degarelix, a 14-mer engineered macrocyclic peptide, and semaglutide. Overall, continuous NCPS has the potential to transform peptide manufacturing."
-    },
-    {
-      "date": "2026-11-14",
-      "cat": "bio",
-      "t": "一年吞下5億顆安眠藥！大腦當機睡不著？新型藥物與 CBT-I 帶你找回「關機力」",
-      "x": "台灣人一年吃掉超過 5 億顆安眠藥，平均一天吞下 138 萬顆！難道我們真的這麼難入睡嗎？面對漫漫長夜，許多人依賴藥物來強制大腦關機，但安眠藥吃久了怕成癮、擔心戒不掉，甚至憂慮會引發失智。到底失眠一定要吃藥嗎？吃了十年的藥還有機會戒除嗎？這一集，就讓挺健康鄭丁…",
-      "src": "泛科學",
-      "url": "https://pansci.asia/archives/382531"
-    },
-    {
-      "date": "2026-11-24",
-      "cat": "bio",
-      "t": "這種以史蒂芬·科爾伯特 (Stephen Colbert) 命名的小蜘蛛的基因組比人類大 50%",
-      "x": "一種以 Stephen Colbert 命名的加州小型活板門蜘蛛，儘管其體型只有四分之一，但其基因組卻比人類大 50%。科學家發現其龐大的基因組包含 46 億個 DNA 鹼基對和 52 條染色體，揭示了有關蜘蛛進化的驚人線索。",
-      "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261122060343.htm",
-      "orig": "This tiny spider named after Stephen Colbert has a genome 50% larger than a human’s",
-      "origX": "A tiny California trapdoor spider named after Stephen Colbert has a genome roughly 50% larger than a human's, despite being only about the size of a quarter. Scientists discovered that its enormous genome contains 4.6 billion DNA base pairs and 52 chromosomes, revealing surprising clues about spider evolution."
-    },
-    {
-      "date": "2026-11-20",
-      "cat": "phys",
-      "t": "簡報：航海家一號現在距離地球只有一個「光日」－創造了一項宇宙記錄",
-      "x": "聆聽科學界最偉大的故事 | 2026 年 11 月 20 日",
-      "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03806-5",
-      "orig": "Briefing Chat: Voyager 1 is now one ‘light day’ from Earth — setting a cosmic record",
-      "origX": "Hear the biggest stories from the world of science | 20 November 2026"
     }
   ]
 }
