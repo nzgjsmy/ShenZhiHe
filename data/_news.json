@@ -2,24 +2,24 @@
   "_note": "科研時事（站點級，跨科目）。顯示在三科總覽頁。cat 用 bio/chem/phys/math，只影響標籤顏色。越新的排越前。內容必須來自可靠來源並附連結——時事不是常識，寧可少寫也不要編。每天從泛科學、ScienceDaily、Nature 主刊精選 8 篇（單一來源最多 3 篇、單一科目最多 3 篇），本檔由 scripts/fetch_news.py 自動產生，可手動補充。",
   "items": [
     {
-      "date": "2026-11-25",
+      "date": "2026-11-26",
       "cat": "phys",
-      "t": "一種簡單的金屬隱藏著一種奇怪的新形式的磁性",
-      "x": "科學家在一種看似普通的金屬中發現了一種奇怪的磁性，這種金屬沒有整體磁化，但卻深刻地改變了電子的行為。這項突破為理解奇異量子材料和開發未來電子技術提供了一條有前途的新途徑。",
+      "t": "物理學家捕捉反物質的突破可以解釋宇宙存在的原因",
+      "x": "正電子是電子的反物質對應物。物理學家捕獲了一個正電子並將其冷卻到接近絕對零度的溫度。正電子懸浮在一個無壁陷阱中，與普通物質安全隔離。團隊將對物質和反物質進行迄今為止最精確的比較。電子和正電子之間的任何差異都可能暴露粒子 p 標準模型中的裂縫",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261123005341.htm",
-      "orig": "A simple metal is hiding a strange new form of magnetism",
-      "origX": "Scientists have discovered a strange form of magnetism in an ordinary-looking metal that has no overall magnetization yet profoundly changes how electrons behave. The breakthrough offers a promising new path toward understanding exotic quantum materials and developing future electronic technologies."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261124055849.htm",
+      "orig": "Physicists trap antimatter in a breakthrough that could explain why the universe exists",
+      "origX": "Positrons are the antimatter counterpart of an electron. Physicists trapped a positron and cooled it to temperatures near absolute zero. Positron is suspended in a wall-free trap, safely separated from ordinary matter. Team will conduct most precise comparison yet between matter and antimatter. Any difference between the electron and positron could expose cracks in the Standard Model of particle physics."
     },
     {
-      "date": "2026-11-24",
-      "cat": "bio",
-      "t": "大腦記錄分數：創傷如何在細胞中留下分子疤痕",
-      "x": "大型屍檢研究發現大腦中的表觀遺傳學變化與創傷後壓力症候群有關。",
+      "date": "2026-11-25",
+      "cat": "chem",
+      "t": "用於全鈣鈦礦串聯太陽能電池的原位氧化還原轉換分子",
+      "x": "全鈣鈦礦串聯太陽能電池 (TSC) 因其超越單結鈣鈦礦太陽能電池 (PSC) 效率極限的能力而受到關注1,2。然而，全鈣鈦礦TSC的效率和穩定性受到錫鉛（Sn-Pb）窄帶隙子電池中電洞傳輸層/鈣鈦礦界面化學不穩定性的限制，這會引入深陷阱態",
       "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03821-6",
-      "orig": "The brain keeps the score: how trauma leaves molecular scars in cells",
-      "origX": "Large post-mortem study identifies epigenetic changes in the brain linked to post-traumatic stress disorder."
+      "url": "https://www.nature.com/articles/s41586-026-11465-9",
+      "orig": "An in situ redox-converted molecule for all-perovskite tandem solar cells",
+      "origX": "All-perovskite tandem solar cells (TSCs) are gaining prominence due to their ability to surpass the efficiency limit of single-junction perovskite solar cells (PSCs)1,2. However, the efficiency and stability of all-perovskite TSCs are limited by chemical instability at the hole transport layer/perovskite interface in the tin-lead (Sn-Pb) narrow-bandgap subcell, which introduces deep trap states from tin cations and promotes non-radiative recombination3-5. Here we incorporate a redox-converted molecule of p-aminobenzohydrazide (ABH) into poly(3,4-ethylenedioxythiophene):polystyrene sulfonate (PEDOT:PSS) that neutralizes PSS acidity, heals Sn4+ defects, and generates a dipole passivation effect upon oxidation. During the preparation of Sn-Pb perovskites, ABH suppresses interfacial oxidation by reducing Sn4+ defects and converts to p-aminobenzaldehyde (ABD), which suppresses photogenerated hole-induced Sn2+ oxidation, aligning energy levels for efficient hole extraction. The in situ redox-converted molecule stabilizes the buried interface during both device fabrication and operation, reduces non-radiative recombination and enhances stability. The resulting narrow-bandgap Sn-Pb PSC achieves a power conversion efficiency (PCE) of 25.4% (certified 25.2%) with an open-circuit voltage of 0.92 V and a fill factor of 83.4%. Integrated into monolithic all-perovskite TSCs, the device delivers a PCE of 31.1% (certified 30.8%) together with enhanced thermal (ISOS-D-2I, 85 °C) and operational stability (ISOS-L-1I) under inert conditions."
     },
     {
       "date": "2026-11-17",
@@ -30,24 +30,24 @@
       "url": "https://pansci.asia/archives/382529"
     },
     {
-      "date": "2026-11-25",
+      "date": "2026-11-26",
       "cat": "chem",
-      "t": "愛因斯坦的相對論剛剛顛覆了化學的基本規則",
-      "x": "布朗大學的一項令人驚訝的發現正在挑戰化學教科書中最基本的解釋之一。研究人員發現了直接證據，表明愛因斯坦的相對論改變了重原子形成三鍵的方式，導致通常不同類型的化學鍵混合在一起。這項突破證實了幾十年前的預測，並表明傳統的化學規則並不適用",
+      "t": "為什麼氫火焰會發出橙色光，然後幾乎看不見",
+      "x": "氫火焰可以從亮橙色轉變為幾乎看不見，這取決於一些意想不到的情況：空氣中漂浮著微量的鈉。科學家表示，這項發現可以透過用專門的感測器取代視覺火焰檢測來幫助未來的氫動力爐和烤箱更安全。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261120075602.htm",
-      "orig": "Einstein’s relativity just upended a fundamental rule of chemistry",
-      "origX": "A surprising discovery at Brown University is challenging one of chemistry's most fundamental textbook explanations. Researchers found direct evidence that Einstein's theory of relativity changes how heavy atoms form triple bonds, causing normally distinct types of chemical bonds to blend together. The breakthrough confirms a decades-old prediction and suggests that traditional chemistry rules don't fully apply to heavy elements such as bismuth."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261118065509.htm",
+      "orig": "Why hydrogen flames can glow orange, then turn nearly invisible",
+      "origX": "Hydrogen flames can shift from bright orange to nearly invisible depending on something unexpected: tiny amounts of sodium floating in the air. Scientists say this discovery could help make future hydrogen-powered stoves and ovens safer by replacing visual flame detection with specialized sensors."
     },
     {
-      "date": "2026-11-24",
+      "date": "2026-11-25",
       "cat": "bio",
-      "t": "小心，AlphaFold：Claude 和 ChatGPT 的新生物學技能讓科學家們驚嘆不已",
-      "x": "Anthropic 和 OpenAI 的語言模型可以設計蛋白質並預測其序列和結構——以前只有在專門的人工智慧工具中才能看到的功能。",
+      "t": "動脈如何在過度生長誘導突變的情況下保持其形狀",
+      "x": "為什麼癌症相關突變會導致一些血管異常發育，但動脈卻不會？答案在於受影響細胞的身份和成熟度。",
       "src": "Nature（譯）",
-      "url": "https://www.nature.com/articles/d41586-026-03836-z",
-      "orig": "Watch out, AlphaFold: Claude and ChatGPT’s new biology skills wow scientists",
-      "origX": "Anthropic and OpenAI’s language models can design proteins and predict their sequences and structures — capabilities previously seen only in specialized AI tools."
+      "url": "https://www.nature.com/articles/d41586-026-03491-4",
+      "orig": "How arteries keep their shape in the face of overgrowth-inducing mutations",
+      "origX": "Why do cancer-associated mutations cause some blood vessels to develop abnormally, but not arteries? The answer lies in the identity and maturity of the affected cells."
     },
     {
       "date": "2026-11-14",
@@ -58,14 +58,14 @@
       "url": "https://pansci.asia/archives/382531"
     },
     {
-      "date": "2026-11-24",
-      "cat": "phys",
-      "t": "星際太陽帆在75%光速時遇到奇怪問題",
-      "x": "科學家發現了星際旅行的一個令人驚訝的障礙：在極端速度下，推動未來太陽帆的光實際上可能開始減慢它們的速度。一旦太空船達到光速的 75%，一些散射光就會開始產生阻力，這可能會使人類到達遙遠恆星的計畫變得複雜。",
+      "date": "2026-11-26",
+      "cat": "bio",
+      "t": "科學家在紅海下方一英里多發現神秘湖泊",
+      "x": "在紅海表面一英里多的地方，科學家發現了罕見的水下湖泊，這些湖泊可以揭示有關地球古代海洋的秘密以及外星生命的可能性。這些極鹹、無氧的環境被稱為鹽水池，令人驚訝地充滿了微生物，挑戰了我們對生物可以生存的理解。",
       "src": "ScienceDaily（譯）",
-      "url": "https://www.sciencedaily.com/releases/2026/11/261120071305.htm",
-      "orig": "Interstellar solar sails hit a bizarre problem at 75% of light speed",
-      "origX": "Scientists have discovered a surprising obstacle to interstellar travel: at extreme speeds, the light propelling futuristic solar sails could actually begin slowing them down. Once a spacecraft reaches 75% of the speed of light, some scattered light starts producing drag, potentially complicating humanity’s plans to reach distant stars."
+      "url": "https://www.sciencedaily.com/releases/2026/11/261125045259.htm",
+      "orig": "Scientists discover mysterious lakes more than a mile beneath the Red Sea",
+      "origX": "More than a mile beneath the surface of the Red Sea, scientists have discovered rare underwater lakes that could reveal secrets about Earth's ancient oceans and the possibility of alien life. Known as brine pools, these extremely salty, oxygen-free environments are surprisingly teeming with microbial life, challenging our understanding of where living organisms can survive."
     },
     {
       "date": "2026-11-23",
