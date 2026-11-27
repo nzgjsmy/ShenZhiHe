@@ -6,8 +6,8 @@
   "color": "#b45309",
   "order": 4,
   "ready": true,
-  "description": "計算機程式分區：CASIO fx-50FH II 四段萬能程式（四心、線性規劃、三角方程求根、正弦餘弦希羅三合一），含調用時機、按鍵與驗收數據。",
-  "source": "CASIO fx-50FH II（H.K.E.A.A. APPROVED 港版，7 個變數）實機測試；程式由 DSH 會話逐段驗算並經用戶實機驗收",
+  "description": "計算機程式分區：CASIO fx-50FH II 四段萬能程式（四心、線性規劃、三角方程求根、正弦餘弦希羅三合一）；另收 DSE 數學卷二（MC）歷屆真題，逐題原卷圖＋官方答案與答對率。",
+  "source": "CASIO fx-50FH II（H.K.E.A.A. APPROVED 港版，7 個變數）實機測試；程式由 DSH 會話逐段驗算並經用戶實機驗收；數學卷二真題與答案表：HKEAA 歷屆《評卷參考》「試卷二」答案表",
   "topics": [
     "calc",
     "four_centers"

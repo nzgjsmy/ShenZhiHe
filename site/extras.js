@@ -42,12 +42,105 @@ function viewExtra(id, sel){
   if(x.type==="hot"){ viewHot(x); return; }
   if(x.type==="code"){ viewCodeProg(x); return; }
   if(x.type==="formulas"){ viewFormulas(x); return; }
+  if(x.type==="answerkey"){ viewAnswerKey(x); return; }
   if(x.type==="orgnaming"){ viewOrgNaming(x); return; }
 if(x.type==="files"){ viewFiles(x); return; }
   app.innerHTML="<div class=\"view\"><div class=\"thead\"><button class=\"back\" onclick=\"go(\'#/extras\')\">← 額外資訊</button><h2>"+esc(x.emoji||"📎")+" "+esc(x.title||x.id)+"</h2></div>"
     +"<div class=\"tmeta\">"+esc(x.subtitle||"")+"</div>"
     +"<div class=\"note\">這個額外資訊的型別（"+esc(x.type||"未指定")+"）還沒有專屬版面，先在下方看原始內容。</div>"
     +"<pre style=\"overflow:auto;background:var(--paper-soft);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:14px;font-size:13px\">"+esc(JSON.stringify(x,null,1).slice(0,20000))+"</pre></div>";
+}
+
+
+/* ---- 真題答案表（按年份 → 題號排序，按答對率上色） ----
+   資料不另外存一份：直接讀 SUB._pastpaper.years（每題已有 answer / pct），
+   避免答案表與題庫兩邊不同步。
+   配色沿用真題頁的難度四級：≥80 容易、60–79 中等、40–59 偏難、<40 極難。 */
+function akData(){
+  /* 答案表資料：優先用 _pastpaper.answers（含所有已核對年份，即使該年題庫還沒收錄圖），
+     沒有才退回 years（老資料只有題庫年份）。 */
+  var PP=(SUB&&SUB._pastpaper)||{};
+  if(PP.answers && Object.keys(PP.answers).length) return PP.answers;
+  var out={}, ys=PP.years||{};
+  Object.keys(ys).forEach(function(y){
+    out[y]={};
+    (ys[y]||[]).forEach(function(q){ out[y][q.qnum]={ans:q.answer,pct:q.pct}; });
+  });
+  return out;
+}
+function akYears(){
+  var ys=akData();
+  return Object.keys(ys).sort(function(a,b){
+    var na=parseInt(a,10), nb=parseInt(b,10);
+    if(!isNaN(na)&&!isNaN(nb)) return na-nb;
+    if(!isNaN(na)) return -1;
+    if(!isNaN(nb)) return 1;
+    return a<b?-1:1;
+  });
+}
+function akJump(y,n){
+  var ys=((SUB&&SUB._pastpaper)||{}).years||{};
+  if(!ys[y]||!ys[y].length){        // 該年題庫還沒收錄：不要跳到空白頁
+    alert(y+" 年的題庫整理中，先在真題頁看其他年份。");
+    return;
+  }
+  go("#/pastpaper");
+  setTimeout(function(){
+    try{ showPPView("byyear"); ppOpenYearQ(y,n); }catch(e){}
+  },90);
+}
+function viewAnswerKey(x){
+  navOn("extras");
+  if(needsContent())return;
+  var bank=((SUB&&SUB._pastpaper)||{}).years||{}, years=akData(), ys=akYears();
+  if(!ys.length){
+    app.innerHTML="<div class=\"view\"><div class=\"thead\"><button class=\"back\" onclick=\"go('#/extras')\">← 額外資訊</button><h2>🔑 答案表</h2></div>"
+      +"<div class=\"emptybox\"><div class=\"e1\">🔑</div><h3>還沒有真題資料</h3><p>先建立 <code>data/"+esc(SUB.id)+"/_pastpaper.json</code>，答案表會自動出現。</p></div></div>";
+    return;
+  }
+  // 全站難度分佈
+  var tot=0, cnt={e:0,m:0,h:0,vh:0}, sum=0, rated=0;
+  ys.forEach(function(y){ Object.keys(years[y]||{}).forEach(function(k){
+    var q=years[y][k];
+    tot++;
+    if(q.pct>0){ cnt[ppCls(q.pct)]++; sum+=q.pct; rated++; }
+  });});
+  var avg=rated?Math.round(sum/rated):0;
+
+  var cards=ys.map(function(y){
+    var qs=Object.keys(years[y]||{}).map(function(k){return {qnum:+k,ans:years[y][k].ans,pct:years[y][k].pct};})
+      .sort(function(a,b){return a.qnum-b.qnum;});
+    var r=qs.filter(function(q){return q.pct>0;});
+    var av=r.length?Math.round(r.reduce(function(s,q){return s+q.pct;},0)/r.length):0;
+    var cells=qs.map(function(q){
+      var cls=q.pct>0?ppCls(q.pct):"";
+      return "<button class=\"akcell "+cls+"\" title=\""+esc(y+" 年第 "+q.qnum+" 題 · 答案 "+q.ans+" · 答對率 "+q.pct+"% · "+ppLvl(q.pct))+"\""
+        +" onclick=\"akJump('"+escJs(y)+"',"+q.qnum+")\">"
+        +"<b>"+q.qnum+"</b><u>"+esc(q.ans||"–")+"</u><em>"+(q.pct>0?q.pct+"%":"–")+"</em></button>";
+    }).join("");
+    var inBank=!!(bank[y]&&bank[y].length);
+    return "<div class=\"pcard akcard\">"
+      +"<h4>"+esc(ppYearLab?ppYearLab(y):y)+" <span class=\"pg\">"+qs.length+" 題"+(av?" · 平均 "+av+"%":"")+"</span>"
+      +(inBank?"":" <span class=\"akpending\">題庫整理中</span>")+"</h4>"
+      +"<div class=\"akgrid\">"+cells+"</div></div>";
+  }).join("");
+
+  var legend='<div class=\"aklegend\">'
+    +'<span class=\"aklg e\">● 容易 ≥80%</span>'
+    +'<span class=\"aklg m\">● 中等 60–79%</span>'
+    +'<span class=\"aklg h\">● 偏難 40–59%</span>'
+    +'<span class=\"aklg vh\">● 極難 <40%</span>'
+    +'<span class=\"aklg\">格內：題號／答案／答對率</span></div>';
+
+  app.innerHTML="<div class=\"view\">"
+    +"<div class=\"thead\"><button class=\"back\" onclick=\"go('#/extras')\">← 額外資訊</button><h2>"+esc(x.emoji||"🔑")+" "+esc(x.title||"答案表")+"</h2></div>"
+    +"<div class=\"tmeta\">"+esc(x.subtitle||"")+(x.intro?"<br>"+esc(x.intro):"")+"</div>"
+    +"<div class=\"aksum\"><b>"+ys.length+"</b> 個年份 · <b>"+tot+"</b> 題 · 平均答對率 <b>"+avg+"%</b>"
+      +" · 容易 "+cnt.e+" / 中等 "+cnt.m+" / 偏難 "+cnt.h+" / 極難 "+cnt.vh+"</div>"
+    +legend
+    +cards
+    +(x.source?"<div class=\"note\">資料來源："+esc(x.source)+"</div>":"")
+    +"</div>";
 }
 
 /* ---- 公式表對照：要背 × 不用背 ----

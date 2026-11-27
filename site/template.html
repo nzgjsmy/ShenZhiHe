@@ -1640,6 +1640,36 @@ html[data-theme="dark"] .ppcell.m{background:#3a2e1a;color:#fbbf24;border-color:
 html[data-theme="dark"] .ppcell.h{background:#4a2a10;color:#fdba74;border-color:#5a3416}
 html[data-theme="dark"] .ppcell.vh{background:#4a1a1a;color:#fca5a5;border-color:#5c2222}
 html[data-theme="dark"] .ppcell.gap{background:transparent;border-color:var(--line);color:var(--muted)}
+/* ---- 額外資訊：真題答案表 ---- */
+.aksum{margin:10px 0 6px;font-size:13.5px;color:var(--text-soft)}
+.aksum b{color:var(--ink);font-size:15px}
+.aklegend{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 14px;font-size:12.5px;color:var(--muted)}
+.aklg.e{color:#16a34a}.aklg.m{color:#d97706}.aklg.h{color:#ea580c}.aklg.vh{color:#dc2626}
+.akcard{margin-bottom:16px}
+.akpending{font-size:11.5px;font-weight:600;color:var(--muted);border:1px dashed var(--line);
+  border-radius:999px;padding:1px 8px;margin-left:4px}
+.akgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:6px}
+.akcell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  border:1px solid var(--line);border-radius:9px;background:var(--paper);color:var(--text-soft);
+  padding:5px 2px;font-family:inherit;cursor:pointer;line-height:1.1;min-width:0;
+  transition:transform .08s ease,border-color .12s ease,box-shadow .12s ease}
+.akcell:hover{transform:translateY(-1px);border-color:var(--accent);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.akcell:active{transform:scale(.96)}
+.akcell b{font-size:10.5px;font-weight:600;opacity:.72}
+.akcell u{text-decoration:none;font-size:14.5px;font-weight:800;letter-spacing:.4px}
+.akcell em{font-style:normal;font-size:10px;opacity:.85}
+.akcell.e{background:#dcfce7;color:#14532d;border-color:#34d399}
+.akcell.m{background:#fef3c7;color:#78350f;border-color:#fbbf24}
+.akcell.h{background:#ffedd5;color:#7c2d12;border-color:#fb923c}
+.akcell.vh{background:#fee2e2;color:#7f1d1d;border-color:#f87171}
+html[data-theme="dark"] .akcell{background:var(--paper-soft);color:var(--text-soft);border-color:var(--line)}
+html[data-theme="dark"] .akcell.e{background:#173d24;color:#4ade80;border-color:#1f5133}
+html[data-theme="dark"] .akcell.m{background:#3a2e1a;color:#fbbf24;border-color:#4a3a1f}
+html[data-theme="dark"] .akcell.h{background:#4a2a10;color:#fdba74;border-color:#5a3416}
+html[data-theme="dark"] .akcell.vh{background:#4a1a1a;color:#fca5a5;border-color:#5c2222}
+html[data-theme="dark"] .aklg.e{color:#4ade80}html[data-theme="dark"] .aklg.m{color:#fbbf24}
+html[data-theme="dark"] .aklg.h{color:#fdba74}html[data-theme="dark"] .aklg.vh{color:#fca5a5}
+
 html[data-theme="dark"] .ppfig{background:#2a2010;color:#fdba74}
 html[data-theme="dark"] .ppbtn{background:#0f3d38;color:var(--accent);border-color:var(--accent)}
 html[data-theme="dark"] .ppbtn:hover{background:#134e48}
@@ -4098,6 +4128,8 @@ function viewHome(){
   const _PP=(SUB&&SUB._pastpaper&&SUB._pastpaper.years)||{};
   const PPYRS=Object.keys(_PP).length;
   const PPN=Object.keys(_PP).reduce((a,y)=>a+(_PP[y]||[]).length,0);
+  // 有沒有題解：數學卷二目前只有原卷圖＋答案（公式無法可靠轉文字），文案不能寫「附題解」
+  const PPEX=Object.keys(_PP).some(y=>(_PP[y]||[]).some(q=>q.explanation));
   const freshCards=dueList().slice(0,3).map(x=>`<div class="rrow"><div class="rt"><b>${esc(x.o.p.title)}</b><span>${esc(x.o.t.title)} · ${esc(x.o.s.title)}${x.fresh?' · 還沒測過':''}</span></div><button class="go" onclick="jumpPoint('${x.pid}')">去看</button><button class="go" style="background:var(--ink)" onclick="startQuiz({mode:'point',id:'${x.pid}'})">測驗</button></div>`).join('');
   const _d=new Date();
   const _wd=['日','一','二','三','四','五','六'][_d.getDay()];
@@ -4157,7 +4189,7 @@ function viewHome(){
            onclick="go('#/pastpaper')" onkeydown="dseCardKey(event)">
         <span class="ic">📝</span>
         <span class="tx"><b>MC</b>
-          <span>${PPYRS} 個年份 · ${PPN} 道選擇題 · 附題解與答對率</span></span>
+          <span>${PPYRS} 個年份 · ${PPN} 道選擇題 · ${PPEX?'附題解與答對率':'附答案與答對率（題目以原卷圖呈現）'}</span></span>
       </div>
       ${LQN>0?`
       <div class="dse-hero dse-lq" role="button" tabindex="0" aria-label="進入 LQ 長題真題"
@@ -5456,8 +5488,12 @@ let PP_TOPIC = '';                 // '' = 全部話題
 let PP_ALL_BY_YEAR = {};           // 按年份的原始題目，供「按年份」視圖按需展開
 function ppLvl(p){return p>=80?'容易':(p>=60?'中等':(p>=40?'偏難':'極難'));}
 function ppCls(p){return p>=80?'e':(p>=60?'m':(p>=40?'h':'vh'));}
+/* 有些科目的真題不用「章號」分類（數學卷二只有甲部／乙部），
+   這些 key 的名稱直接寫在這裡，ppChTag 對它們回空字串，避免顯示成 Ch01。 */
+const PP_TOPIC_EXTRA={'ma1':'甲部 · 選擇題 Q1–30','ma2':'乙部 · 選擇題 Q31–45'};
 function ppTopicName(k){
   if(k==='zz') return '未分類';
+  if(Object.prototype.hasOwnProperty.call(PP_TOPIC_EXTRA,k)) return PP_TOPIC_EXTRA[k];
   return (typeof TMAP!=='undefined'&&TMAP[k]&&TMAP[k].title)?TMAP[k].title:k;
 }
 /* 題幹／題解的陳述編號排版：把「(1) (2) (3)」「(i) (ii) (iii)」各自獨立成行。
@@ -5486,6 +5522,7 @@ function ppMarks(src){
    排序用 ppChNo（章號）+ ppChTag（章內字母），這樣 1A<1B<1C<2A<…<6<8 才正確。 */
 function ppChTag(k){
   if(k==='zz') return '';
+  if(Object.prototype.hasOwnProperty.call(PP_TOPIC_EXTRA,k)) return '';
   const t=(typeof TMAP!=='undefined')&&TMAP[k];
   const pdf=String((t&&t.pdf)||'');
   let m=pdf.match(/^(\d+[A-C]?)(?![0-9A-Za-z])/);     // 化學：1A / 1B / 4B（"4B…" 用省略號接檔名）／6 / 8
@@ -5511,7 +5548,7 @@ function ppYearLab(y){
 }
 function ppCard(q){
   const opts=q.options||[];
-  const qImg=q.qImg?`<div class="ppqimg"><img class="pplazy" data-src="${esc(q.qImg)}" alt="${q.year} Q${q.qnum} 原卷" decoding="async"><div class="ppimgnote">此題文字 OCR 未能可靠還原，顯示原卷該題區域。</div></div>`:'';
+  const qImg=q.qImg?`<div class="ppqimg"><img class="pplazy" data-src="${esc(q.qImg)}" alt="${q.year} Q${q.qnum} 原卷" decoding="async"><div class="ppimgnote">${esc(q.qImgNote||'此題文字 OCR 未能可靠還原，顯示原卷該題區域。')}</div></div>`:'';
   const optImg=q.optImg?`<div class="ppoptimg"><img class="pplazy" data-src="${esc(q.optImg)}" alt="${q.year} Q${q.qnum} 選項圖" decoding="async"></div>`:'';
   const oh=(q.optImg||q.qImg)
     ? `<div class="ppopts letters">${['A','B','C','D'].map(k=>`<button class="ppo letter" data-k="${k}" onclick="ppPick(this,'${esc(q.id)}','${k}')"><b>${k}</b></button>`).join('')}</div>`
@@ -6145,12 +6182,13 @@ function viewPastPaper(){
   app.innerHTML=`
   <div class="view">
     <div class="thead"><button class="back" onclick="go('#/home')">← 返回首頁</button><h2>📝 ${esc(PP.title||'DSE 生物歷屆真題')}</h2></div>
-    <div class="tmeta">共 ${yrs.length} 個年份 · ${all.length} 道選擇題，按課題（Ch 編號）或按年份排序。點選項作答，答錯自動收進「錯題本」；答對後自動移出。答對率取自各年《評卷參考》。</div>
+    <div class="tmeta">${PP.description?esc(PP.description):`共 ${yrs.length} 個年份 · ${all.length} 道選擇題，按課題（Ch 編號）或按年份排序。點選項作答，答錯自動收進「錯題本」；答對後自動移出。答對率取自各年《評卷參考》。`}</div>
     ${chips}
     <div class="quick" style="margin:10px 0 4px">
       <button onclick="showPPView('bytopic')">🏷️ 按話題</button>
       <button onclick="showPPView('byyear')">📅 按年份</button>
       ${SUB&&(SUB._lq||SUB._lq_p1)?'<button onclick="go(\'#/lq\')">📖 長題目</button>':''}
+      ${extraById('answerkey')?'<button onclick="go(\'#/extras/answerkey\')">🔑 答案表</button>':''}
     </div>
     <div id="pp-bytopic">${cards}</div>
     <div id="pp-byyear" style="display:none">${yearBlock}</div>
