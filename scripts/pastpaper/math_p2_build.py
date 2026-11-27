@@ -128,8 +128,17 @@ def page_tokens(ocr, a):
 
 
 def strip_qnums(ocr, a, x0):
-    """左边界窄条 OCR：题号是孤立数字，不会被题干糊住（2012 就是靠这个补全的）。"""
-    strip = a[:, max(0, x0 - 10):x0 + 90]
+    """左边界窄条 OCR：题号是孤立数字，不会被题干糊住（2012 就是靠这个补全的）。
+
+    条带宽度要按页宽比例给：2024 原卷解像度是其他年份的 1.8 倍，
+    固定 90px 的窄条切不到题号（整页识别也会把「1.」当噪声丢掉）。
+    """
+    env = os.environ.get("MATHPP_STRIP", "")
+    if env:                      # 需要時可指定絕對條帶範圍，例如 MATHPP_STRIP="230,420"
+        x0, x1 = [int(v) for v in env.split(",")]
+    else:
+        x0, x1 = max(0, x0 - 10), x0 + max(90, int(a.shape[1] * 0.06))
+    strip = a[:, x0:x1]
     if strip.size == 0:
         return []
     img = np.stack([strip] * 3, axis=-1)
@@ -294,6 +303,10 @@ def build_year(ocr, year):
                     canvas.paste(img2, (0, img.height + 14))
                     img = canvas
             fp = os.path.join(outdir, "q%02d.webp" % n)
+            # 2024 的原卷掃描解像度是其他年份的 1.8 倍，裁出來會特別大，
+            # 統一壓到 1300px 寬（和站內其他真題圖同級），檔案才不會爆。
+            if img.width > 1300:
+                img = img.resize((1300, max(1, int(img.height * 1300 / img.width))))
             img.convert("RGB").save(fp, "WEBP", quality=82, method=5)
             crops.append({"qnum": n, "page": p["pdfpage"] + 1, "half": p["half"],
                           "file": fp, "size": list(img.size), "cont": bool(cont)})
