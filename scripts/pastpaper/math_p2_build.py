@@ -50,7 +50,13 @@ RE_LEAD_NUM = re.compile(r"^(\d{1,2})\s*[.．](?!\d)")
 def page_gray(page, dpi=DPI, clip=None):
     pix = page.get_pixmap(dpi=dpi, colorspace=pymupdf.csGRAY, clip=clip)
     a = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width)
-    return a, pix.width, pix.height
+    # 有些卷子（2018）四周有黑色扫描边框，行/列投影会把整页当成一大块墨，
+    # 题号检测与裁图全乱；MATHPP_TRIM=0.015 先把边框裁掉再分析。
+    trim = float(os.environ.get("MATHPP_TRIM", "0") or 0)
+    if trim > 0:
+        dy, dx = int(a.shape[0] * trim), int(a.shape[1] * trim)
+        a = a[dy:a.shape[0] - dy, dx:a.shape[1] - dx]
+    return a, a.shape[1], a.shape[0]
 
 
 def clean_mask(a, thr=170):
