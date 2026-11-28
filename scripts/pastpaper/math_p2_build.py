@@ -93,6 +93,22 @@ def content_bbox(a):
     return int(cols.min()), int(cols.max()), int(rws.min()), int(rws.max())
 
 
+def margin_x(a, w):
+    """左边距（题号列）：取各行行首 x 的众数。
+
+    不能直接用整页 content_bbox 的 x0 —— 卷面左缘若有扫描边线，bbox 会给出 0，
+    条带就切到空白区，题号整列认不出来（2018／2022 的第 1 题就是这样漏的）。
+    """
+    rows = rows_of(a)
+    cand = [r[2] for r in rows if r[2] < w * 0.35]
+    if not cand:
+        return content_bbox(a)[0]
+    mx = int(np.bincount(np.array(cand)).argmax())
+    if mx < w * 0.04:              # 众数贴着纸边 → 是扫描边线，不是题号列
+        return content_bbox(a)[0]
+    return mx
+
+
 def content_bottom(a, footer_ratio=0.9):
     m = clean_mask(a)
     h = a.shape[0]
@@ -127,7 +143,7 @@ def page_tokens(ocr, a):
     return out
 
 
-def strip_qnums(ocr, a, x0):
+def strip_qnums(ocr, a, x0, band=None):
     """左边界窄条 OCR：题号是孤立数字，不会被题干糊住（2012 就是靠这个补全的）。
 
     条带宽度要按页宽比例给：2024 原卷解像度是其他年份的 1.8 倍，
@@ -136,6 +152,8 @@ def strip_qnums(ocr, a, x0):
     env = os.environ.get("MATHPP_STRIP", "")
     if env:                      # 需要時可指定絕對條帶範圍，例如 MATHPP_STRIP="230,420"
         x0, x1 = [int(v) for v in env.split(",")]
+    elif band:
+        x0, x1 = band
     else:
         x0, x1 = max(0, x0 - 10), x0 + max(90, int(a.shape[1] * 0.06))
     strip = a[:, x0:x1]
@@ -151,7 +169,7 @@ def strip_qnums(ocr, a, x0):
     return got
 
 
-def detect_qnums(ocr, a, w, h, x0=None):
+def detect_qnums(ocr, a, w, h, x0=None, band=None):
     """找题号：允许与题干糊在同一 token（"34.若 x…"），要求贴左边、不在页脚。"""
     toks = page_tokens(ocr, a)
     cand = []
@@ -163,7 +181,7 @@ def detect_qnums(ocr, a, w, h, x0=None):
             continue
         cand.append((int(m.group(1)), t["y0"]))
     if x0 is not None:
-        cand += [(n, y) for n, y in strip_qnums(ocr, a, x0) if y <= h * 0.92]
+        cand += [(n, y) for n, y in strip_qnums(ocr, a, x0, band) if y <= h * 0.92]
     cand.sort(key=lambda z: z[1])
     clean, last, lasty = {}, 0, -999
     for n, y in cand:
@@ -231,18 +249,34 @@ def build_year(ocr, year):
         bb = content_bbox(a)
         if bb is None:
             continue
-        # 题号检测：200dpi 一般就够；扫得淡或版面奇怪的页判不出来，再退到 300dpi 重试
-        qn_raw = {}
-        for det_dpi in (DET_DPI,):
-            hi, hw, hh = page_gray(doc[pdfidx], det_dpi, clip)
-            hx0 = content_bbox(hi)[0]
-            got = detect_qnums(ocr, hi, hw, hh, hx0)
-            if got:
-                qn_raw = got
-                sc = w / hw
-                break
+        # 题号检测：默认 200dpi＋6% 宽条带。若一页只认出 0–1 个题号（扫描淡、
+        # 版面特殊），依次换「更宽条带／150dpi／300dpi」重试，取认出来最多的那组。
+        qn_raw, sc = {}, 1.0
+        # 条带宽度要试几档：太窄切不到题号（2024），太宽会把题干吃进来、
+        # 题号与公式糊成一个 token（2022 的「1.α2-α-β2+β=」）。
+        anchor = os.environ.get("MATHPP_ANCHOR", "mode")
+        if anchor == "scan":
+            # 各页左边距不一致的卷子（2018 重新排版：第 1 页 181px、第 2 页 347px），
+            # 固定锚点必串页；改成在左半页扫几段窄条，把所有题号并起来。
+            hi, hw, hh = page_gray(doc[pdfidx], DET_DPI, clip)
+            merged = {}
+            for f in (0.06, 0.10, 0.14, 0.18, 0.22):
+                got = detect_qnums(ocr, hi, hw, hh, int(hw * f),
+                                   (int(hw * f), int(hw * (f + 0.07))))
+                for n, y in got.items():
+                    merged.setdefault(n, y)
+            qn_raw, sc = merged, w / hw
         else:
-            sc = 1.0
+            for det_dpi, ratio in ((DET_DPI, 0.06), (DET_DPI, 0.12), (DET_DPI, 0.03),
+                                   (150, 0.05), (300, 0.05)):
+                hi, hw, hh = page_gray(doc[pdfidx], det_dpi, clip)
+                hx0 = content_bbox(hi)[0] if anchor == "bbox" else margin_x(hi, hw)
+                band = (max(0, hx0 - 10), hx0 + int(hw * ratio))
+                got = detect_qnums(ocr, hi, hw, hh, hx0, band)
+                if len(got) > len(qn_raw):
+                    qn_raw, sc = got, w / hw
+                if len(qn_raw) >= 3:   # 甲部每页最多 4 题、乙部 3 题，认到 3 个就够
+                    break
         qn = {n: int(y * sc) for n, y in qn_raw.items()}
         x0, x1, ytop, ybot = bb
         pages.append({"pdfpage": pdfidx, "half": half, "a": a, "w": w, "h": h,
@@ -254,14 +288,30 @@ def build_year(ocr, year):
     # 后面那个多半是把公式/星号读成题号（2018 Q34、2022 Q41 都踩过）。
     # 允许的跳跃：一页最多 4–5 题，所以「比上一个题号大很多」的候选多半是把
     # 公式里的数字读成了题号（如 2016 把 "34." 误认在很前面，结果把真 34–45 全挡掉）。
+    # 相邻两个题号在卷面上永远是连号（最多跳 1–2，因为可能漏认），所以比上一个
+    # 题号大 3 以上的候选就是公式/页脚被读成题号（2021 p10 的「38.／40.」把 31–39 全挡过）。
     last = 0
     for p in pages:
         keep = {}
         for n, y in sorted(p["qn"].items(), key=lambda kv: kv[1]):
-            if n > last:
+            if last < n <= last + 3:
                 keep[n] = y
                 last = n
         p["qn"] = keep
+
+    # 第 1 题常在「甲部」标题下面、题干紧接题号，OCR 容易把「1.」与公式糊在一起漏掉；
+    # 它的位置可以确定地推出来：本页 2 题上方、行首贴边的那一行。
+    for p in pages:
+        if 1 in p["qn"] or 2 not in p["qn"]:
+            continue
+        y2 = p["qn"][2]
+        # 参考左边距用「本页最靠左的行首」（x0 遇到扫描边线会是 0，不能直接用）
+        mref = min((r[2] for r in p["rows"]), default=p["x0"])
+        cand = [r for r in p["rows"]
+                if r[2] <= mref + 20 and p["ytop"] < r[0] < y2 - 40]
+        if cand:
+            p["qn"][1] = cand[-1][0]
+            print("    補第 1 题 → p%d%s y=%d" % (p["pdfpage"] + 1, p["half"], cand[-1][0]))
 
     fill_gaps(pages)
     allnums = [n for p in pages for n in p["qn"]]
