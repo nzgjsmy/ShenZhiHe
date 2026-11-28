@@ -370,7 +370,10 @@ def copy_note_images():
     #    這正是 V0.20.0～V0.24.0 期間線上 PP／SP 題目配圖全 404 的原因。
     # ⚠️ 化學科真題配圖放在 img/pp/chem/<年份>/（與生物同檔名不衝突），
     #    年份段前要容納可選的 chem/，否則這批圖全數漏拷 → 線上 404（V0.25.24 踩過）。
-    refs_pp = sorted(set(re.findall(r"img/(pp/(?:chem/)?(?:[0-9]{4}|PP|SP)/[A-Za-z0-9_]+\.webp)", html)))
+    # ⚠️ 科目子目錄（chem/、math/）一定要列進來：2026-11-27 數學卷二題圖放在
+    #    img/pp/math/<年>/qNN.webp，舊 regex 只認 chem/，整批 360 張沒進部署包（線上會 404）。
+    refs_pp = sorted(set(re.findall(
+        r"img/(pp/(?:(?:chem|math)/)?(?:[0-9]{4}|PP|SP)/[A-Za-z0-9_]+\.webp)", html)))
     # 長題目的原卷頁圖：img/lq/<年份>/（卷二）與 img/lq1/<年份>/（卷一乙部）。
     # 同樣是「payload JSON 裡的引用」，不寫這條線上會整批 404。
     # ⚠️ 化學科的長題圖放在 img/lq1/chem/<年份>/（與生物同檔名不衝突），

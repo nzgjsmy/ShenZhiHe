@@ -103,7 +103,7 @@ def main():
     ansdoc = {
         "title": "DSE 數學卷二（MC）答案與答對率",
         "source": "各年《評卷參考》「試卷二」答案表；括號內為答對百分率",
-        "note": "2024 年卷二評卷參考未包含答案表（該年檔案只有卷一評卷參考與考生表現），故暫缺。",
+        "note": "2024 年答案表由用戶提供截圖補入（該年官方檔案只有卷一評卷參考與考生表現）。",
         "years": {y: {"%d" % k: v for k, v in sorted(d.items())} for y, d in truth.items()},
     }
     with open(ANS, "w", encoding="utf-8") as f:
